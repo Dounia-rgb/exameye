@@ -67,22 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle batch approval button
-    const batchApproveBtn = document.getElementById('batchApproveBtn');
-    if (batchApproveBtn) {
-        batchApproveBtn.addEventListener('click', function() {
-            batchApprove();
-        });
-    }
-    
-    // Handle batch reject button
-    const batchRejectBtn = document.getElementById('batchRejectBtn');
-    if (batchRejectBtn) {
-        batchRejectBtn.addEventListener('click', function() {
-            batchReject();
-        });
-    }
-    
     // Handle batch delete button
     const batchDeleteBtn = document.getElementById('batchDeleteBtn');
     if (batchDeleteBtn) {
@@ -244,7 +228,6 @@ function fetchAllPVs() {
         });
 }
 
-
 // Client-side filtering function
 function clientSideFilterPVs(pvs) {
     if (!pvs || pvs.length === 0) return [];
@@ -281,7 +264,6 @@ function clientSideFilterPVs(pvs) {
                 return false;
             }
         }
-
         
         // Date filter
         if (dateFilter && !matchesDateFilter(pv.date, dateFilter)) return false;
@@ -289,6 +271,7 @@ function clientSideFilterPVs(pvs) {
         return true;
     });
 }
+
 function populateMatiereFilter(pvs) {
     if (!pvs || pvs.length === 0) return;
     
@@ -467,13 +450,14 @@ function addEventListeners() {
         }
     });
     
-   // View details button - redirect to your PHP view page
-document.querySelectorAll('.view-details-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const pvId = this.getAttribute('data-id');
-        window.open(`../db/view_pv.php?id=${pvId}`, '_blank', 'width=800,height=1000');
+    // View details button - redirect to your PHP view page
+    document.querySelectorAll('.view-details-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const pvId = this.getAttribute('data-id');
+            window.open(`../db/view_pv.php?id=${pvId}`, '_blank', 'width=800,height=1000');
+        });
     });
-});
+    
     // Download PDF button
     document.querySelectorAll('.download-pdf-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -492,7 +476,6 @@ document.querySelectorAll('.view-details-btn').forEach(btn => {
 }
 
 // Function to filter PVs
-// Replace the current filterPVs function with this enhanced version
 function filterPVs() {
     // First try server-side filtering
     fetchPVData();
@@ -502,70 +485,6 @@ function filterPVs() {
         const filteredPVs = clientSideFilterPVs(window.allPVs);
         displayPVData(filteredPVs);
     }
-}
-
-// Enhance the fetchPVData function to better handle errors
-function fetchPVData() {
-    const pvContainer = document.querySelector('.pv-container');
-    if (!pvContainer) return;
-
-    pvContainer.innerHTML = `
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Chargement des PVs...</p>
-        </div>
-    `;
-
-    const searchTerm = document.querySelector('.search-box')?.value || '';
-    const semestreFilter = document.querySelector('select[name="semestre"]')?.value || '';
-    const matiereFilter = document.querySelector('select[name="matiere"]')?.value || '';
-    const statusFilter = document.querySelector('select[name="status"]')?.value || '';
-    const dateFilter = document.querySelector('select[name="date"]')?.value || '';
-
-    const params = new URLSearchParams();
-    if (searchTerm) params.append('search', searchTerm);
-    if (semestreFilter) params.append('semestre', semestreFilter);
-    if (matiereFilter) params.append('matiere', matiereFilter);
-    if (statusFilter) params.append('status', statusFilter);
-    if (dateFilter) params.append('date', dateFilter);
-
-    fetch(`../db/get_pv_data.php?${params.toString()}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            if (!data || !data.success) {
-                throw new Error(data.message || 'No data received from server');
-            }
-            
-            // Filter out unwanted matières from the response
-            const filteredPVs = data.pvs.filter(pv => 
-                pv.matiere && 
-                !pv.matiere.toLowerCase().includes('ov envoyer')
-            );
-            
-            window.allPVs = filteredPVs;
-            displayPVData(filteredPVs);
-            updateFilterUI();
-        })
-        .catch(error => {
-            console.error('Error fetching filtered PV data:', error);
-            
-            if (window.allPVs && window.allPVs.length > 0) {
-                const filteredPVs = clientSideFilterPVs(window.allPVs);
-                displayPVData(filteredPVs);
-                showNotification('Filtrage côté client appliqué (erreur serveur)', 'warning');
-            } else {
-                pvContainer.innerHTML = `
-                    <div class="error-message">
-                        <p>Erreur lors du filtrage</p>
-                        <p>${error.message}</p>
-                        <button class="btn" onclick="fetchAllPVs()">Réessayer</button>
-                    </div>
-                `;
-            }
-        });
 }
 
 // Add this function to visually indicate active filters
@@ -671,7 +590,6 @@ function exportPVs() {
 }
 
 // Function to delete selected PVs
-// Function to delete selected PVs
 function deleteSelectedPVs() {
     const selectedPVs = document.querySelectorAll('.pv-item input[type="checkbox"]:checked');
     
@@ -682,29 +600,25 @@ function deleteSelectedPVs() {
     
     const confirmModal = document.getElementById('confirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
-    const confirmBtn = document.getElementById('confirmBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
     
-    // Mise à jour du contenu de la modale
-    confirmModal.querySelector('.modal-header h2').textContent = 'Confirmation de suppression';
+    // Préparer le message de confirmation
     confirmMessage.innerHTML = `
         <div class="warning-icon">
             <i class="fas fa-exclamation-triangle"></i>
         </div>
         <p>Vous êtes sur le point de supprimer <strong>${selectedPVs.length} PV(s)</strong>.</p>
-        <p class="warning-text">Cette action est irréversible. Voulez-vous vraiment continuer ?</p>
+        <p class="warning-text">Cette action est irréversible. Souhaitez-vous vraiment continuer ?</p>
     `;
     
     // Afficher la modale
     confirmModal.style.display = 'block';
     
-    // Gestion des événements
-    const handleConfirm = function() {
+    // Gérer la confirmation
+    const handleConfirm = () => {
         const pvIds = Array.from(selectedPVs).map(checkbox => 
             checkbox.closest('.pv-item').getAttribute('data-id')
         );
         
-        // Envoyer la requête de suppression au serveur
         fetch('../db/delete_pvs.php', {
             method: 'POST',
             headers: {
@@ -715,13 +629,10 @@ function deleteSelectedPVs() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Supprimer les éléments du DOM
                 selectedPVs.forEach(checkbox => {
-                    const pvItem = checkbox.closest('.pv-item');
-                    if (pvItem) pvItem.remove();
+                    checkbox.closest('.pv-item').remove();
                 });
                 
-                // Mettre à jour les PVs stockés
                 if (window.allPVs) {
                     window.allPVs = window.allPVs.filter(pv => !pvIds.includes(pv.idSurveillance.toString()));
                 }
@@ -736,174 +647,19 @@ function deleteSelectedPVs() {
         });
         
         closeAllModals();
-        
-        // Nettoyer les gestionnaires d'événements
-        confirmBtn.removeEventListener('click', handleConfirm);
-        cancelBtn.removeEventListener('click', handleCancel);
     };
     
-    const handleCancel = function() {
-        closeAllModals();
-        confirmBtn.removeEventListener('click', handleConfirm);
-        cancelBtn.removeEventListener('click', handleCancel);
-    };
+    // Ajouter les gestionnaires d'événements
+    document.getElementById('confirmBtn').onclick = handleConfirm;
+    document.getElementById('cancelBtn').onclick = closeAllModals;
+    confirmModal.querySelector('.close-btn').onclick = closeAllModals;
     
-    // Ajouter les nouveaux gestionnaires d'événements
-    confirmBtn.addEventListener('click', handleConfirm);
-    cancelBtn.addEventListener('click', handleCancel);
-    
-    // Gestion de la fermeture via le bouton X ou en cliquant à l'extérieur
-    const closeBtn = confirmModal.querySelector('.close-btn');
-    closeBtn.onclick = function() {
-        closeAllModals();
-        confirmBtn.removeEventListener('click', handleConfirm);
-        cancelBtn.removeEventListener('click', handleCancel);
-    };
-    
+    // Fermer en cliquant à l'extérieur
     window.onclick = function(event) {
         if (event.target === confirmModal) {
             closeAllModals();
-            confirmBtn.removeEventListener('click', handleConfirm);
-            cancelBtn.removeEventListener('click', handleCancel);
         }
     };
-}
-// Function to approve a batch of PVs
-function batchApprove() {
-    const selectedPVs = document.querySelectorAll('.pv-item input[type="checkbox"]:checked');
-    
-    if (selectedPVs.length === 0) {
-        showNotification('Veuillez sélectionner au moins un PV à approuver.', 'warning');
-        return;
-    }
-    
-    const confirmMessage = document.getElementById('confirmMessage');
-    confirmMessage.textContent = `Êtes-vous sûr de vouloir approuver ${selectedPVs.length} PV(s) ?`;
-    
-    const confirmBtn = document.getElementById('confirmBtn');
-    confirmBtn.onclick = function() {
-        const pvIds = Array.from(selectedPVs).map(checkbox => 
-            checkbox.closest('.pv-item').getAttribute('data-id')
-        );
-        
-        // Send approval request to server
-        fetch('../db/approve_pvs.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ids: pvIds })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update UI to reflect new status
-                selectedPVs.forEach(checkbox => {
-                    const pvItem = checkbox.closest('.pv-item');
-                    if (pvItem) {
-                        pvItem.setAttribute('data-status', 'verified');
-                        pvItem.className = pvItem.className.replace(/pending|rejected/g, '') + ' verified';
-                        
-                        const titleEl = pvItem.querySelector('.pv-title');
-                        const oldIcon = titleEl.querySelector('i');
-                        if (oldIcon) oldIcon.remove();
-                        
-                        titleEl.insertAdjacentHTML('afterbegin', '<i class="fas fa-check-circle" title="Vérifié"></i>');
-                    }
-                });
-                
-                // Update status in stored PVs
-                if (window.allPVs) {
-                    pvIds.forEach(id => {
-                        const pvIndex = window.allPVs.findIndex(pv => pv.idSurveillance.toString() === id);
-                        if (pvIndex !== -1) {
-                            window.allPVs[pvIndex].status = 'verified';
-                        }
-                    });
-                }
-                
-                showNotification(`${pvIds.length} PV(s) approuvé(s) avec succès.`, 'success');
-            } else {
-                showNotification(data.message || 'Erreur lors de l\'approbation', 'error');
-            }
-        })
-        .catch(error => {
-            showNotification('Erreur de connexion lors de l\'approbation', 'error');
-        });
-        
-        closeAllModals();
-    };
-    
-    document.getElementById('confirmModal').style.display = 'block';
-}
-
-// Function to reject a batch of PVs
-function batchReject() {
-    const selectedPVs = document.querySelectorAll('.pv-item input[type="checkbox"]:checked');
-    
-    if (selectedPVs.length === 0) {
-        showNotification('Veuillez sélectionner au moins un PV à rejeter.', 'warning');
-        return;
-    }
-    
-    const confirmMessage = document.getElementById('confirmMessage');
-    confirmMessage.textContent = `Êtes-vous sûr de vouloir rejeter ${selectedPVs.length} PV(s) ?`;
-    
-    const confirmBtn = document.getElementById('confirmBtn');
-    confirmBtn.onclick = function() {
-        const pvIds = Array.from(selectedPVs).map(checkbox => 
-            checkbox.closest('.pv-item').getAttribute('data-id')
-        );
-        
-        // Send rejection request to server
-        fetch('../db/reject_pvs.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ ids: pvIds })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update UI to reflect new status
-                selectedPVs.forEach(checkbox => {
-                    const pvItem = checkbox.closest('.pv-item');
-                    if (pvItem) {
-                        pvItem.setAttribute('data-status', 'rejected');
-                        pvItem.className = pvItem.className.replace(/pending|verified/g, '') + ' rejected';
-                        
-                        const titleEl = pvItem.querySelector('.pv-title');
-                        const oldIcon = titleEl.querySelector('i');
-                        if (oldIcon) oldIcon.remove();
-                        
-                        titleEl.insertAdjacentHTML('afterbegin', '<i class="fas fa-times-circle" title="Rejeté"></i>');
-                    }
-                });
-                
-                // Update status in stored PVs
-                if (window.allPVs) {
-                    pvIds.forEach(id => {
-                        const pvIndex = window.allPVs.findIndex(pv => pv.idSurveillance.toString() === id);
-                        if (pvIndex !== -1) {
-                            window.allPVs[pvIndex].status = 'rejected';
-                        }
-                    });
-                }
-                
-                showNotification(`${pvIds.length} PV(s) rejeté(s).`, 'warning');
-            } else {
-                showNotification(data.message || 'Erreur lors du rejet', 'error');
-            }
-        })
-        .catch(error => {
-            showNotification('Erreur de connexion lors du rejet', 'error');
-        });
-        
-        closeAllModals();
-    };
-    
-    document.getElementById('confirmModal').style.display = 'block';
 }
 
 // Function to close all modals
