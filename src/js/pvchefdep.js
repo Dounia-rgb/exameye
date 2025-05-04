@@ -671,6 +671,7 @@ function exportPVs() {
 }
 
 // Function to delete selected PVs
+// Function to delete selected PVs
 function deleteSelectedPVs() {
     const selectedPVs = document.querySelectorAll('.pv-item input[type="checkbox"]:checked');
     
@@ -679,16 +680,31 @@ function deleteSelectedPVs() {
         return;
     }
     
+    const confirmModal = document.getElementById('confirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
-    confirmMessage.textContent = `Êtes-vous sûr de vouloir supprimer ${selectedPVs.length} PV(s) ?`;
-    
     const confirmBtn = document.getElementById('confirmBtn');
-    confirmBtn.onclick = function() {
+    const cancelBtn = document.getElementById('cancelBtn');
+    
+    // Mise à jour du contenu de la modale
+    confirmModal.querySelector('.modal-header h2').textContent = 'Confirmation de suppression';
+    confirmMessage.innerHTML = `
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <p>Vous êtes sur le point de supprimer <strong>${selectedPVs.length} PV(s)</strong>.</p>
+        <p class="warning-text">Cette action est irréversible. Voulez-vous vraiment continuer ?</p>
+    `;
+    
+    // Afficher la modale
+    confirmModal.style.display = 'block';
+    
+    // Gestion des événements
+    const handleConfirm = function() {
         const pvIds = Array.from(selectedPVs).map(checkbox => 
             checkbox.closest('.pv-item').getAttribute('data-id')
         );
         
-        // Send delete request to server
+        // Envoyer la requête de suppression au serveur
         fetch('../db/delete_pvs.php', {
             method: 'POST',
             headers: {
@@ -699,15 +715,13 @@ function deleteSelectedPVs() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Remove deleted items from DOM
+                // Supprimer les éléments du DOM
                 selectedPVs.forEach(checkbox => {
                     const pvItem = checkbox.closest('.pv-item');
-                    if (pvItem) {
-                        pvItem.remove();
-                    }
+                    if (pvItem) pvItem.remove();
                 });
                 
-                // Also remove from stored PVs
+                // Mettre à jour les PVs stockés
                 if (window.allPVs) {
                     window.allPVs = window.allPVs.filter(pv => !pvIds.includes(pv.idSurveillance.toString()));
                 }
@@ -722,9 +736,37 @@ function deleteSelectedPVs() {
         });
         
         closeAllModals();
+        
+        // Nettoyer les gestionnaires d'événements
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
     };
     
-    document.getElementById('confirmModal').style.display = 'block';
+    const handleCancel = function() {
+        closeAllModals();
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
+    };
+    
+    // Ajouter les nouveaux gestionnaires d'événements
+    confirmBtn.addEventListener('click', handleConfirm);
+    cancelBtn.addEventListener('click', handleCancel);
+    
+    // Gestion de la fermeture via le bouton X ou en cliquant à l'extérieur
+    const closeBtn = confirmModal.querySelector('.close-btn');
+    closeBtn.onclick = function() {
+        closeAllModals();
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
+    };
+    
+    window.onclick = function(event) {
+        if (event.target === confirmModal) {
+            closeAllModals();
+            confirmBtn.removeEventListener('click', handleConfirm);
+            cancelBtn.removeEventListener('click', handleCancel);
+        }
+    };
 }
 
 // Function to approve a batch of PVs

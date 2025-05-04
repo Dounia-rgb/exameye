@@ -7,12 +7,17 @@ if (!$pvId) {
 }
 
 // Connexion à la base de données
-require_once 'config.php'; // Utilise votre fichier config.php existant
+require_once 'config.php';
 
 try {
-    // Utilise directement la connexion $conn créée dans config.php
     // Récupération des données du PV
-    $stmt = $conn->prepare("SELECT * FROM surveillance WHERE idSurveillance = ?");
+    $stmt = $conn->prepare("
+        SELECT s.*, u.nom AS nomProfesseur, sa.localisation
+        FROM surveillance s
+        LEFT JOIN utilisateur u ON s.idProfesseur = u.idUtilisateur
+        LEFT JOIN salle sa ON s.idSalle = sa.idSalle
+        WHERE s.idSurveillance = ?
+    ");
     $stmt->execute([$pvId]);
     $pvData = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -20,16 +25,28 @@ try {
         die("PV non trouvé");
     }
 
-    // Récupération des surveillants
-    $stmt = $conn->prepare("SELECT nom FROM surveillants WHERE idSurveillance = ?");
-    $stmt->execute([$pvId]);
-    $surveillants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Récupération des surveillants (depuis le champ emargement de la table surveillance)
+    $surveillants = [];
+    if (!empty($pvData['emargement'])) {
+        $emargements = json_decode($pvData['emargement'], true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($emargements)) {
+            foreach ($emargements as $emargement) {
+                if (!empty($emargement['nom'])) {
+                    $surveillants[] = ['nom' => $emargement['nom']];
+                }
+            }
+        } else {
+            // Fallback si le JSON est invalide - traitement comme texte simple
+            $names = explode(',', $pvData['emargement']);
+            foreach ($names as $name) {
+                $surveillants[] = ['nom' => trim($name)];
+            }
+        }
+    }
 
 } catch (PDOException $e) {
     die("Erreur de base de données: " . $e->getMessage());
 }
-
-// Début du HTML avec le style approprié
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -124,7 +141,7 @@ try {
             <th>Semestre</th>
             <td><?= htmlspecialchars($pvData['semestre'] ?? 'Non spécifié') ?></td>
             <th>Année</th>
-            <td><?= htmlspecialchars($pvData['annee'] ?? 'Non spécifié') ?></td>
+            <td><?= htmlspecialchars($pvData['anneeUniversitaire'] ?? 'Non spécifié') ?></td>
             <th>Cycle</th>
             <td><?= htmlspecialchars($pvData['cycle'] ?? 'Non spécifié') ?></td>
         </tr>
@@ -163,10 +180,13 @@ try {
     </table>
 
     <div>
-        <p><strong>Nombre d'étudiants présents :</strong> <?= htmlspecialchars($pvData['nombreEtudiants'] ?? 'Non spécifié') ?></p>
-        <p><strong>Nombre de copies distribuées :</strong> <?= htmlspecialchars($pvData['copiesDistribuees'] ?? 'Non spécifié') ?></p>
-        <p><strong>Nombre de copies rendues :</strong> <?= htmlspecialchars($pvData['copiesRendues'] ?? 'Non spécifié') ?></p>
-        <p><strong>Incidents signalés :</strong> <?= isset($pvData['incidents']) ? ($pvData['incidents'] ? 'Oui' : 'Non') : 'Non spécifié' ?></p>
+        <p><strong>Nombre d'étudiants présents :</strong> <?= htmlspecialchars($pvData['nombreEtudiantsPresents'] ?? 'Non spécifié') ?></p>
+        <p><strong>Nombre de copies rendues :</strong> <?= htmlspecialchars($pvData['nombreCopiesRendues'] ?? 'Non spécifié') ?></p>
+        <p><strong>Étudiants sans carte d'identité :</strong> <?= htmlspecialchars($pvData['nombreEtudiantsSansCI'] ?? '0') ?></p>
+        <p><strong>Incidents signalés :</strong> <?= !empty($pvData['incidents']) ? 'Oui' : 'Non' ?></p>
+        <?php if (!empty($pvData['incidents'])): ?>
+            <p><strong>Détails des incidents :</strong> <?= htmlspecialchars($pvData['incidents']) ?></p>
+        <?php endif; ?>
     </div>
 
     <div class="signature-section">
