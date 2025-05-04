@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExamEye Planning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="../src/css/planning.css" />
+    <link rel="stylesheet" href="/src/css/prof.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Assurez-vous que le chemin du script correspond au nom réel du fichier -->
+    <script src="../src/js/planning.js" defer></script>
+
+    <div class="sidebar left-sidebar">
+        <div class="logo">
+            <img src="/src/img/logo.jpg" alt="ExamEye Logo" />
+            <h1>ExamEye</h1>
+        </div>
+        <ul class="menu">
+            <li><i class="fas fa-home"></i>
+                <a href="prof.html">Accueil</a>
+            </li>
+            <li class="active">
+                <i class="fas fa-table"></i>
+                <a href="#">Planning</a>
+            </li>
+            <li><i class="fas fa-file-alt"></i>
+                <a href="pv.html">PV d'examen</a>
+            </li>
+            <li><i class="fas fa-envelope-open-text"></i>
+                <a href="Convocation.html">Convocation</a>
+            </li>
+            <li><i class="fas fa-bell"></i>
+                <a href="notification.html">Notifications</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+        <div class="title">Online Exam Surveil</div>
+        <div class="main-content">
+            <div class="header"><i class="fas fa-table"></i> Planning
+                <div class="account-container" id="accountContainer">
+                    <div class="account-icon" id="accountIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <ul>
+                            <li><i class="fas fa-user"></i>
+                                <a href="compte.html" style="text-decoration: none; color: inherit;">MY ACCOUNT</a>
+                            </li>
+                            <li><i class="fas fa-cog"></i> Paramètres</li>
+                            <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planning Paper Container -->
+            <div class="planning-paper">
+                <div class="planning-header">
+                    <img src="../src/img/usto.jpg" alt="USTO Logo" class="usto-logo" />
+                    <div class="planning-texts">
+                        <h2 class="planning-title" id="planning-title">Planning des Examens</h2>
+                        <h3 class="faculty-title">Faculté des mathématiques et informatique</h3>
+                        <p class="ref">REF: /SURVF/MID-INF/PED/USTO/</p>
+                        <h3 class="planning-heading">PLANNING DES EXAMENS - SESSION 1: 2023/2024</h3>
+                        <p class="subtitle">Licence & Master - SEMESTRE 1</p>
+                    </div>
+                </div>
+
+                <!-- Planning Table -->
+                <div class="planning-display-container">
+                    <h3>Planning Exam</h3>
+                    <table class="planning-table" id="table-affichage">
+                        <thead>
+                            <tr>
+                                <th>Semestre</th>
+                                <th>Date</th>
+                                <th>Heure Début</th>
+                                <th>Heure Fin</th>
+                                <th>Matière</th>
+                                <th>Salle</th>
+                                <th>Groupe</th>
+                            </tr>
+                        </thead>
+                        <tbody id="planning-body">
+                            <!-- Dynamic content inserted here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script pour gérer le dropdown du compte utilisateur
+        document.addEventListener('DOMContentLoaded', function() {
+            const accountIcon = document.getElementById('accountIcon');
+            const accountDropdown = document.getElementById('accountDropdown');
+            
+            accountIcon.addEventListener('click', function() {
+                accountDropdown.classList.toggle('show');
+            });
+            
+            // Fermer le dropdown quand on clique ailleurs
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('.account-icon') && !event.target.closest('.account-icon')) {
+                    if (accountDropdown.classList.contains('show')) {
+                        accountDropdown.classList.remove('show');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

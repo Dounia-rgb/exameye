@@ -1,0 +1,231 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    background: #f7f9fc;
+    min-height: 100vh;
+}
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #0b084d, #030339);
+    padding: 15px 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.logo {
+    display: flex;
+    align-items: center;
+}
+.logo img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.logo h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.5px;
+}
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+.nav-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 400;
+    border: none;
+}
+.nav-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    font-weight: 500;
+    border-bottom: 2px solid #4aade9;
+}
+.account-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.account-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #3b4d69;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+}
+.account-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 220px;
+    padding: 10px;
+    z-index: 1000;
+}
+.account-dropdown.show {
+    display: block;
+}
+.account-dropdown ul {
+    list-style: none;
+}
+.account-dropdown li {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.account-dropdown li:hover {
+    background: #f0f5ff;
+}
+.account-dropdown li i {
+    color: #1e3a8a;
+    width: 16px;
+    text-align: center;
+}
+.main-container {
+    padding: 25px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.title {
+    font-size: 22px;
+    color: #1e293b;
+    font-weight: 600;
+    position: relative;
+    padding-left: 15px;
+}
+.title:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 22px;
+    width: 4px;
+    background: #1e3a8a;
+    border-radius: 2px;
+}
+.management-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    border: 1px solid #eaecef;
+}
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+.notification-content {
+    flex-grow: 1;
+}
+.notification-actions {
+    display: flex;
+    gap: 10px;
+}
+.action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+.accept-btn {
+    background-color: #10b981;
+    color: white;
+}
+.reject-btn {
+    background-color: #ef4444;
+    color: white;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #64748b;
+    font-weight: 600;
+}
+.user-name {
+    font-weight: 500;
+    color: #1e293b;
+}
+.request-text {
+    color: #64748b;
+    font-size: 14px;
+    padding-left: 50px;
+}
+.no-notifications {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+    font-style: italic;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1;
+}
+.notification-time {
+    font-size: 12px;
+    color: #94a3b8;
+    padding-left: 50px;
+    margin-top: 5px;
+}
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 10px;
+}
+.badge-new {
+    background-color: #3b82f6;
+    color: white;
+}

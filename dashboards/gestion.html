@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamEye Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/css/gestion.css">
+</head>
+<body>
+    <script src="/src/js/gestion.js" defer> </script>
+    
+    <div class="top-nav">
+        <div class="logo">
+            <img src="/src/img/logo.jpg" alt="ExamEye Logo">
+            <h1>ExamEye Administration</h1>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="#" class="nav-btn active">
+                <i class="fas fa-users-cog"></i>
+                Gestion des comptes
+            </a>
+            <a href="notificationgestion.html" class="nav-btn">
+                <i class="fas fa-user-clock"></i>
+                Demandes
+            </a>
+        </div>
+        
+        <div class="account-container" id="accountContainer">
+            <div class="account-icon" id="accountIcon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="account-dropdown" id="accountDropdown">
+                <ul>
+                    <li>
+                        <i class="fas fa-user-circle"></i>
+                        <a href="compte.html" style="text-decoration: none; color: inherit;">Mon profil</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-sign-out-alt"></i>
+                        Déconnexion
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dashboard-header">
+            <div class="title">Gestion des Comptes Utilisateurs</div>
+        </div>
+        
+        <div class="management-section">
+            <div class="tab-container">
+                <div class="tab active" id="professeurs-tab">Professeurs</div>
+                <div class="tab" id="chefs-tab">Chefs de Département</div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Rechercher par nom, email ou matière...">
+                <button id="searchButton">
+                    <i class="fas fa-search"></i>
+                    Rechercher
+                </button>
+            </div>
+
+            <div id="professeurs-table">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Nom Complet</th>
+                            <th>Email</th>
+                            <th>Matière</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="professeursTableBody">
+                        <tr>
+                            <td>Ahmed Benali</td>
+                            <td>ahmed.benali@univ.edu</td>
+                            <td>Programmation Java</td>
+                            <td class="action-cell">
+                                <button class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Modifier
+                                </button>
+                                <button class="action-btn delete-btn">
+                                    <i class="fas fa-trash"></i>
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Fatima Zohra</td>
+                            <td>fatima.zohra@univ.edu</td>
+                            <td>Algèbre linéaire</td>
+                            <td class="action-cell">
+                                <button class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Modifier
+                                </button>
+                                <button class="action-btn delete-btn">
+                                    <i class="fas fa-trash"></i>
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Karim Bouzidi</td>
+                            <td>karim.bouzidi@univ.edu</td>
+                            <td>Mécanique quantique</td>
+                            <td class="action-cell">
+                                <button class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Modifier
+                                </button>
+                                <button class="action-btn delete-btn">
+                                    <i class="fas fa-trash"></i>
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="noResultsProfs" class="no-results" style="display: none;">
+                    <i class="fas fa-search fa-lg" style="margin-right: 10px;"></i>
+                    Aucun résultat trouvé pour cette recherche.
+                </div>
+            </div>
+
+            <div id="chefs-table" style="display: none;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Nom Complet</th>
+                            <th>Email</th>
+                            <th>Département</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="chefsTableBody">
+                        <tr>
+                            <td>Mohamed El Amrani</td>
+                            <td>mohamed.elamrani@univ.edu</td>
+                            <td>Informatique</td>
+                            <td class="action-cell">
+                                <button class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Modifier
+                                </button>
+                                <button class="action-btn delete-btn">
+                                    <i class="fas fa-trash"></i>
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Samira Khadraoui</td>
+                            <td>samira.khadraoui@univ.edu</td>
+                            <td>Mathématiques</td>
+                            <td class="action-cell">
+                                <button class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Modifier
+                                </button>
+                                <button class="action-btn delete-btn">
+                                    <i class="fas fa-trash"></i>
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="noResultsChefs" class="no-results" style="display: none;">
+                    <i class="fas fa-search fa-lg" style="margin-right: 10px;"></i>
+                    Aucun résultat trouvé pour cette recherche.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Modifier l'utilisateur</div>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editName">Nom Complet</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editField" id="fieldLabel">Matière</label>
+                    <input type="text" id="editField" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel" id="cancelEdit">Annuler</button>
+                    <button type="submit" class="modal-btn save">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+</body>
+</html>

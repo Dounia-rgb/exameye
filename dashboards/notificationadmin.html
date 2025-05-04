@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamEye Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/src/css/chefdep.css">
+    <link rel="stylesheet" href="../src/css/notificationadmin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="../src/js/send_notification.js" defer></script>
+</head>
+
+<body>
+    <div class="sidebar left-sidebar">
+        <div class="logo">
+            <img src="../src/img/logo.jpg" alt="ExamEye Logo">
+            <h1>ExamEye</h1>
+        </div>
+        <ul class="menu">
+            <li><i class="fas fa-home"></i>
+                <a href="administrateur.html">Accueil</a>
+            </li>
+            <li><i class="fas fa-table"></i>
+                <a href="planningadmin.html">Planning</a>
+            </li>
+            <li><i class="fas fa-file-alt"></i>
+                <a href="pvadmin.html">PV d'examen</a>
+            </li>
+            <li><i class="fas fa-envelope-open-text"></i>
+                <a href="convocationadmin.html">Convocation</a>
+            </li>
+            <li class="active"><i class="fas fa-bell"></i>
+                <a href="#">Notifications</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+        <div class="title">Online Exam Surveil</div>
+        <div class="main-content">
+            <div class="header">
+                <i class="fas fa-bell"></i>
+                Notifications
+                <div class="account-container" id="accountContainer">
+                    <div class="account-icon" id="accountIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <ul>
+                            <li><i class="fas fa-user"></i>
+                                <a href="compte.html" style="text-decoration: none; color: inherit;"> MY ACCOUNT</a>
+                            </li>
+                            <li><i class="fas fa-cog"></i> Paramètres</li>
+                            <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-panel">
+                <div class="card">
+                    <h2>Envoyer une Notification</h2>
+                    
+                    <div class="predefined-messages">
+                        <h3>Messages prédéfinis</h3>
+                        <div class="message-buttons">
+                            <button class="message-btn" data-message="Rappel: Veuillez confirmer votre disponibilité pour la surveillance de l'examen prévu le [DATE].">
+                                Rappel de disponibilité
+                            </button>
+                            <button class="message-btn" data-message="L'examen de [MATIÈRE] aura lieu le [DATE] à [HEURE]. Merci de vous présenter 30 minutes avant le début.">
+                                Information d'examen
+                            </button>
+                            <button class="message-btn" data-message="Une réunion concernant l'organisation des examens aura lieu le [DATE] à [HEURE] dans la salle [SALLE].">
+                                Réunion d'organisation
+                            </button>
+                            <button class="message-btn" data-message="Les copies de l'examen de [MATIÈRE] doivent être remises avant le [DATE].">
+                                Remise des copies
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="message-area">
+                        <h3>Message personnalisé</h3>
+                        <textarea id="message-content" placeholder="Écrivez votre message ici..."></textarea>
+                    </div>
+                    
+                    <div class="recipients-section">
+                        <h3>Destinataires</h3>
+                        <button id="select-recipients" class="btn primary-btn">
+                            <i class="fas fa-user-plus"></i> Sélectionner des professeurs
+                        </button>
+                        <div class="selected-recipients-count">
+                            <span id="recipients-count">0</span> professeur(s) sélectionné(s)
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="send-notification" class="btn primary-btn">
+                            <i class="fas fa-paper-plane"></i> Envoyer
+                        </button>
+                        <button id="clear-form" class="btn secondary-btn">
+                            <i class="fas fa-times"></i> Effacer
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card recent-notifications">
+                    <h2>Notifications récentes</h2>
+                    <div class="notification-list">
+                        <!-- Les notifications seront chargées dynamiquement ici -->
+                        <div class="loading-notifications">Chargement des notifications...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour sélectionner les professeurs -->
+    <div id="recipients-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sélectionner les destinataires</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="search-box">
+                    <input type="text" id="professor-search" placeholder="Rechercher un professeur...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="select-options">
+                    <button id="select-all" class="btn small-btn">Tout sélectionner</button>
+                    <button id="deselect-all" class="btn small-btn">Tout désélectionner</button>
+                </div>
+                <div class="professors-list" id="professors-container">
+                    <!-- Sera rempli par JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-selection" class="btn primary-btn">Confirmer</button>
+                <button id="cancel-selection" class="btn secondary-btn">Annuler</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

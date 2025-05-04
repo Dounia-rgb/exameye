@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamEye Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/src/css/compte.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    </style>
+</head>
+<body>
+  <script src="/src/js/compte.js" defer></script>
+    <div class="main-container">
+        <div class="title">Online Exam Surveil</div>
+        <div class="main-content">
+            <div class="profile-container">
+                <h2>Mon Profil</h2>
+                
+                <div class="profile-info">
+                    <label>Nom :</label>
+                    <span id="nom">Dupont</span>
+                </div>
+
+                <div class="profile-info">
+                    <label>Prénom :</label>
+                    <span id="prenom">Jean</span>
+                </div>
+
+                <div class="profile-info">
+                    <label>Email :</label>
+                    <span id="email">jean.dupont@example.com</span>
+                </div>
+
+                <div class="profile-info">
+                    <label>Matières enseignées :</label>
+                    <ul id="subjectList"></ul>
+                    
+                    <button class="small-btn" onclick="toggleAddMatiereInput()">
+                        <i class="fas fa-plus"></i> Ajouter une matière
+                    </button>
+
+                    <div id="addMatiereInputContainer" style="display: none;">
+                        <input type="text" id="newMatiereInput" placeholder="Nouvelle matière" />
+                        <button class="small-btn" onclick="addMatiere()">
+                            <i class="fas fa-check"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-info">
+                    <label>Mot de passe :</label>
+                    <div class="password-container">
+                        <span id="password">********</span>
+                        <i class="fas fa-eye eye-icon" onclick="togglePassword()"></i>
+                    </div>
+                </div>
+
+                <button onclick="modifierProfil()">
+                    <i class="fas fa-edit"></i> Modifier le Profil
+                </button>
+            </div>
+        </div>
+    </div>
+
+  
+</body>
+</html>

@@ -1,0 +1,173 @@
+/* === Main Container === */
+.notifications-container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    margin-top: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* === Page Title === */
+.notifications-container h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2e3b55;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* === Filter Buttons Bar === */
+.notification-filters {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #e0e4ff;
+    color: #2e3b55;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background-color: #c8d0ff;
+    color: #1c2b48;
+}
+
+.filter-btn.active {
+    background-color: #2e3b55;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(46, 59, 85, 0.2);
+}
+
+/* === Notification List === */
+#notificationsList {
+    list-style: none;
+    padding: 0;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+/* === Individual Notification === */
+.notification-item {
+    background: #f8f9fc;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+    padding: 18px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.notification-item:hover {
+    background-color: #edf3ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* === Text Layout Inside Notification === */
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.notification-header strong {
+    font-size: 16px;
+    color: #333;
+}
+
+.notification-body {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+    line-height: 1.5;
+}
+
+.notification-date {
+    font-size: 12px;
+    color: #888;
+}
+
+/* === Delete Button === */
+.delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: #bbb;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.delete-btn:hover {
+    color: #e74c3c;
+}
+
+/* === Unread Notification === */
+.notification-item.unread {
+    border-left: 4px solid #2e86de;
+    background-color: #eef5ff;
+}
+
+/* === Empty State === */
+.empty-notifications {
+    text-align: center;
+    padding: 60px 20px;
+    color: #aaa;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.empty-notifications i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+/* === Animation for New Notification === */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+.notification-item.new {
+    animation: pulse 2s infinite;
+}
+
+/* === Responsive Fixes === */
+@media (max-width: 768px) {
+    .notifications-container {
+        padding: 20px;
+    }
+
+    .notification-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .delete-btn {
+        top: 10px;
+        right: 10px;
+    }
+}
+.notif-title {
+    text-align: center;
+    color: #2e3b55;
+    font-size: 24px;
+    margin-bottom: 30px;
+}

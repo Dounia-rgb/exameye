@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ExamEye - Système de gestion des PV d'examen pour les administrateurs">
+    <title>ExamEye - Gestion des PV d'examen</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../src/img/favicon.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../src/css/chefdep.css">
+    <link rel="stylesheet" href="../src/css/pvchefdep.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Fallback for no JavaScript -->
+    <noscript>
+        <div class="no-js-warning">
+            Cette application nécessite JavaScript pour fonctionner correctement. Veuillez l'activer dans votre navigateur.
+        </div>
+    </noscript>
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" aria-hidden="true">
+        <div class="spinner" role="status">
+            <span class="sr-only">Chargement...</span>
+        </div>
+    </div>
+
+    <!-- Notification Element -->
+    <div id="notification" role="alert" aria-live="assertive"></div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar left-sidebar" role="navigation">
+        <div class="logo">
+            <img src="../src/img/logo.jpg" alt="ExamEye Logo">
+            <h1>ExamEye</h1>
+        </div>
+        <ul class="menu">
+            <li><i class="fas fa-home" aria-hidden="true"></i>
+                <a href="administrateur.html">Accueil</a>
+            </li>
+            <li><i class="fas fa-table" aria-hidden="true"></i>
+                <a href="planningadmin.html">Planning</a>
+            </li>
+           <li class="active"><i class="fas fa-bell" aria-hidden="true"></i>
+                <a href="#" aria-current="page">PV d'examen</a>
+           </li>
+            <li><i class="fas fa-envelope-open-text" aria-hidden="true"></i>
+                <a href="convocationadmin.html">Convocation</a>
+            </li>
+             <li><i class="fas fa-file-alt" aria-hidden="true"></i>
+                <a href="notificationadmin.html">Notifications</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-container" role="main">
+        <div class="title">
+            <i class="fas fa-file-contract" aria-hidden="true"></i>
+            Gestion des PV d'examen
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <i class="fas fa-file-alt" aria-hidden="true"></i>
+                    PV d'examen par matière
+                </div>
+                <div class="account-container" id="accountContainer">
+                  <div class="account-icon" id="accountIcon" tabindex="0" aria-label="Menu du compte" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-user" aria-hidden="true"></i>
+                  </div>
+                  <div class="account-dropdown" id="accountDropdown" role="menu" aria-labelledby="accountIcon">
+                      <ul>
+                          <li role="menuitem"><i class="fas fa-user" aria-hidden="true"></i>
+                              <a href="compte.html" style="text-decoration: none; color: inherit;">MON COMPTE</a>
+                          </li>
+                          <li role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Paramètres</li>
+                          <li role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Déconnexion</li>
+                      </ul>
+                  </div>
+              </div>
+            </div>
+            
+            <!-- Search and filter section -->
+            <div class="search-filter" role="search">
+                <input type="text" class="search-box" placeholder="Rechercher une matière, un professeur ou un groupe..." aria-label="Rechercher">
+                <select class="filter-select" name="semestre" aria-label="Filtrer par semestre">
+                    <option value="">Tous les semestres</option>
+                    <option value="S1">Semestre 1</option>
+                    <option value="S2">Semestre 2</option>
+                    <option value="S3">Semestre 3</option>
+                    <option value="S4">Semestre 4</option>
+                </select>
+                <select class="filter-select" name="matiere" aria-label="Filtrer par matière">
+                    <option value="">Toutes les matières</option>
+                    <option value="algorithmique">asd</option>
+                    <option value="bdd">Base de Données</option>
+                    <option value="reseaux">Réseaux Informatiques</option>
+                    <option value="systeme">Systèmes d'Exploitation</option>
+                </select>
+                <select class="filter-select" name="date" aria-label="Filtrer par date">
+                    <option value="">Toutes les dates</option>
+                    <option value="today">Aujourd'hui</option>
+                    <option value="yesterday">Hier</option>
+                    <option value="thisWeek">Cette semaine</option>
+                    <option value="thisMonth">Ce mois</option>
+                </select>
+                <button class="btn view-btn" id="filterBtn" aria-label="Appliquer les filtres">
+                    <i class="fas fa-filter" aria-hidden="true"></i> Filtrer
+                </button>
+                <button class="btn download-btn" id="exportBtn" aria-label="Exporter les données">
+                    <i class="fas fa-file-export" aria-hidden="true"></i> Exporter
+                </button>
+            </div>
+            
+            <!-- Batch actions -->
+            <div class="batch-actions" role="region" aria-label="Actions groupées">
+                <div class="select-all">
+                    <input type="checkbox" id="selectAll" aria-label="Sélectionner tous les PV">
+                    <label for="selectAll">Tout sélectionner</label>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn approve-btn" id="batchApproveBtn" aria-label="Approuver les PV sélectionnés">
+                        <i class="fas fa-check" aria-hidden="true"></i> Approuver
+                    </button>
+                    <button class="btn reject-btn" id="batchRejectBtn" aria-label="Rejeter les PV sélectionnés">
+                        <i class="fas fa-times" aria-hidden="true"></i> Rejeter
+                    </button>
+                    <button class="btn delete-btn" id="batchDeleteBtn" aria-label="Supprimer les PV sélectionnés">
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i> Supprimer
+                    </button>
+                    <button class="btn upload-btn" id="uploadNewPVBtn" aria-label="Télécharger un nouveau PV">
+                        <i class="fas fa-upload" aria-hidden="true"></i> Nouveau PV
+                    </button>
+                </div>
+            </div>
+            
+            <!-- PV organized by subject -->
+            <div class="pv-wrapper">
+                <div class="pv-container" role="region" aria-label="Liste des PV">
+                    <!-- PV content will be loaded dynamically -->
+                    <div class="loading initial-load">
+                        <div class="spinner"></div>
+                        <p>Chargement des PVs...</p>
+                    </div>
+                    <div class="empty-state" id="emptyState" style="display:none;">
+                        <i class="fas fa-folder-open" aria-hidden="true"></i>
+                        <p>Aucun PV trouvé.</p>
+                        <button class="btn" id="resetFiltersBtn">Réinitialiser les filtres</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination controls -->
+            <div class="pagination-controls" aria-label="Pagination" role="navigation">
+                <button class="btn" id="prevPage" disabled>
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i> Précédent
+                </button>
+                <span id="pageInfo">Page <span id="currentPage">1</span> sur <span id="totalPages">1</span></span>
+                <button class="btn" id="nextPage" disabled>
+                    Suivant <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upload PV Modal -->
+    <div id="uploadModal" class="modal" style="display: none;" role="dialog" aria-labelledby="uploadModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Fermer">&times;</span>
+            <div class="modal-header">
+                <h2 id="uploadModalTitle">Télécharger un PV</h2>
+            </div>
+            <div class="modal-body">
+                <form id="uploadPVForm" enctype="multipart/form-data">
+                    <!-- CSRF Protection Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    
+                    <div class="form-group">
+                        <label for="pvFile" class="custom-file-upload">
+                            <i class="fas fa-file-upload" aria-hidden="true"></i> Sélectionner un fichier
+                            <input type="file" id="pvFile" name="pv_pdf" accept=".pdf" required>
+                        </label>
+                        <div class="file-feedback" id="fileInfo"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pvMatiere">Matière</label>
+                        <select id="pvMatiere" name="matiere" required>
+                            <option value="">Sélectionner une matière</option>
+                            <option value="algorithmique">asd</option>
+                            <option value="bdd">Base de Données</option>
+                            <option value="reseaux">Réseaux Informatiques</option>
+                            <option value="systeme">Systèmes d'Exploitation</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pvSemestre">Semestre</label>
+                        <select id="pvSemestre" name="semestre" required>
+                            <option value="">Sélectionner un semestre</option>
+                            <option value="S1">Semestre 1</option>
+                            <option value="S2">Semestre 2</option>
+                            <option value="S3">Semestre 3</option>
+                            <option value="S4">Semestre 4</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pvDate">Date de l'examen</label>
+                        <input type="date" id="pvDate" name="date" required>
+                    </div>
+                    
+                    <div class="form-error" id="uploadError"></div>
+                    <input type="hidden" id="pvId" name="idSurveillance">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn close-modal">Annuler</button>
+                <button id="uploadPVBtn" class="btn-primary" disabled>
+                    <i class="fas fa-upload" aria-hidden="true"></i> Télécharger
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PV Details Modal -->
+    <div id="detailsModal" class="modal details-modal" style="display: none;" role="dialog" aria-labelledby="detailsModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Fermer">&times;</span>
+            <div class="modal-header">
+                <h2 id="detailsModalTitle">Détails du PV</h2>
+            </div>
+            <div class="modal-body" id="detailsContent">
+                <!-- Details will be populated dynamically -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Chargement des détails...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn close-modal">Fermer</button>
+                <div class="admin-controls">
+                    <button class="btn approve-btn" id="approveBtn">
+                        <i class="fas fa-check" aria-hidden="true"></i> Approuver
+                    </button>
+                    <button class="btn reject-btn" id="rejectBtn">
+                        <i class="fas fa-times" aria-hidden="true"></i> Rejeter
+                    </button>
+                    <button class="btn edit-btn" id="editBtn">
+                        <i class="fas fa-edit" aria-hidden="true"></i> Modifier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" style="display: none;" role="dialog" aria-labelledby="confirmModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Fermer">&times;</span>
+            <div class="modal-header">
+                <h2 id="confirmModalTitle">Confirmation</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn close-modal">Annuler</button>
+                <button id="confirmBtn" class="btn-primary">Confirmer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit PV Modal -->
+    <div id="editModal" class="modal" style="display: none;" role="dialog" aria-labelledby="editModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Fermer">&times;</span>
+            <div class="modal-header">
+                <h2 id="editModalTitle">Modifier le PV</h2>
+            </div>
+            <div class="modal-body">
+                <form id="editPVForm">
+                    <!-- CSRF Protection Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" id="editPvId" name="idSurveillance">
+                    
+                    <div class="form-group">
+                        <label for="editMatiere">Matière</label>
+                        <select id="editMatiere" name="matiere" required>
+                            <option value="algorithmique">asd</option>
+                            <option value="bdd">Base de Données</option>
+                            <option value="reseaux">Réseaux Informatiques</option>
+                            <option value="systeme">Systèmes d'Exploitation</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editSemestre">Semestre</label>
+                        <select id="editSemestre" name="semestre" required>
+                            <option value="S1">Semestre 1</option>
+                            <option value="S2">Semestre 2</option>
+                            <option value="S3">Semestre 3</option>
+                            <option value="S4">Semestre 4</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editDate">Date</label>
+                        <input type="date" id="editDate" name="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editHeureDebut">Heure de début</label>
+                        <input type="time" id="editHeureDebut" name="heureDebut" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editHeureFin">Heure de fin</label>
+                        <input type="time" id="editHeureFin" name="heureFin" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editProfesseur">Professeur</label>
+                        <input type="text" id="editProfesseur" name="professeur" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editSalle">Salle</label>
+                        <input type="text" id="editSalle" name="salle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editIncidents">Incidents</label>
+                        <textarea id="editIncidents" name="incidents" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-error" id="editError"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn close-modal">Annuler</button>
+                <button id="saveEditBtn" class="btn-primary">
+                    <i class="fas fa-save" aria-hidden="true"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal" style="display: none;" role="dialog" aria-labelledby="helpModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Fermer">&times;</span>
+            <div class="modal-header">
+                <h2 id="helpModalTitle">Aide - Gestion des PV</h2>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>Recherche et filtrage</h3>
+                    <p>Utilisez la barre de recherche et les filtres pour trouver rapidement les PV dont vous avez besoin.</p>
+                </div>
+                <div class="help-section">
+                    <h3>Actions sur les PV</h3>
+                    <ul>
+                        <li><strong>Voir</strong> - Afficher les détails d'un PV</li>
+                        <li><strong>PDF</strong> - Télécharger le PV au format PDF</li>
+                        <li><strong>Imprimer</strong> - Imprimer le PV</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>Actions groupées</h3>
+                    <p>Sélectionnez plusieurs PV à l'aide des cases à cocher pour effectuer des actions groupées.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn close-modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed Help Button -->
+    <button class="help-btn" id="helpBtn" aria-label="Aide">
+        <i class="fas fa-question-circle" aria-hidden="true"></i>
+    </button>
+
+     <!-- Scripts -->
+     <script src="../src/js/pvchefdep.js" defer></script>
+</body>
+
+</html>

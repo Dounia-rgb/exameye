@@ -1,0 +1,28 @@
+.card {
+    background: rgba(255, 255, 255, 0.2); /* Fond semi-transparent */
+    backdrop-filter: blur(10px); /* Effet de flou */
+    padding: 20px;
+    border-radius: 15px; /* Arrondi plus doux */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre plus marquée */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+}
+
+.card:hover {
+    transform: scale(1.07); /* Effet de zoom plus fluide */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Effet de profondeur */
+    background-blend-mode: overlay; /* Mélange de couleur pour mieux voir le texte */
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

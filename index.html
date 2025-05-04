@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ExamEye - Plateforme universitaire de surveillance et gestion des examens présentiel">
+  <title>ExamEye | Portail académique</title>
+  <script src="/src/Js/tailwind.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/welcome.css">
+  <link href="css/tailwind.min.css" rel="stylesheet">
+  <link href="css/remixicon.css" rel="stylesheet">
+
+</head>
+<body>
+  <div class="wallpaper"></div>
+  <div class="overlay"></div>
+
+ 
+<header class="navbar" id="navbar">
+  <div class="container mx-auto px-6 py-2"> <!-- Reduced py-3 to py-2 -->
+    <div class="flex justify-between items-center">
+      <!-- Logo and ExamEye text aligned to top left -->
+      <div class="flex items-center">
+        <img src="/src/img/logo.jpg" alt="Logo ExamEye" class="h-8 w-8 rounded-full border border-blue-300/30" /> <!-- Smaller size -->
+        <div class="ml-2 flex flex-col justify-start"> <!-- Added justify-start -->
+          <span class="text-xl font-bold text-white leading-tight">ExamEye</span> <!-- Smaller text and tight leading -->
+          <span class="text-xs text-blue-200">Gestion académique</span>
+        </div>
+      </div>
+      
+      <div class="hidden md:flex items-center space-x-6"> 
+        <a href="#features" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Fonctionnalités</a> <!-- Smaller text -->
+        <a href="#integration" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Intégration</a>
+        <a href="#stats" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Statistiques</a>
+        <a href="/dashboards/login.html" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Connexion</a>
+        <a href="/dashboards/register.html" class="text-sm text-blue-300 hover:text-white font-medium transition-colors">cree un compte</a>
+
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden">
+        <button class="text-white p-1" id="mobileMenuBtn"> 
+          <i class="ri-menu-line text-xl"></i> 
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile menu (hidden by default) -->
+    <div id="mobileMenu" class="hidden md:hidden mt-2 pb-2"> <!-- Smaller padding -->
+      <div class="flex flex-col space-y-2"> <!-- Tighter spacing -->
+        <a href="#features" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Fonctionnalités</a>
+        <a href="#integration" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Intégration</a>
+        <a href="#stats" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Statistiques</a>
+        <a href="/dashboards/login.html" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Connexion</a>
+        <a href="/dashboards/register.html" class="text-sm text-blue-300 hover:text-white font-medium transition-colors">cree un compte</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Hero Section -->
+  <section class="section flex items-center min-h-screen">
+    <div class="container mx-auto px-6 text-center" >
+      <div class="flex justify-center mb-6" s>
+        <!-- Logo USTO au centre de la page d'accueil -->
+        <img src="/src/img/usto.jpg" alt="USTO Logo" class="w-20 h-20 rounded-full border-4 border-blue-300/30 shadow-lg" />
+      </div>
+      <span class="academic-badge inline-block text-blue-100 px-4 py-1 rounded-full text-sm font-medium mb-4">Plateforme réservée au personnel universitaire USTO</span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+        Gestion et surveillance d'examens <span class="highlight">présentiel</span>
+      </h1>
+      
+      <p class="text-xl text-blue-100 max-w-3xl mx-auto mb-10" style="padding: 2rem 0; ">
+        Une solution sécurisée, intuitive et complète pour l'administration des examens en présentiel à l'université.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/dashboards/login.html" class="btn-primary text-white px-8 py-3 rounded-lg font-semibold text-lg flex items-center justify-center">
+          <i class="ri-login-box-line mr-2"></i> Connexion
+        </a>
+        <a href="/dashboards/register.html" class="btn-outline text-white px-8 py-3 rounded-lg font-semibold text-lg flex items-center justify-center">
+          <i class="ri-user-add-line mr-2"></i> Cree un compte 
+        </a>
+      </div>
+      
+      <!-- Trusted by -->
+      <div class="mt-16">
+        <p class="text-blue-200 mb-4 font-medium">Utilisé par les départements de l'USTO :</p>
+        <div class="flex flex-wrap justify-center gap-8 items-center">
+          <div class="text-blue-100/80 text-sm font-medium py-2 px-4">Faculté des informatique</div>
+        
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <!-- Features Section -->
+<section id="features" class="section bg-blue-900/10">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="inline-block text-blue-300 font-semibold mb-2 uppercase tracking-wider text-sm">FONCTIONNALITÉS PRINCIPALES</span>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Une solution <span class="text-blue-300">complète</span> et <span class="text-blue-300">sécurisée</span></h2>
+      <p class="text-blue-100 max-w-2xl mx-auto text-lg" style="padding: 2rem 0;">
+        Optimisez la gestion de vos examens en présentiel avec nos outils spécialement conçus pour l'USTO
+      </p>
+    </div>
+    
+    <!-- Main Features - 3 columns -->
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Feature Card 1 -->
+      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
+        <div class="icon-wrapper mb-6 mx-auto">
+          <i class="ri-clipboard-line text-blue-300 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-center text-white">Gestion des PV</h3>
+        <p class="text-blue-100 text-center mb-4">
+          Création et suivi des procès-verbaux d'examens avec signature numérique et traçabilité complète.
+        </p>
+        <ul class="mt-4 space-y-2">
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">PV numériques personnalisables</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Archivage automatique</span>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Feature Card 2 -->
+      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
+        <div class="icon-wrapper mb-6 mx-auto">
+          <i class="ri-fingerprint-line text-blue-300 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-center text-white">Sécurité renforcée</h3>
+        <p class="text-blue-100 text-center mb-4">
+          Système de surveillance et contrôle d'accès biométrique pour une gestion sécurisée des examens.
+        </p>
+        <ul class="mt-4 space-y-2">
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Vérification d'identité</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Journal des activités</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Chiffrement des données</span>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Feature Card 3 -->
+      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
+        <div class="icon-wrapper mb-6 mx-auto">
+          <i class="ri-calendar-todo-line text-blue-300 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-center text-white">Planification avancée</h3>
+        <p class="text-blue-100 text-center mb-4">
+          Organisation des sessions d'examens avec détection intelligente des conflits de planning.
+        </p>
+        <ul class="mt-4 space-y-2">
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Calendrier intelligent</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Attribution automatique des salles</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Gestion des surveillants</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Secondary Features - 2 columns -->
+    <div class="grid md:grid-cols-2 gap-8 mt-12">
+      <!-- Feature Card 4 -->
+      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
+        <div class="icon-wrapper mb-6 mx-auto">
+          <i class="ri-team-line text-blue-300 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-center text-white">Gestion des surveillants</h3>
+        <p class="text-blue-100 text-center mb-4">
+          Attribution et suivi des tâches de surveillance avec système de notification.
+        </p>
+        <ul class="mt-4 space-y-2">
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Planification équitable des surveillances</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Notifications automatisées</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Suivi des présences</span>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Feature Card 5 -->
+      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
+        <div class="icon-wrapper mb-6 mx-auto">
+          <i class="ri-bar-chart-grouped-line text-blue-300 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-center text-white">Rapports et statistiques</h3>
+        <p class="text-blue-100 text-center mb-4">
+          Analyse détaillée des sessions d'examens et rapports administratifs.
+        </p>
+        <ul class="mt-4 space-y-2">
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Tableaux de bord personnalisables</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Export au format PDF</span>
+          </li>
+          <li class="flex items-start">
+            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
+            <span class="text-blue-100">Indicateurs de performance</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="text-center mt-16">
+      <a href="#integration" class="btn-primary inline-flex items-center px-8 py-3 rounded-lg font-semibold text-lg">
+        Découvrez l'intégration avec l'USTO
+        <i class="ri-arrow-down-line ml-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- Integration Section -->
+<section id="integration" class="section">
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col lg:flex-row items-center">
+      <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pr-10">
+      
+        <!-- Box avec fond foncé pour améliorer la lisibilité du texte blanc -->
+        <div class="bg-blue-900/80 p-6 rounded-xl shadow-lg mb-8">
+          <p class="text-white mb-6">
+            ExamEye s'interface parfaitement avec l'écosystème numérique de l'USTO :
+          </p>
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <div class="bg-blue-500/50 p-2 rounded-lg mr-4 flex-shrink-0">
+                <i class="ri-lock-password-line text-white"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Authentification universitaire</h4>
+                <p class="text-blue-100 text-sm">Compatible avec le système d'identité de l'USTO</p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="bg-blue-500/50 p-2 rounded-lg mr-4 flex-shrink-0">
+                <i class="ri-database-2-line text-white"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Systèmes de scolarité</h4>
+                <p class="text-blue-100 text-sm">Synchronisation avec les données d'inscription</p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="bg-blue-500/50 p-2 rounded-lg mr-4 flex-shrink-0">
+                <i class="ri-file-transfer-line text-white"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Export des données</h4>
+                <p class="text-blue-100 text-sm">Communication avec les systèmes de notation</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        
+        
+      </div>
+      <div class="lg:w-1/2">
+        <div class="card p-6 rounded-xl shadow-lg">
+          <div class="flex items-center justify-center mb-4">
+            <img src="/src/img/usto.jpg" alt="USTO" class="h-16 w-16 rounded-full border-2 border-blue-300/30">
+          </div>
+          <h3 class="text-xl font-bold text-center mb-3 text-white">Université des Sciences et de la Technologie d'Oran</h3>
+          <p class="text-blue-100 text-center">
+            ExamEye est développé spécifiquement pour répondre aux besoins de gestion des examens de l'USTO.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Testimonial Section -->
+  <section class="section bg-gradient-to-r from-blue-900/40 to-indigo-900/40">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <span class="inline-block text-blue-300 font-semibold mb-2">TÉMOIGNAGES</span>
+        <h2 class="text-3xl md:text-4xl font-bold mb-2">Ce que disent nos utilisateurs</h2>
+      </div>
+      
+      <div class="max-w-4xl mx-auto">
+        <div class="card p-8 md:p-10 rounded-2xl">
+          <div class="flex items-center mb-6">
+            <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mr-4">
+              <i class="ri-user-line text-blue-300 text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-white">Mme Ougouti Souad</h4>
+              <p class="text-blue-200 text-sm">Responsable des Examens - USTO</p>
+            </div>
+          </div>
+          <p class="text-blue-100 italic mb-4">
+            "ExamEye a révolutionné notre façon de gérer les examens en présentiel. Nos surveillants peuvent facilement 
+            remplir les PV numériques, l'administration gagne un temps considérable sur la planification, et nous avons 
+            maintenant une traçabilité parfaite de toutes les copies d'examens."
+          </p>
+          <div class="flex text-yellow-400">
+            <i class="ri-star-fill"></i>
+            <i class="ri-star-fill"></i>
+            <i class="ri-star-fill"></i>
+            <i class="ri-star-fill"></i>
+            <i class="ri-star-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 

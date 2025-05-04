@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExamEye – Convocations</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/src/css/chefdep.css">
+  <link rel="stylesheet" href="../src/css/convocationadmin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <script src="/src/js/convocationadmin.js" defer></script>
+
+  <!-- Sidebar -->
+  <div class="sidebar left-sidebar">
+    <div class="logo">
+      <img src="/src/img/logo.jpg" alt="ExamEye Logo" />
+      <h1>ExamEye</h1>
+    </div>
+    <ul class="menu">
+      <li><i class="fas fa-home"></i> <a href="administrateur.html">Accueil</a></li>
+      <li><i class="fas fa-table"></i> <a href="planningadmin.html">Planning</a></li>
+      <li><i class="fas fa-file-alt"></i> <a href="pvadmin.html">PV d'examen</a></li>
+      <li class="active"><i class="fas fa-envelope-open-text"></i> <a href="#">Convocation</a></li>
+      <li><i class="fas fa-bell"></i> <a href="notificationadmin.html">Notifications</a></li>
+    </ul>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="main-container">
+    <div class="title">Online Exam Surveil</div>
+    <div class="main-content">
+      <div class="header">
+        <i class="fas fa-chart-line"></i> Convocations
+        <div class="account-container" id="accountContainer">
+          <div class="account-icon" id="accountIcon"><i class="fas fa-user"></i></div>
+          <div class="account-dropdown" id="accountDropdown">
+            <ul>
+              <li><i class="fas fa-user"></i><a href="compte.html" style="text-decoration: none; color: inherit;"> MY ACCOUNT</a></li>
+              <li><i class="fas fa-cog"></i> Paramètres</li>
+              <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulaire Convocation -->
+      <div class="convocation-paper">
+        <div class="convocation-header">
+          <img src="../src/img/usto.jpg" alt="USTO Logo" class="usto-logo" />
+          <div class="convocation-texts">
+            <h2 class="convocation-title">Université des sciences et de la technologie d'Oran</h2>
+            <h3 class="faculty-title">Faculté des mathématiques et informatique</h3>
+            <p class="ref">REF: /SURVF/MID-INF/PED/USTO/</p>
+            <h3 class="convocation-heading">CONVOCATION AUX SURVEILLANCES - SESSION 1: 2023/2024</h3>
+            <p class="subtitle">Licence & Master - SEMESTRE 1</p>
+          </div>
+        </div>
+
+        <div class="recipient">Mme/Mlle/Mr : <strong id="profName">Sélectionnez un professeur</strong></div>
+
+        <form id="convocationForm" class="convocation-form">
+          <div class="form-row">
+            <label for="professeur">Professeur :</label>
+            <select id="professeur" name="professeur" required>
+              <option value="">-- Sélectionnez un professeur --</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Année d'étude :</label>
+            <select type="text" id="annee" name="annee" required >
+                <option value="1">L1</option>
+                <option value="2">L2</option>
+                <option value="3">L3</option>
+                <option value="4">M1</option>
+                <option value="5">M2</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Semestre :</label>
+            <select id="semestre" name="semestre" required>
+              <option value="1">Semestre 1</option>
+              <option value="2">Semestre 2</option>
+              <option value="3">Semestre 3</option>
+              <option value="4">Semestre 4</option>
+              <option value="5">Semestre 5</option>
+              <option value="6">Semestre 6</option>
+            </select>
+          </div>
+
+          <div id="examList"></div>
+
+          <button type="button" id="addExam">➕ Ajouter un examen</button>
+
+          <div class="form-actions">
+            <button type="button" id="previewBtn">👁️ Aperçu</button>
+            <button type="submit">📤 Envoyer la convocation</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

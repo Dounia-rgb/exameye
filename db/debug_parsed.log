@@ -1,0 +1,18 @@
+Array
+(
+    [idProfesseur] => 11
+    [convocations] => Array
+        (
+            [0] => Array
+                (
+                    [matiere] => asd
+                    [date] => 2025-04-30
+                    [heure] => 02:36
+                    [heureFin] => 
+                    [cycle] => L2
+                    [semestre] => 1
+                )
+
+        )
+
+)

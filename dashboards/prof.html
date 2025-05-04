@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ExamEye - Espace Professeur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="/src/css/prof.css">
+</head>
+<body>
+    <script src="/src/js/prof.js" defer></script>
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="/src/img/logo.jpg" alt="ExamEye Logo">
+            <h1>ExamEye</h1>
+        </div>
+        <nav class="menu">
+            <ul>
+                <li class="active"><a href="#"><i class="fas fa-home"></i>Accueil</a></li>
+                <li><a href="planning.html"><i class="fas fa-table"></i> Planning</a></li>
+                <li><a href="pv.html"><i class="fas fa-file-alt"></i> PV d'examen</a></li>
+                <li><a href="Convocation.html"><i class="fas fa-envelope-open-text"></i> Convocation</a></li>
+                <li><a href="notification.html"><i class="fas fa-bell"></i> Notifications</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <main class="main-container">
+        <header class="title">Système de Surveillance des Examens</header>
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="header-title">
+                    <i class="fas fa-chart-line"></i> Tableau de bord
+                </div>
+                <div class="account-container" id="accountContainer">
+                    <div class="account-icon" id="accountIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <ul>
+                            <li>
+                                <a href="compte.html">
+                                    <i class="fas fa-user"></i> Mon Compte
+                                </a>
+                            </li>
+                            <li><a href="#"><i class="fas fa-cog"></i> Paramètres</a></li>
+                            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <section class="welcome-section">
+                <div class="welcome-header">
+                    <div class="welcome-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="welcome-text">
+                        <h2>Bienvenue, <span class="professor-name">Professeur</span></h2>
+                        <p class="welcome-subtitle">Votre tableau de bord de surveillance</p>
+                    </div>
+                </div>
+                
+                <div class="welcome-actions">
+                    <a href="planning.html" class="action-btn primary">
+                        <i class="fas fa-calendar-plus"></i> Voir le planning
+                    </a>
+                    <a href="pv.html" class="action-btn secondary">
+                        <i class="fas fa-file-alt"></i> Remplir un PV
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamEye Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="../src/css/notification.css">
+    <link rel="stylesheet" href="/src/css/prof.css">
+    <script src="../src/js/notifications_loading.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="sidebar left-sidebar">
+        <div class="logo">
+            <img src="../src/img/logo.jpg" alt="ExamEye Logo">
+            <h1>ExamEye</h1>
+        </div>
+        <ul class="menu">
+            <li><i class="fas fa-home"></i>
+                <a href="prof.html">Accueil</a>
+            </li>
+            <li><i class="fas fa-table"></i>
+                <a href="planning.html">Planning</a>
+            </li>
+            <li><i class="fas fa-file-alt"></i>
+                <a href="pv.html">PV d'examen</a>
+            </li>
+            <li><i class="fas fa-envelope-open-text"></i>
+                <a href="Convocation.html">Convocation</a>
+            </li>
+            <li class="active"><i class="fas fa-bell"></i>
+                <a href="#">Notifications</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+        <div class="title">Online Exam Surveil</div>
+        <div class="main-content">
+            <div class="header">
+                <i class="fas fa-bell"></i>
+                Notifications
+                <div class="account-container" id="accountContainer">
+                    <div class="account-icon" id="accountIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <ul>
+                            <li><i class="fas fa-user"></i>
+                                <a href="compte.html" style="text-decoration: none; color: inherit;"> MY ACCOUNT</a>
+                            </li>
+                            <li><i class="fas fa-cog"></i> Paramètres</li>
+                            <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter buttons for notifications -->
+            <div id="notificationFilters" class="notification-filters">
+                <!-- Filter buttons will be dynamically inserted here -->
+            </div>
+
+            <!-- Notifications container at the top -->
+            <div class="notifications-container">
+                <h2 class="notif-title">Notifications reçues</h2>
+
+                <ul id="notificationsList"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

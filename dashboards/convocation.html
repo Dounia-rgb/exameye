@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExamEye Convocation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="/src/css/prof.css">
+    <link rel="stylesheet" href="../src/css/convocation.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="sidebar left-sidebar">
+        <div class="logo">
+            <img src="/src/img/logo.jpg" alt="ExamEye Logo" />
+            <h1>ExamEye</h1>
+        </div>
+        <ul class="menu">
+            <li><i class="fas fa-home"></i><a href="prof.html">Accueil</a></li>
+            <li><i class="fas fa-table"></i><a href="planning.html">Planning</a></li>
+            <li><i class="fas fa-file-alt"></i><a href="pv.html">PV d'examen</a></li>
+            <li class="active"><i class="fas fa-envelope-open-text"></i><a href="#">Convocation</a></li>
+            <li><i class="fas fa-bell"></i><a href="notification.html">Notifications</a></li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+        <div class="title">Online Exam Surveil</div>
+        <div class="main-content">
+            <div class="header">
+                <i class="fas fa-envelope-open-text"></i> Convocation
+                <div class="account-container" id="accountContainer">
+                    <div class="account-icon" id="accountIcon"><i class="fas fa-user"></i></div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <ul>
+                            <li><i class="fas fa-user"></i> Mon Compte</li>
+                            <li><i class="fas fa-cog"></i> Paramètres</li>
+                            <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="convocation-paper">
+                <div class="convocation-header">
+                    <img src="../src/img/usto.jpg" alt="USTO Logo" class="usto-logo" />
+                    <div class="convocation-texts">
+                        <h2 class="convocation-title">Université des sciences et de la technologie d'Oran</h2>
+                        <h3 class="faculty-title">Faculté des mathématiques et informatique</h3>
+                        <p class="ref">REF: /SURVF/MID-INF/PED/USTO/</p>
+                        <h3 class="convocation-heading">CONVOCATION AUX SURVEILLANCES - SESSION 1: 2023/2024</h3>
+                        <p class="subtitle">Licence & Master - SEMESTRE 1</p>
+                    </div>
+                </div>
+
+                <div class="recipient">Mme/Mlle/Mr : <strong id="profName">Chargement...</strong></div>
+
+                <div class="convocation-table-container">
+                    <p>Chargement des convocations...</p>
+                </div>
+
+                <div class="footer" id="convocationFooter"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../src/js/convocation.js"></script>
+</body>
+
+</html>

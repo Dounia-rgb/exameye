@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExamEye – Planning</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/src/css/planningadmin.css">
+    
+</head>
+<body>
+  <script src="/src/js/planningadmin.js " defer></script>
+  <div class="sidebar left-sidebar">
+    <div class="logo">
+      <img src="/src/img/logo.jpg" alt="ExamEye Logo" />
+      <h1>ExamEye</h1>
+    </div>
+    <ul class="menu">
+      <li><i class="fas fa-home"></i> <a href="administrateur.html">Accueil</a></li>
+      <li class="active"><i class="fas fa-table"></i> <a href="#">Planning</a></li>
+      <li><i class="fas fa-file-alt"></i> <a href="pvadmin.html">PV d'examen</a></li>
+      <li><i class="fas fa-envelope-open-text"></i> <a href="convocationadmin.html">Convocation</a></li>
+      <li><i class="fas fa-bell"></i> <a href="notificationadmin.html">Notifications</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <div class="title">Online Exam Surveil</div>
+    <div class="main-content">
+      <div class="header">
+        <i class="fas fa-table"></i> Planning
+        <div class="account-container" id="accountContainer">
+          <div class="account-icon" id="accountIcon"><i class="fas fa-user"></i></div>
+          <div class="account-dropdown" id="accountDropdown">
+            <ul>
+              <li><i class="fas fa-user"></i><a href="compte.html" style="text-decoration: none; color: inherit;"> MY ACCOUNT</a></li>
+              <li><i class="fas fa-cog"></i> Paramètres</li>
+              <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- USTO Header -->
+      <div class="convocation-header">
+        <img src="../src/img/usto.jpg" alt="USTO Logo" class="usto-logo" />
+        <div class="convocation-texts">
+          <h2 class="convocation-title">Université des sciences et de la technologie d'Oran</h2>
+          <h3 class="faculty-title">Faculté des mathématiques et informatique</h3>
+          <p class="ref">REF: /SURVF/MID-INF/PED/USTO/</p>
+          <h3 class="convocation-heading" id="sessionHeading">PLANNING DES SURVEILLANCES - SESSION 1: <span id="currentYear"></span>/<span id="nextYear"></span></h3>
+          <p class="subtitle" id="cycleSubtitle">Licence & Master</p>
+        </div>
+      </div>
+
+      <!-- Selection Section -->
+      <div class="cycle-selection">
+        <h3>Créer un nouveau planning</h3>
+        <div class="selection-row">
+          <div class="selection-group">
+            <label for="cycle">Cycle:</label>
+            <select id="cycle" onchange="updateYearOptions()">
+              <option value="">-- Sélectionnez un cycle --</option>
+              <option value="Licence">Licence</option>
+              <option value="Master">Master</option>
+              <option value="ING">ING</option>
+            </select>
+          </div>
+          <div class="selection-group">
+            <label for="year">Année:</label>
+            <select id="year" disabled onchange="updateSemesterOptions()">
+              <option value="">-- Sélectionnez d'abord le cycle --</option>
+            </select>
+          </div>
+          <div class="selection-group">
+            <label for="semester">Semestre:</label>
+            <select id="semester" disabled>
+              <option value="">-- Sélectionnez d'abord l'année --</option>
+            </select>
+          </div>
+        </div>
+        <button id="startPlanningBtn" class="planning-action-btn start-planning-btn" disabled onclick="startPlanning()">Commencer la planification</button>
+        <button id="finishPlanningBtn" class="planning-action-btn finish-planning-btn" onclick="finishPlanning()">Terminer ce planning</button>
+      </div>
+
+      <!-- Planning Form -->
+      <div class="planning-form-container" id="planningForm">
+        <h2>Planification en cours - <span id="selectedCycleYear"></span></h2>
+        <div class="table-responsive">
+          <table class="planning-input-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Heure Début</th>
+                <th>Heure Fin</th>
+                <th>Matière</th>
+                <th>Salle</th>
+                <th>Groupe</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="planning-body">
+              <tr>
+                <td><input type="date" name="date" required /></td>
+                <td><input type="time" name="heure_debut" required /></td>
+                <td><input type="time" name="heure_fin" required /></td>
+                <td><input type="text" name="matiere" placeholder="Ex: Algèbre 2" required /></td>
+  <td>
+<select name="salle" required>
+  <option value="">-- Choisir une salle --</option>
+  
+</select> </td>
+                <td>
+                    <select name="groupe" required>
+                      <option value="">-- Choisir un groupe --</option>
+                    </select>
+                  </td>
+                  
+                <td><button class="btn-ajouter" onclick="ajouterLigne(event)">Ajouter</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+     
+      <div class="plannings-container" id="planningsContainer">
+        <h3>Plannings enregistrés</h3>
+        <div id="noPlanningsMessage" class="empty-message">Aucun planning enregistré pour le moment</div>
+        <!-- Saved plannings will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>

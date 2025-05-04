@@ -1,0 +1,49 @@
+<?php
+session_start();
+header('Content-Type: application/json');
+
+require_once 'config.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode(["error" => "Non autorisé"]);
+    exit;
+}
+
+// Get the notification ID from POST data
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
+
+if (!isset($data['idNotification'])) {
+    http_response_code(400);
+    echo json_encode(["error" => "ID de notification manquant"]);
+    exit;
+}
+
+$notificationId = $data['idNotification'];
+$idUtilisateur = $_SESSION['user_id'];
+
+try {
+    // First check if this notification belongs to this user
+    $checkStmt = $conn->prepare("SELECT idNotification FROM notification WHERE idNotification = ? AND destinataire = ?");
+
+    $checkStmt->execute([$notificationId, $idUtilisateur]);
+    
+    if ($checkStmt->rowCount() === 0) {
+        http_response_code(403);
+        echo json_encode(["error" => "Cette notification n'appartient pas à cet utilisateur"]);
+        exit;
+    }
+    
+    // Mark the notification as read
+    $updateStmt = $conn->prepare("UPDATE notification SET isRead = 1 WHERE idNotification = ?");
+
+    $updateStmt->execute([$notificationId]);
+    
+    echo json_encode(["success" => true, "message" => "Notification marquée comme lue"]);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(["error" => "Erreur de base de données: " . $e->getMessage()]);
+}
+?>

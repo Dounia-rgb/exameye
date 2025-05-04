@@ -1,0 +1,333 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    background: #f7f9fc;
+    min-height: 100vh;
+}
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #0b084d, #030339);
+    padding: 15px 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.logo {
+    display: flex;
+    align-items: center;
+}
+.logo img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.logo h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.5px;
+}
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+.nav-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 400;
+    border: none;
+}
+.nav-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    font-weight: 500;
+    border-bottom: 2px solid #4aade9;
+}
+.account-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.account-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #3b4d69;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+}
+.account-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 220px;
+    padding: 10px;
+    z-index: 1000;
+}
+.account-dropdown.show {
+    display: block;
+}
+.account-dropdown ul {
+    list-style: none;
+}
+.account-dropdown li {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.account-dropdown li:hover {
+    background: #f0f5ff;
+}
+.account-dropdown li i {
+    color: #1e3a8a;
+    width: 16px;
+    text-align: center;
+}
+.main-container {
+    padding: 25px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.title {
+    font-size: 22px;
+    color: #1e293b;
+    font-weight: 600;
+    position: relative;
+    padding-left: 15px;
+}
+.title:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 22px;
+    width: 4px;
+    background: #1e3a8a;
+    border-radius: 2px;
+}
+.management-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    border: 1px solid #eaecef;
+}
+.tab-container {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.tab {
+    padding: 10px 24px;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 8px;
+    background: #f5f7fa;
+    font-weight: 500;
+    color: #64748b;
+    border: 1px solid #eaecef;
+}
+.tab.active {
+    background: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+}
+.search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.search-bar input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #dce0e5;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f8fafc;
+}
+.search-bar input:focus {
+    outline: none;
+    border-color: #93c5fd;
+    background: white;
+}
+.search-bar button {
+    padding: 12px 24px;
+    background: #1e3a8a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.user-table th, .user-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eaecef;
+}
+.user-table th {
+    background-color: #f8fafc;
+    color: #334155;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+}
+.user-table td {
+    font-size: 14px;
+    color: #1e293b;
+}
+.action-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: white;
+}
+.action-btn.edit-btn {
+    background-color: #3b82f6;
+}
+.action-btn.delete-btn {
+    background-color: #ef4444;
+}
+.no-results {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+    font-style: italic;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1;
+    margin-top: 20px;
+}
+.highlight {
+    background-color: #fef9c3;
+    padding: 2px 0;
+    border-radius: 3px;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e3a8a;
+}
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #64748b;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #334155;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+.modal-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.modal-btn.cancel {
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #d1d5db;
+}
+.modal-btn.save {
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+}

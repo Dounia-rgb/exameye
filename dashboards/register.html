@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/css/register.css">
+    <title>Register Page</title>
+    <script src="../js/register.js"></script>
+</head>
+<body>
+    <div class="welcome-text">Welcome to ExamEye</div>
+    <div class="container">
+        <div class="register-box">
+            <h2>Register</h2>
+            <form id="registerForm" action="../db/register.php" method="POST">
+                <div class="input-box">
+                    <input type="text" name="name" id="name" placeholder="Name" required>
+                </div>
+                <div class="input-box">
+                    <input type="email" name="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                </div>
+
+                <div class="role-selection">
+                    <label class="role-label">Select Role:</label>
+                    <div class="input-box role-options">
+                        <label>
+                            <input type="radio" name="role" value="administrateur" required> Administrateur
+                        </label>
+                        <label>
+                            <input type="radio" name="role" value="professeur" required> Professeur
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="register-btn">Register</button>
+                <p>Already have an account? <a href="../index.html">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            let isValid = true;
+
+          
+            const email = document.getElementById("email");
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email.value.trim())) {
+                alert("Invalid email address.");
+                isValid = false;
+            }
+
+            const name = document.getElementById("name");
+            if (name.value.trim().length < 3) {
+                alert("Name must be at least 3 characters.");
+                isValid = false;
+            }
+
+           
+            const password = document.getElementById("password");
+            if (password.value.length < 6) {
+                alert("Password must be at least 6 characters.");
+                isValid = false;
+            }
+
+            if (!isValid) event.preventDefault();
+        });
+    </script>
+
+</body>
+</html>
