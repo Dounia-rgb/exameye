@@ -531,3 +531,45 @@ select[name="matiere"] {
 select[name="matiere"] option {
     padding: 8px;
 }
+/* Style pour la modale de confirmation */
+#confirmModal .modal-content {
+    max-width: 500px;
+    border-top: 4px solid #e74c3c;
+}
+
+#confirmModal .warning-icon {
+    text-align: center;
+    font-size: 3rem;
+    color: #e74c3c;
+    margin-bottom: 1rem;
+}
+
+#confirmModal .warning-text {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+#confirmModal .modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+#confirmModal .btn-primary {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+#confirmModal .btn-primary:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+#confirmModal .btn-secondary {
+    background-color: #95a5a6;
+    border-color: #95a5a6;
+}
+
+#confirmModal .btn-secondary:hover {
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+}

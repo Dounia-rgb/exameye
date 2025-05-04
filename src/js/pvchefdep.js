@@ -768,7 +768,6 @@ function deleteSelectedPVs() {
         }
     };
 }
-
 // Function to approve a batch of PVs
 function batchApprove() {
     const selectedPVs = document.querySelectorAll('.pv-item input[type="checkbox"]:checked');
