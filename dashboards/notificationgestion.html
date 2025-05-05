@@ -3,132 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExamEye - Demandes de Connexion</title>
+    <meta name="description" content="ExamEye - Gestion des demandes d'administration">
+    <title>ExamEye - Gestion des Demandes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/src/css/notificationgestion.css">
+    <link rel="stylesheet" href="../src/css/notificationgestion.css">
 </head>
 <body>
-    
-    <script src="/src/js/notificationadmin.js" defer> </script>
-    <div class="top-nav">
+    <header class="top-nav" role="banner">
         <div class="logo">
-            <img src="/src/img/logo.jpg" alt="ExamEye Logo">
+            <img src="../src/img/logo.jpg" alt="ExamEye Logo" width="40" height="40">
             <h1>ExamEye Administration</h1>
         </div>
         
-        <div class="nav-buttons">
+        <nav class="nav-buttons" role="navigation">
             <a href="gestion.html" class="nav-btn">
-                <i class="fas fa-users-cog"></i>
-                Gestion des comptes
+                <i class="fas fa-users-cog" aria-hidden="true"></i>
+                <span>Gestion des comptes</span>
             </a>
-           
             <a href="#" class="nav-btn active">
-                <i class="fas fa-user-clock"></i>
-                Demandes
+                <i class="fas fa-user-clock" aria-hidden="true"></i>
+                <span>Demandes</span>
             </a>
-        </div>
+        </nav>
         
         <div class="account-container" id="accountContainer">
-            <div class="account-icon" id="accountIcon">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="account-dropdown" id="accountDropdown">
+            <button class="account-icon" id="accountIcon" aria-label="Menu compte" aria-expanded="false" aria-controls="accountDropdown">
+                <i class="fas fa-user" aria-hidden="true"></i>
+            </button>
+            <div class="account-dropdown" id="accountDropdown" role="menu">
                 <ul>
-                    <li>
-                        <i class="fas fa-user-circle"></i>
-                        <a href="compte.html" style="text-decoration: none; color: inherit;">Mon profil</a>
+                    <li role="none">
+                        <a href="compte.html" role="menuitem">
+                            <i class="fas fa-user-circle" aria-hidden="true"></i>
+                            <span>Mon profil</span>
+                        </a>
                     </li>
-                    <li>
-                        <i class="fas fa-sign-out-alt"></i>
-                        Déconnexion
+                    <li role="none">
+                        <a href="#" role="menuitem" id="logoutButton">
+                            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                            <span>Déconnexion</span>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
-    </div>
+    </header>
 
-    <div class="main-container">
+    <main class="main-container" role="main">
         <div class="dashboard-header">
-            <div class="title">Demandes de Connexion</div>
-            <div class="notification-count">
-                <span id="pendingCount">3</span> demandes en attente
+            <h2 class="title">Gestion des Demandes</h2>
+            <div class="notification-count" aria-live="polite">
+                <span id="pendingCount">0</span> demandes en attente
             </div>
         </div>
         
-        <div class="management-section">
-            <div id="connection-requests-list">
-                <div class="notification-item">
-                    <div class="notification-content">
-                        <div class="user-info">
-                            <div class="user-avatar">AM</div>
-                            <div class="user-name">Ahmed Mohamed</div>
-                            <span class="badge badge-new">Nouveau</span>
-                        </div>
-                        <div class="request-text">Demande d'accès en tant que professeur</div>
-                        <div class="notification-time">Il y a 5 minutes</div>
-                    </div>
-                    <div class="notification-actions">
-                        <button class="action-btn accept-btn">
-                            <i class="fas fa-check"></i>
-                            Accepter
-                        </button>
-                        <button class="action-btn reject-btn">
-                            <i class="fas fa-times"></i>
-                            Refuser
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="notification-item">
-                    <div class="notification-content">
-                        <div class="user-info">
-                            <div class="user-avatar">FZ</div>
-                            <div class="user-name">Fatima Zahra</div>
-                        </div>
-                        <div class="request-text">Demande d'accès en tant qu'étudiante</div>
-                        <div class="notification-time">Il y a 1 heure</div>
-                    </div>
-                    <div class="notification-actions">
-                        <button class="action-btn accept-btn">
-                            <i class="fas fa-check"></i>
-                            Accepter
-                        </button>
-                        <button class="action-btn reject-btn">
-                            <i class="fas fa-times"></i>
-                            Refuser
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="notification-item">
-                    <div class="notification-content">
-                        <div class="user-info">
-                            <div class="user-avatar">KB</div>
-                            <div class="user-name">Karim Bouzidi</div>
-                        </div>
-                        <div class="request-text">Demande d'accès en tant que chef de département</div>
-                        <div class="notification-time">Il y a 2 heures</div>
-                    </div>
-                    <div class="notification-actions">
-                        <button class="action-btn accept-btn">
-                            <i class="fas fa-check"></i>
-                            Accepter
-                        </button>
-                        <button class="action-btn reject-btn">
-                            <i class="fas fa-times"></i>
-                            Refuser
-                        </button>
-                    </div>
-                </div>
+        <section class="management-section" aria-labelledby="requests-heading">
+            <h3 id="requests-heading" class="sr-only">Liste des demandes</h3>
+            <div id="notificationsContainer" role="region" aria-live="polite">
+                <!-- Les notifications seront chargées ici dynamiquement -->
             </div>
             
             <div id="no-requests" class="no-notifications" style="display: none;">
-                <i class="fas fa-check-circle fa-lg" style="margin-right: 10px;"></i>
-                Aucune demande de connexion en attente
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                <span>Aucune demande en attente</span>
             </div>
-        </div>
-    </div>
-
+        </section>
+    </main>
+    
+    <!-- Script chargé à la fin du body pour s'assurer que le DOM est complètement chargé -->
+    <script src="../src/js/notificationgestion.js"></script>
 </body>
 </html>

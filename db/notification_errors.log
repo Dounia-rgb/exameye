@@ -1,0 +1,168 @@
+[05-May-2025 22:24:09 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 111
+[05-May-2025 22:24:09 UTC] PHP Stack trace:
+[05-May-2025 22:24:09 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:24:09 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:24:09 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 112
+[05-May-2025 22:24:09 UTC] PHP Stack trace:
+[05-May-2025 22:24:09 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:24:09 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:24:09 UTC] [Notification Error] 2025-05-05 22:24:09 - Invalid subject data format
+[05-May-2025 22:25:31 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 111
+[05-May-2025 22:25:31 UTC] PHP Stack trace:
+[05-May-2025 22:25:31 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:25:31 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:25:31 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 112
+[05-May-2025 22:25:31 UTC] PHP Stack trace:
+[05-May-2025 22:25:31 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:25:31 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:25:31 UTC] [Notification Error] 2025-05-05 22:25:31 - Invalid subject data format
+[05-May-2025 22:27:50 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 111
+[05-May-2025 22:27:50 UTC] PHP Stack trace:
+[05-May-2025 22:27:50 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:27:50 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:27:50 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 112
+[05-May-2025 22:27:50 UTC] PHP Stack trace:
+[05-May-2025 22:27:50 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:27:50 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:27:50 UTC] [Notification Error] 2025-05-05 22:27:50 - Invalid subject data format
+[05-May-2025 22:35:14 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 110
+[05-May-2025 22:35:14 UTC] PHP Stack trace:
+[05-May-2025 22:35:14 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:35:14 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:35:23 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 110
+[05-May-2025 22:35:23 UTC] PHP Stack trace:
+[05-May-2025 22:35:23 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:35:23 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:38:31 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 110
+[05-May-2025 22:38:31 UTC] PHP Stack trace:
+[05-May-2025 22:38:31 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:38:31 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:38:31 UTC] Processing subject add request: Subject ID={"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, User ID=25, User Role=admin
+[05-May-2025 22:38:31 UTC] Current subjects: 
+[05-May-2025 22:38:31 UTC] New subjects: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}
+[05-May-2025 22:38:31 UTC] Insert result: success
+[05-May-2025 22:39:24 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 110
+[05-May-2025 22:39:24 UTC] PHP Stack trace:
+[05-May-2025 22:39:24 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:39:24 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:39:24 UTC] Processing subject add request: Subject ID={"subject_id":3,"subject_name":"se","user_id":11,"user_name":"Ougouti Souad"}, User ID=25, User Role=admin
+[05-May-2025 22:39:24 UTC] Current subjects: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}
+[05-May-2025 22:39:24 UTC] New subjects: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"},{"subject_id":3,"subject_name":"se","user_id":11,"user_name":"Ougouti Souad"}
+[05-May-2025 22:39:24 UTC] Update result: success
+[05-May-2025 22:50:25 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 110
+[05-May-2025 22:50:25 UTC] PHP Stack trace:
+[05-May-2025 22:50:25 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 22:50:25 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 22:50:25 UTC] Processing subject add request: Subject ID={"subject_id":2,"subject_name":"algebre","user_id":20,"user_name":"moi"}, User ID=25, User Role=admin
+[05-May-2025 22:50:25 UTC] Current subjects: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"},{"subject_id":3,"subject_name":"se","user_id":11,"user_name":"Ougouti Souad"}
+[05-May-2025 22:50:25 UTC] New subjects: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"},{"subject_id":3,"subject_name":"se","user_id":11,"user_name":"Ougouti Souad"},{"subject_id":2,"subject_name":"algebre","user_id":20,"user_name":"moi"}
+[05-May-2025 22:50:25 UTC] Update result: success
+[05-May-2025 22:54:24 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 22:54:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 22:56:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 22:58:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:00:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:02:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:04:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:06:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:08:26 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:08:47 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:08:47 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:08:48 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:08:48 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:09:16 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:09:58 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:09:59 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:09:59 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:09:59 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:09:59 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:11:59 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:03 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:04 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:04 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:04 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:05 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:05 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:05 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:05 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:05 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:06 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:06 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:07 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:12:45 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:14:46 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:16:46 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:17:12 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:19:36 UTC] Subject request details - ID: 71, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[05-May-2025 23:19:36 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:19:36 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:20:19 UTC] Subject request details - ID: 71, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[05-May-2025 23:20:19 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:20:19 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:20:40 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 193
+[05-May-2025 23:20:40 UTC] PHP Stack trace:
+[05-May-2025 23:20:40 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 23:20:40 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 23:20:58 UTC] Subject request details - ID: 71, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[05-May-2025 23:20:58 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:20:58 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:21:02 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 193
+[05-May-2025 23:21:02 UTC] PHP Stack trace:
+[05-May-2025 23:21:02 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 23:21:02 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 23:21:03 UTC] Subject request details - ID: 71, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[05-May-2025 23:21:03 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:21:03 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:22:19 UTC] Subject request details - ID: 71, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[05-May-2025 23:22:19 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:22:19 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:22:34 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:22:34 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:22:37 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:22:37 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:22:38 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:22:38 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:22:38 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:22:38 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:24:39 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:24:39 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:26:39 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:26:39 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:28:10 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:28:10 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:28:11 UTC] Subject request details - ID: 72, Reference: {"subject_id":3,"subject_name":"se","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: se par Mme Hadj (ID: 10)
+[05-May-2025 23:28:11 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:28:14 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 193
+[05-May-2025 23:28:14 UTC] PHP Stack trace:
+[05-May-2025 23:28:14 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 23:28:14 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 23:28:14 UTC] Received reference data: {"subject_id":"{\"subject_id\":3,\"subject_name\":\"se\",\"user_id\":10,\"user_name\":\"Mme Hadj\"}","user_id":"{\"subject_id\":3,\"subject_name\":\"se\",\"user_id\":10,\"user_name\":\"Mme Hadj\"}"}
+[05-May-2025 23:28:14 UTC] Processing with subjectId: 3, professorId: 10
+[05-May-2025 23:28:14 UTC] Processing subject add request: Subject ID=3, User ID=10, User Role=professeur
+[05-May-2025 23:28:14 UTC] Current subjects: asd
+[05-May-2025 23:28:14 UTC] New subjects: asd,3
+[05-May-2025 23:28:14 UTC] Update result: success
+[05-May-2025 23:28:14 UTC] Subject request details - ID: 70, Reference: {"subject_id":1,"subject_name":"asd","user_id":20,"user_name":"moi"}, Message: Demande d'ajout de matière: asd par moi (ID: 20)
+[05-May-2025 23:28:35 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 193
+[05-May-2025 23:28:35 UTC] PHP Stack trace:
+[05-May-2025 23:28:35 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 23:28:35 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 23:28:35 UTC] Received reference data: {"subject_id":"{\"subject_id\":1,\"subject_name\":\"asd\",\"user_id\":20,\"user_name\":\"moi\"}","user_id":"{\"subject_id\":1,\"subject_name\":\"asd\",\"user_id\":20,\"user_name\":\"moi\"}"}
+[05-May-2025 23:28:35 UTC] Processing with subjectId: 1, professorId: 20
+[05-May-2025 23:28:35 UTC] Processing subject add request: Subject ID=1, User ID=20, User Role=professeur
+[05-May-2025 23:28:35 UTC] Current subjects: Mathématique
+[05-May-2025 23:28:35 UTC] New subjects: Mathématique,1
+[05-May-2025 23:28:35 UTC] Update result: success
+[05-May-2025 23:31:57 UTC] Subject request details - ID: 73, Reference: {"subject_id":1,"subject_name":"asd","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: asd par Ougouti Souad (ID: 11)
+[05-May-2025 23:31:57 UTC] Subject request details - ID: 74, Reference: {"subject_id":2,"subject_name":"algebre","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: algebre par Mme Hadj (ID: 10)
+[05-May-2025 23:32:02 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 193
+[05-May-2025 23:32:02 UTC] PHP Stack trace:
+[05-May-2025 23:32:02 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[05-May-2025 23:32:02 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[05-May-2025 23:32:02 UTC] Received reference data: {"subject_id":"{\"subject_id\":1,\"subject_name\":\"asd\",\"user_id\":11,\"user_name\":\"Ougouti Souad\"}","user_id":"{\"subject_id\":1,\"subject_name\":\"asd\",\"user_id\":11,\"user_name\":\"Ougouti Souad\"}"}
+[05-May-2025 23:32:02 UTC] Processing with subjectId: 1, professorId: 11
+[05-May-2025 23:32:02 UTC] Processing subject add request: Subject ID=1, User ID=11, User Role=professeur
+[05-May-2025 23:32:02 UTC] Current subjects: Mathématiques
+[05-May-2025 23:32:02 UTC] New subjects: Mathématiques,1
+[05-May-2025 23:32:02 UTC] Update result: success
+[05-May-2025 23:32:02 UTC] Subject request details - ID: 74, Reference: {"subject_id":2,"subject_name":"algebre","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: algebre par Mme Hadj (ID: 10)

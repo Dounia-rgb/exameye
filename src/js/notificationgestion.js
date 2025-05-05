@@ -1,328 +1,467 @@
-// Dropdown compte
-document.getElementById('accountIcon').addEventListener('click', function() {
-    document.getElementById('accountDropdown').classList.toggle('show');
-});
+/**
+ * Notification Management System
+ * Full version compatible with ExamEye structure
+ */
+;(function() {
+    'use strict';
 
-window.addEventListener('click', function(event) {
-    if (!event.target.closest('#accountIcon') && !event.target.closest('#accountDropdown')) {
-        document.getElementById('accountDropdown').classList.remove('show');
+    // System configuration
+    const config = {
+        apiEndpoint: '../../db/notification_handler.php',
+        pathsToTry: [
+            '../../db/notification_handler.php',  // From /dashboards/
+            '../db/notification_handler.php',     // From /dashboards/subdir/
+            '/db/notification_handler.php'        // Absolute path
+        ],
+        currentPathIndex: 0,
+        refreshInterval: 120000, // 2 minutes
+        maxRetries: 3
+    };
+
+    // DOM Elements
+    const dom = {
+        container: document.getElementById('notificationsContainer'),
+        count: document.getElementById('pendingCount'),
+        noRequests: document.getElementById('no-requests'),
+        accountIcon: document.getElementById('accountIcon'),
+        accountDropdown: document.getElementById('accountDropdown'),
+        retryBtn: null
+    };
+
+    // State management
+    const state = {
+        retryCount: 0,
+        refreshTimer: null,
+        currentRequests: []
+    };
+
+    // Initialize the system
+    function init() {
+        if (!dom.container) {
+            console.error('Notification container not found');
+            return;
+        }
+
+        setupEventListeners();
+        loadNotifications();
+        startAutoRefresh();
     }
-});
 
-// Charger les notifications
-function loadNotifications() {
-    const notificationsContainer = document.getElementById('notificationsContainer');
-    
-    // Afficher chargement
-    notificationsContainer.innerHTML = '<div class="loading-notification">Chargement des notifications...</div>';
-    
-    fetch('db/gestion.php?action=getNotifications')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                if (data.notifications.length === 0) {
-                    notificationsContainer.innerHTML = `
-                        <div class="empty-notification">
-                            <i class="fas fa-bell-slash"></i>
-                            <p>Aucune notification en attente</p>
-                        </div>
-                    `;
+    // Set up event listeners
+    function setupEventListeners() {
+        // Account dropdown toggle
+        if (dom.accountIcon && dom.accountDropdown) {
+            dom.accountIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dom.accountDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                dom.accountDropdown.classList.remove('show');
+            });
+        }
+
+        // Network status monitoring
+        window.addEventListener('online', handleNetworkOnline);
+        window.addEventListener('offline', handleNetworkOffline);
+    }
+
+    // Main notification loader
+    function loadNotifications() {
+        if (state.retryCount >= config.maxRetries) {
+            showErrorState('Maximum retries reached');
+            return;
+        }
+
+        showLoadingState();
+
+        fetch(`${config.pathsToTry[config.currentPathIndex]}?action=getPendingRequests`)
+            .then(handleApiResponse)
+            .then(processNotifications)
+            .catch(handleLoadError);
+    }
+
+    // Handle API response
+    function handleApiResponse(response) {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return response.json();
+    }
+
+    // Process notification data
+    function processNotifications(data) {
+        if (!data.success) {
+            throw new Error(data.message || 'Invalid response from server');
+        }
+
+        state.retryCount = 0; // Reset retry counter on success
+        state.currentRequests = data.requests || [];
+
+        if (state.currentRequests.length > 0) {
+            renderNotifications();
+            updateCountDisplay();
+        } else {
+            showNoNotifications();
+        }
+    }
+
+    // Render notifications to DOM
+    function renderNotifications() {
+        dom.container.innerHTML = '';
+
+        state.currentRequests.forEach(request => {
+            const notification = createNotificationElement(request);
+            dom.container.appendChild(notification);
+        });
+
+        setupActionHandlers();
+    }
+
+    // Create individual notification element
+    function createNotificationElement(request) {
+        const element = document.createElement('div');
+        element.className = 'notification-item';
+        element.dataset.id = request.idNotification;
+        element.dataset.type = request.type;
+        element.dataset.senderId = request.senderId;
+
+        // Clean up senderName if it contains unwanted prefixes
+        if (request.senderName && 
+            (request.senderName.includes('Matière:') || 
+             request.senderName.includes('ID Matière:'))) {
+            request.senderName = 'Utilisateur';
+        }
+
+        // Store reference data for subject requests
+        if (request.type === 'subject_add_request') {
+            // Parse the message to extract subject information if available
+            let subjectData = null;
+            try {
+                // Try to extract JSON data from the message if possible
+                const jsonMatch = request.message.match(/{.*}/);
+                if (jsonMatch) {
+                    subjectData = JSON.parse(jsonMatch[0]);
+                }
+            } catch (e) {
+                console.warn('Could not parse subject data from message');
+            }
+
+            // Create the reference data object
+            const referenceData = {
+                subject_id: request.idReference,
+                user_id: request.senderId
+            };
+            
+            // Add extra information if available
+            if (subjectData) {
+                Object.assign(referenceData, subjectData);
+            }
+            
+            element.dataset.reference = JSON.stringify(referenceData);
+        }
+
+        element.innerHTML = `
+            <div class="notification-header">
+                <span class="notification-type">${getRequestTypeLabel(request.type)}</span>
+                <span class="notification-date">${formatDate(request.dateEnvoi)}</span>
+            </div>
+            <div class="notification-message">${escapeHtml(request.message) || 'No message provided'}</div>
+            ${createNotificationDetails(request)}
+            <div class="notification-actions">
+                <button class="btn btn-approve" title="Approve request">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="btn btn-reject" title="Reject request">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+            </div>
+        `;
+
+        return element;
+    }
+
+    // Create details section based on request type
+    function createNotificationDetails(request) {
+        if (request.type === 'subject_add_request') {
+            // Extract just the name part if senderName contains additional info
+            let displayName = request.senderName;
+            
+            // If senderName contains "Matière:" prefix, use the senderId instead
+            if (displayName && displayName.includes('Matière:')) {
+                // Try to find just a user name in the database via AJAX
+                displayName = 'ID utilisateur: ' + request.senderId;
+            }
+            
+            return `
+                <div class="notification-details">
+                    <h4>Détails de la matière:</h4>
+                    
+                    <p><strong>ID Matière:</strong> ${escapeHtml(request.idReference)}</p>
+                </div>
+            `;
+        }
+        return '';
+    }
+
+    // Set up approve/reject button handlers
+    function setupActionHandlers() {
+        document.querySelectorAll('.btn-approve').forEach(btn => {
+            btn.addEventListener('click', handleApproveAction);
+        });
+
+        document.querySelectorAll('.btn-reject').forEach(btn => {
+            btn.addEventListener('click', handleRejectAction);
+        });
+    }
+
+    // Handle approve action
+    function handleApproveAction() {
+        const notification = this.closest('.notification-item');
+        if (!notification) return;
+
+        if (confirm('Êtes-vous sûr de vouloir approuver cette demande?')) {
+            const formData = new FormData();
+            formData.append('action', 'approveRequest');
+            formData.append('notificationId', notification.dataset.id);
+            formData.append('type', notification.dataset.type);
+
+            // Fix: Correctly parse and handle the reference data
+            if (notification.dataset.type === 'subject_add_request') {
+                try {
+                    // Get the reference data
+                    const referenceString = notification.dataset.reference;
+                    console.log('Reference data:', referenceString);
+                    
+                    if (referenceString) {
+                        const referenceData = JSON.parse(referenceString);
+                        
+                        // Extract just the required fields for the PHP script
+                        const simplifiedReference = {
+                            subject_id: referenceData.subject_id, 
+                            user_id: referenceData.user_id
+                        };
+                        
+                        formData.append('referenceId', JSON.stringify(simplifiedReference));
+                    } else {
+                        throw new Error('Missing reference data for subject request');
+                    }
+                } catch (e) {
+                    console.error('Error processing reference data:', e);
+                    showToast('Error processing request data', 'error');
                     return;
                 }
-                
-                notificationsContainer.innerHTML = '';
-                
-                data.notifications.forEach(notification => {
-                    const date = new Date(notification.dateEnvoi);
-                    const formattedDate = date.toLocaleDateString('fr-FR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    const notifCard = document.createElement('div');
-                    notifCard.className = 'notification-card';
-                    notifCard.dataset.id = notification.idNotification;
-                    notifCard.dataset.reference = notification.idReference;
-                    notifCard.dataset.type = notification.type;
-                    
-                    let notifType, actionButtons;
-                    
-                    if (notification.type === 'convocation_request') {
-                        notifType = 'Demande de convocation';
-                        actionButtons = `
-                            <button class="action-btn approve-btn" data-type="convocation">
-                                <i class="fas fa-check"></i> Approuver
-                            </button>
-                            <button class="action-btn reject-btn" data-type="convocation">
-                                <i class="fas fa-times"></i> Rejeter
-                            </button>
-                        `;
-                    } else if (notification.type === 'surveillance_request') {
-                        notifType = 'Demande de surveillance';
-                        actionButtons = `
-                            <button class="action-btn approve-btn" data-type="surveillance">
-                                <i class="fas fa-check"></i> Approuver
-                            </button>
-                            <button class="action-btn reject-btn" data-type="surveillance">
-                                <i class="fas fa-times"></i> Rejeter
-                            </button>
-                        `;
-                    } else {
-                        notifType = 'Notification';
-                        actionButtons = `
-                            <button class="action-btn mark-read-btn">
-                                <i class="fas fa-check"></i> Marquer comme lu
-                            </button>
-                        `;
-                    }
-                    
-                    notifCard.innerHTML = `
-                        <div class="notification-header">
-                            <div class="notif-type">${notifType}</div>
-                            <div class="notif-date">${formattedDate}</div>
-                        </div>
-                        <div class="notification-content">
-                            <div class="notif-user">
-                                <i class="fas fa-user-circle"></i>
-                                <span>${notification.nom}</span> (${notification.email})
-                            </div>
-                            <div class="notif-message">${notification.message}</div>
-                        </div>
-                        <div class="notification-actions">
-                            ${actionButtons}
-                        </div>
-                    `;
-                    
-                    notificationsContainer.appendChild(notifCard);
-                });
-                
-                // Ajouter les event listeners
-                setupNotificationButtons();
+            }
+
+            sendActionRequest(formData);
+        }
+    }
+
+    // Handle reject action
+    function handleRejectAction() {
+        const notification = this.closest('.notification-item');
+        if (!notification) return;
+
+        if (confirm('Êtes-vous sûr de vouloir rejeter cette demande?')) {
+            const formData = new FormData();
+            formData.append('action', 'rejectRequest');
+            formData.append('notificationId', notification.dataset.id);
+            formData.append('type', notification.dataset.type);
+
+            sendActionRequest(formData);
+        }
+    }
+
+    // Send action request to server
+    function sendActionRequest(formData) {
+        showLoadingState();
+
+        fetch(config.pathsToTry[config.currentPathIndex], {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            // Check for non-200 status
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            }
+            
+            // Try to parse as JSON, but handle case where server returns invalid JSON
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse server response as JSON:', text);
+                    throw new Error('Invalid server response format');
+                }
+            });
+        })
+        .then(data => {
+            if (data.success) {
+                showToast('Action terminée avec succès', 'success');
+                loadNotifications(); // Refresh the list
             } else {
-                notificationsContainer.innerHTML = `
-                    <div class="error-notification">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>Erreur lors du chargement des notifications: ${data.message}</p>
-                    </div>
-                `;
+                throw new Error(data.message || 'Action failed');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            notificationsContainer.innerHTML = `
-                <div class="error-notification">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>Erreur de connexion au serveur</p>
+            showToast(`Erreur: ${error.message}`, 'error');
+            console.error('Action error:', error);
+            // Show error state and enable retry
+            showErrorState(error.message || 'Failed to complete action');
+        });
+    }
+
+    // Handle loading errors
+    function handleLoadError(error) {
+        console.error('Load error:', error);
+        state.retryCount++;
+
+        // Try next available path
+        config.currentPathIndex++;
+        if (config.currentPathIndex < config.pathsToTry.length) {
+            console.log(`Trying alternative path: ${config.pathsToTry[config.currentPathIndex]}`);
+            loadNotifications();
+        } else {
+            showErrorState(error.message || 'Failed to load notifications');
+        }
+    }
+
+    // Network status handlers
+    function handleNetworkOnline() {
+        showToast('Connexion rétablie. Rechargement...', 'success');
+        loadNotifications();
+    }
+
+    function handleNetworkOffline() {
+        showToast('Connexion perdue. Réessayer quand en ligne...', 'error');
+    }
+
+    // UI State Management
+    function showLoadingState() {
+        dom.container.innerHTML = `
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Chargement des notifications...</span>
+            </div>
+        `;
+    }
+
+    function showErrorState(message) {
+        dom.container.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>${escapeHtml(message)}</p>
+                <button class="btn retry-btn">Réessayer</button>
+                <div class="error-details">
+                    <p>Chemins essayés:</p>
+                    <ul>
+                        ${config.pathsToTry.map(path => `<li>${escapeHtml(path)}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+
+        // Set up retry button
+        dom.retryBtn = document.querySelector('.retry-btn');
+        if (dom.retryBtn) {
+            dom.retryBtn.addEventListener('click', function() {
+                config.currentPathIndex = 0;
+                state.retryCount = 0;
+                loadNotifications();
+            });
+        }
+    }
+
+    function showNoNotifications() {
+        if (dom.noRequests) {
+            dom.noRequests.style.display = 'flex';
+        } else {
+            dom.container.innerHTML = `
+                <div class="no-notifications">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Aucune notification en attente</p>
                 </div>
             `;
-        });
-}
-
-// Configuration des boutons de notification
-function setupNotificationButtons() {
-    // Boutons pour marquer comme lu
-    document.querySelectorAll('.mark-read-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.notification-card');
-            const id = card.dataset.id;
-            
-            markAsRead(id, card);
-        });
-    });
-    
-    // Boutons d'approbation
-    document.querySelectorAll('.approve-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.notification-card');
-            const id = card.dataset.reference;
-            const type = this.dataset.type;
-            
-            approveRequest(id, type, card);
-        });
-    });
-    
-    // Boutons de rejet
-    document.querySelectorAll('.reject-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.notification-card');
-            const id = card.dataset.reference;
-            const type = this.dataset.type;
-            
-            rejectRequest(id, type, card);
-        });
-    });
-}
-
-// Fonction pour marquer une notification comme lue
-function markAsRead(id, card) {
-    const formData = new FormData();
-    formData.append('action', 'markAsRead');
-    formData.append('id', id);
-    
-    fetch('db/gestion.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Animation de disparition
-            card.classList.add('notification-fade-out');
-            
-            // Supprimer la carte après l'animation
-            setTimeout(() => {
-                card.remove();
-                
-                // Si plus de notifications, afficher le message vide
-                if (document.querySelectorAll('.notification-card').length === 0) {
-                    document.getElementById('notificationsContainer').innerHTML = `
-                        <div class="empty-notification">
-                            <i class="fas fa-bell-slash"></i>
-                            <p>Aucune notification en attente</p>
-                        </div>
-                    `;
-                }
-            }, 300);
-        } else {
-            alert('Erreur: ' + data.message);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Une erreur est survenue');
-    });
-}
-
-// Fonction pour approuver une demande
-function approveRequest(id, type, card) {
-    if (!confirm('Êtes-vous sûr de vouloir approuver cette demande ?')) {
-        return;
+        updateCountDisplay(0);
     }
-    
-    const formData = new FormData();
-    formData.append('action', 'approveRequest');
-    formData.append('id', id);
-    formData.append('type', type);
-    
-    fetch('db/gestion.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Montrer un toast de succès
-            showToast('Demande approuvée avec succès');
-            
-            // Animation de disparition
-            card.classList.add('notification-fade-out');
-            
-            // Supprimer la carte après l'animation
-            setTimeout(() => {
-                card.remove();
-                
-                // Si plus de notifications, afficher le message vide
-                if (document.querySelectorAll('.notification-card').length === 0) {
-                    document.getElementById('notificationsContainer').innerHTML = `
-                        <div class="empty-notification">
-                            <i class="fas fa-bell-slash"></i>
-                            <p>Aucune notification en attente</p>
-                        </div>
-                    `;
-                }
-            }, 300);
-        } else {
-            alert('Erreur: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Une erreur est survenue');
-    });
-}
 
-// Fonction pour rejeter une demande
-function rejectRequest(id, type, card) {
-    if (!confirm('Êtes-vous sûr de vouloir rejeter cette demande ?')) {
-        return;
+    function updateCountDisplay(count) {
+        if (dom.count) {
+            dom.count.textContent = count !== undefined ? count : state.currentRequests.length;
+        }
     }
-    
-    const formData = new FormData();
-    formData.append('action', 'rejectRequest');
-    formData.append('id', id);
-    formData.append('type', type);
-    
-    fetch('db/gestion.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Montrer un toast de succès
-            showToast('Demande rejetée avec succès');
-            
-            // Animation de disparition
-            card.classList.add('notification-fade-out');
-            
-            // Supprimer la carte après l'animation
-            setTimeout(() => {
-                card.remove();
-                
-                // Si plus de notifications, afficher le message vide
-                if (document.querySelectorAll('.notification-card').length === 0) {
-                    document.getElementById('notificationsContainer').innerHTML = `
-                        <div class="empty-notification">
-                            <i class="fas fa-bell-slash"></i>
-                            <p>Aucune notification en attente</p>
-                        </div>
-                    `;
-                }
-            }, 300);
-        } else {
-            alert('Erreur: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Une erreur est survenue');
-    });
-}
 
-// Fonction pour afficher un toast
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.add('toast-show');
-    }, 10);
-    
-    setTimeout(() => {
-        toast.classList.remove('toast-show');
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+            <span>${escapeHtml(message)}</span>
+        `;
+        document.body.appendChild(toast);
+
         setTimeout(() => {
-            toast.remove();
-        }, 300);
-    }, 3000);
-}
-
-// Déconnexion
-document.querySelector('.account-dropdown li:last-child').addEventListener('click', function() {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-        window.location.href = 'logout.php';
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }, 10);
     }
-});
 
-// Charger les notifications au chargement de la page
-window.addEventListener('DOMContentLoaded', () => {
-    loadNotifications();
-});
+    // Auto-refresh functionality
+    function startAutoRefresh() {
+        stopAutoRefresh();
+        state.refreshTimer = setInterval(loadNotifications, config.refreshInterval);
+    }
+
+    function stopAutoRefresh() {
+        if (state.refreshTimer) {
+            clearInterval(state.refreshTimer);
+        }
+    }
+
+    // Helper functions
+    function getRequestTypeLabel(type) {
+        const labels = {
+            'profile_edit_request': 'Demande de modification de profil',
+            'subject_add_request': 'Demande d\'ajout de matière'
+        };
+        return labels[type] || type;
+    }
+
+    function formatDate(dateString) {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            console.error('Date formatting error:', e);
+            return dateString;
+        }
+    }
+
+    function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe.toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

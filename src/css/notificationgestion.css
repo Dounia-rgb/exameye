@@ -4,10 +4,12 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+
 body {
     background: #f7f9fc;
     min-height: 100vh;
 }
+
 .top-nav {
     display: flex;
     justify-content: space-between;
@@ -16,26 +18,31 @@ body {
     padding: 15px 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
 .logo {
     display: flex;
     align-items: center;
 }
+
 .logo img {
     width: 35px;
     height: 35px;
     border-radius: 50%;
     margin-right: 10px;
 }
+
 .logo h1 {
     font-size: 20px;
     font-weight: 600;
     color: white;
     letter-spacing: 0.5px;
 }
+
 .nav-buttons {
     display: flex;
     gap: 15px;
 }
+
 .nav-btn {
     padding: 10px 20px;
     border-radius: 6px;
@@ -48,18 +55,25 @@ body {
     background: rgba(255, 255, 255, 0.1);
     font-weight: 400;
     border: none;
+    transition: all 0.3s ease;
 }
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .nav-btn.active {
     background: rgba(255, 255, 255, 0.25);
     font-weight: 500;
     border-bottom: 2px solid #4aade9;
 }
+
 .account-container {
     position: relative;
     display: flex;
     align-items: center;
-    cursor: pointer;
 }
+
 .account-icon {
     width: 40px;
     height: 40px;
@@ -70,7 +84,15 @@ body {
     align-items: center;
     color: white;
     font-size: 18px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
 }
+
+.account-icon:hover {
+    background-color: #4a5d7a;
+}
+
 .account-dropdown {
     display: none;
     position: absolute;
@@ -83,12 +105,15 @@ body {
     padding: 10px;
     z-index: 1000;
 }
+
 .account-dropdown.show {
     display: block;
 }
+
 .account-dropdown ul {
     list-style: none;
 }
+
 .account-dropdown li {
     padding: 12px;
     display: flex;
@@ -97,26 +122,41 @@ body {
     cursor: pointer;
     border-radius: 6px;
     font-size: 14px;
+    transition: all 0.2s ease;
 }
+
 .account-dropdown li:hover {
     background: #f0f5ff;
 }
+
+.account-dropdown li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
 .account-dropdown li i {
     color: #1e3a8a;
     width: 16px;
     text-align: center;
 }
+
 .main-container {
     padding: 25px;
     max-width: 1300px;
     margin: 0 auto;
 }
+
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
 }
+
 .title {
     font-size: 22px;
     color: #1e293b;
@@ -124,6 +164,7 @@ body {
     position: relative;
     padding-left: 15px;
 }
+
 .title:before {
     content: '';
     position: absolute;
@@ -135,6 +176,23 @@ body {
     background: #1e3a8a;
     border-radius: 2px;
 }
+
+.notification-count {
+    background: #f0f5ff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #1e3a8a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notification-count #pendingCount {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
 .management-section {
     background: white;
     border-radius: 12px;
@@ -142,90 +200,270 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     margin-top: 20px;
     border: 1px solid #eaecef;
+    min-height: 300px;
 }
+
+/* Notification item styles */
 .notification-item {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.notification-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 12px;
 }
-.notification-content {
-    flex-grow: 1;
-}
-.notification-actions {
-    display: flex;
-    gap: 10px;
-}
-.action-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
-}
-.accept-btn {
-    background-color: #10b981;
-    color: white;
-}
-.reject-btn {
-    background-color: #ef4444;
-    color: white;
-}
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-}
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e2e8f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #64748b;
-    font-weight: 600;
-}
-.user-name {
-    font-weight: 500;
-    color: #1e293b;
-}
-.request-text {
-    color: #64748b;
-    font-size: 14px;
-    padding-left: 50px;
-}
-.no-notifications {
-    text-align: center;
-    padding: 30px;
-    color: #64748b;
-    font-style: italic;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px dashed #cbd5e1;
-}
-.notification-time {
-    font-size: 12px;
-    color: #94a3b8;
-    padding-left: 50px;
-    margin-top: 5px;
-}
-.badge {
-    display: inline-block;
-    padding: 3px 8px;
+
+.notification-type {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 10px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 500;
-    margin-left: 10px;
 }
-.badge-new {
-    background-color: #3b82f6;
+
+.notification-date {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.notification-message {
+    color: #334155;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.notification-details {
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.notification-details h4 {
+    color: #1e293b;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Fixed button classes to match JavaScript */
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-approve {
+    background: #10b981;
     color: white;
+}
+
+.btn-approve:hover {
+    background: #0d9f6e;
+}
+
+.btn-reject {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-reject:hover {
+    background: #dc2626;
+}
+
+/* Support for legacy class names if needed */
+.notification-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.approve-btn {
+    background: #10b981;
+    color: white;
+}
+
+.approve-btn:hover {
+    background: #0d9f6e;
+}
+
+.reject-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.reject-btn:hover {
+    background: #dc2626;
+}
+
+/* Empty state */
+.no-notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 30px;
+    color: #64748b;
+    text-align: center;
+}
+
+.no-notifications i {
+    font-size: 24px;
+    color: #94a3b8;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: #ecfdf5;
+    color: #065f46;
+    border-left: 4px solid #10b981;
+}
+
+.toast.error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-left: 4px solid #ef4444;
+}
+
+/* Loading and error states */
+.loading-state,
+.error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    gap: 15px;
+    text-align: center;
+}
+
+.loading-state i,
+.error-state i {
+    font-size: 24px;
+    color: #64748b;
+}
+
+.retry-btn {
+    background: #3b82f6;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+    background: #2563eb;
+}
+
+.error-details {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #64748b;
+    text-align: left;
+}
+
+.error-details ul {
+    list-style-position: inside;
+    margin-top: 5px;
+}
+
+/* Screen reader only utility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .nav-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .account-container {
+        position: static;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .account-dropdown {
+        position: static;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .notification-actions {
+        flex-direction: column;
+    }
+    
+    .btn, .notification-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }

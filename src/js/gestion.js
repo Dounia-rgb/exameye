@@ -20,6 +20,7 @@ professeursTab.addEventListener('click', () => {
     chefsTab.classList.remove('active');
     professeursTable.style.display = 'block';
     chefsTable.style.display = 'none';
+    document.getElementById('demandesContainer').style.display = 'none';
     resetSearch();
     loadUsers('professeur');
 });
@@ -29,12 +30,12 @@ chefsTab.addEventListener('click', () => {
     professeursTab.classList.remove('active');
     chefsTable.style.display = 'block';
     professeursTable.style.display = 'none';
+    document.getElementById('demandesContainer').style.display = 'none';
     resetSearch();
-    loadUsers('administrateur'); // Modifié de 'chefDepartement' à 'administrateur'
+    loadUsers('administrateur');
 });
 
-
-// Highlight
+// Highlight and Search functionality
 function highlightText(cell, searchText) {
     const text = cell.textContent;
     const regex = new RegExp(`(${searchText})`, 'gi');
@@ -49,13 +50,10 @@ function resetHighlighting() {
 
 function resetSearch() {
     resetHighlighting();
-
     document.querySelectorAll('#professeursTableBody tr').forEach(row => row.style.display = '');
     document.querySelectorAll('#chefsTableBody tr').forEach(row => row.style.display = '');
-
     document.getElementById('noResultsProfs').style.display = 'none';
     document.getElementById('noResultsChefs').style.display = 'none';
-    
     document.getElementById('searchInput').value = '';
 }
 
@@ -90,9 +88,9 @@ document.getElementById('searchButton').addEventListener('click', searchTable);
 document.getElementById('searchInput').addEventListener('keyup', function(e) {
     if (e.key === 'Enter') searchTable();
 });
-// Ajouter au début de votre fichier gestion.js
+
+// Session check
 function checkSession() {
-    // Récupérer l'userId depuis l'URL
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('userId');
     
@@ -103,7 +101,6 @@ function checkSession() {
                 alert('Votre session a expiré. Veuillez vous reconnecter.');
                 window.location.href = '../dashboards/login.html';
             } else {
-                // Session valide, on charge les utilisateurs
                 loadUsers('professeur');
                 setupActionButtons();
             }
@@ -114,17 +111,12 @@ function checkSession() {
         });
 }
 
-// Remplacer votre event listener existant par celui-ci
-window.addEventListener('DOMContentLoaded', () => {
-    checkSession();
-});
-// Charger les utilisateurs depuis la base de données
+// User management functions
 function loadUsers(role) {
     const tableBody = role === 'professeur' ? 
         document.getElementById('professeursTableBody') : 
         document.getElementById('chefsTableBody');
     
-    // Vider le tableau
     tableBody.innerHTML = '<tr><td colspan="4" class="loading-row">Chargement des données...</td></tr>';
     
     fetch(`../db/gestion.php?action=getUsers&role=${role}`)
@@ -163,7 +155,6 @@ function loadUsers(role) {
                     tableBody.appendChild(row);
                 });
                 
-                // Réinitialiser les event listeners pour les boutons d'action
                 setupActionButtons();
             } else {
                 tableBody.innerHTML = `<tr><td colspan="4" class="error-row">Erreur: ${data.message}</td></tr>`;
@@ -188,7 +179,6 @@ function openEditModal(row) {
     currentRow = row;
     const cells = row.querySelectorAll('td');
     
-    // Créer les champs cachés s'ils n'existent pas
     if (!document.getElementById('editId')) {
         const idInput = document.createElement('input');
         idInput.type = 'hidden';
@@ -203,24 +193,19 @@ function openEditModal(row) {
         editForm.appendChild(roleInput);
     }
     
-    // Set modal title
     document.getElementById('modalTitle').textContent = `Modifier ${cells[0].textContent}`;
-    
-    // Fill form with current values
     document.getElementById('editId').value = row.dataset.id;
     document.getElementById('editRole').value = row.dataset.role;
     document.getElementById('editName').value = cells[0].textContent;
     document.getElementById('editEmail').value = cells[1].textContent;
     document.getElementById('editField').value = cells[2].textContent;
     
-    // Update field label based on current tab
     if (professeursTab.classList.contains('active')) {
         fieldLabel.textContent = 'Matière';
     } else {
         fieldLabel.textContent = 'Département';
     }
     
-    // Show modal
     editModal.style.display = 'flex';
 }
 
@@ -229,11 +214,9 @@ function closeEditModal() {
     currentRow = null;
 }
 
-// Event listeners for modal
 closeModal.addEventListener('click', closeEditModal);
 cancelEdit.addEventListener('click', closeEditModal);
 
-// Submit form with AJAX
 editForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -252,7 +235,6 @@ editForm.addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the row in the table
             if (currentRow) {
                 const cells = currentRow.querySelectorAll('td');
                 cells[0].textContent = document.getElementById('editName').value;
@@ -270,7 +252,6 @@ editForm.addEventListener('submit', function(e) {
     });
 });
 
-// Close modal when clicking outside
 window.addEventListener('click', function(event) {
     if (event.target === editModal) {
         closeEditModal();
@@ -317,15 +298,21 @@ function setupActionButtons() {
     });
 }
 
-// Déconnexion
-document.querySelector('.account-dropdown li:last-child').addEventListener('click', function() {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-        window.location.href = 'logout.php';
-    }
-});
+// Navigation
+const notificationBtn = document.querySelector('.nav-btn[href="../dashboards/notificationgestion.html"]');
+if (notificationBtn) {
+    notificationBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        professeursTab.classList.remove('active');
+        chefsTab.classList.remove('active');
+        professeursTable.style.display = 'none';
+        chefsTable.style.display = 'none';
+        document.getElementById('demandesContainer').style.display = 'block';
+    });
+}
 
-// Charger les professeurs au chargement de la page
+// Initialize
 window.addEventListener('DOMContentLoaded', () => {
+    checkSession();
     loadUsers('professeur');
-    setupActionButtons();
 });

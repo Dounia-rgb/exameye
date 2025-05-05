@@ -5,33 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ExamEye Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="/src/css/compte.css">
+    <link rel="stylesheet" href="../src/css/compte.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
         
+        .dialog-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .dialog-box {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .dialog-box h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .dialog-box p {
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+        
+        .dialog-box button {
+            margin: 0 auto;
+        }
+        
+        /* Pending status styles */
+        .pending-status {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border-left: 4px solid #ffc107;
+            font-size: 0.9rem;
+        }
+        
+        .pending-status i {
+            margin-right: 0.5rem;
+        }
+        
+        .pending-item {
+            position: relative;
+        }
+        
+        .pending-badge {
+            display: inline-block;
+            background-color: #ffc107;
+            color: #856404;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        #subjectList li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        #subjectList li i {
+            margin-left: auto;
+        }
+        
+        /* Button de retour */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .back-button i {
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
-  <script src="/src/js/compte.js" defer></script>
+    <div class="dialog-overlay" id="dialogOverlay">
+        <div class="dialog-box">
+            <h3>Demande envoyée</h3>
+            <p>Votre demande de modification a été prise en considération et sera traitée par l'administrateur.</p>
+            <button onclick="closeDialog()">OK</button>
+        </div>
+    </div>
+
+    <script src="../src/js/compte.js" defer></script>
     <div class="main-container">
         <div class="title">Online Exam Surveil</div>
         <div class="main-content">
+            <button class="back-button" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+            
             <div class="profile-container">
                 <h2>Mon Profil</h2>
                 
                 <div class="profile-info">
                     <label>Nom :</label>
-                    <span id="nom">Dupont</span>
-                </div>
-
-                <div class="profile-info">
-                    <label>Prénom :</label>
-                    <span id="prenom">Jean</span>
+                    <span id="nom">Chargement...</span>
                 </div>
 
                 <div class="profile-info">
                     <label>Email :</label>
-                    <span id="email">jean.dupont@example.com</span>
+                    <span id="email">Chargement...</span>
                 </div>
 
                 <div class="profile-info">
@@ -64,7 +178,5 @@
             </div>
         </div>
     </div>
-
-  
 </body>
 </html>

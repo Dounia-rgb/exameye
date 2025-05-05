@@ -104,6 +104,43 @@ try {
             
             rejectRequest($pdo, $id, $type);
             break;
+
+        /* NEW REQUEST MANAGEMENT ACTIONS */
+        case 'getPendingRequests':
+            getPendingRequests($pdo);
+            break;
+
+        case 'approveProfileEdit':
+            $notificationId = filter_input(INPUT_POST, 'notificationId', FILTER_VALIDATE_INT);
+            if (!$notificationId) {
+                throw new Exception('ID de notification invalide');
+            }
+            approveProfileEditRequest($pdo, $notificationId);
+            break;
+            
+        case 'approveSubjectAdd':
+            $notificationId = filter_input(INPUT_POST, 'notificationId', FILTER_VALIDATE_INT);
+            if (!$notificationId) {
+                throw new Exception('ID de notification invalide');
+            }
+            approveSubjectAddRequest($pdo, $notificationId);
+            break;
+            
+        case 'rejectProfileRequest':
+            $notificationId = filter_input(INPUT_POST, 'notificationId', FILTER_VALIDATE_INT);
+            if (!$notificationId) {
+                throw new Exception('ID de notification invalide');
+            }
+            rejectProfileRequest($pdo, $notificationId);
+            break;
+            
+        case 'rejectSubjectRequest':
+            $notificationId = filter_input(INPUT_POST, 'notificationId', FILTER_VALIDATE_INT);
+            if (!$notificationId) {
+                throw new Exception('ID de notification invalide');
+            }
+            rejectSubjectRequest($pdo, $notificationId);
+            break;
             
         default:
             throw new Exception('Action non reconnue');
@@ -118,9 +155,10 @@ try {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 
-/**
- * Récupérer les utilisateurs par rôle
- */
+/* ==============================================
+   EXISTING FUNCTIONS - KEEP THESE EXACTLY AS IS
+   ============================================== */
+
 function getUsers($pdo, $role) {
     if (!in_array($role, ['professeur', 'administrateur'])) {
         throw new Exception('Rôle non valide');
@@ -137,11 +175,11 @@ function getUsers($pdo, $role) {
         $stmt->bindValue(':role', $role, PDO::PARAM_STR);
     } else {
         $stmt = $pdo->prepare("
-        SELECT u.idUtilisateur, u.nom, u.email, 'Informatique' as departement
-        FROM utilisateur u
-        WHERE u.role = :role
-        ORDER BY u.nom
-    ");
+            SELECT u.idUtilisateur, u.nom, u.email, 'Informatique' as departement
+            FROM utilisateur u
+            WHERE u.role = :role
+            ORDER BY u.nom
+        ");
         $stmt->bindValue(':role', $role, PDO::PARAM_STR);
     }
     
@@ -152,12 +190,6 @@ function getUsers($pdo, $role) {
     echo json_encode(['success' => true, 'users' => $users]);
 }
 
-/**
- * Modifier un professeur
- */
-/**
- * Modifier un professeur
- */
 function editProfesseur($pdo, $id, $name, $email, $field) {
     $pdo->beginTransaction();
     
@@ -225,9 +257,6 @@ function editProfesseur($pdo, $id, $name, $email, $field) {
     }
 }
 
-/**
- * Modifier un chef de département (administrateur)
- */
 function editAdministrateur($pdo, $id, $name, $email, $departement) {
     $stmt = $pdo->prepare("
         UPDATE utilisateur 
@@ -237,7 +266,6 @@ function editAdministrateur($pdo, $id, $name, $email, $departement) {
     
     $stmt->bindValue(':nom', $name, PDO::PARAM_STR);
     $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-   
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     
@@ -249,9 +277,6 @@ function editAdministrateur($pdo, $id, $name, $email, $departement) {
     echo json_encode(['success' => true]);
 }
 
-/**
- * Supprimer un utilisateur
- */
 function deleteUser($pdo, $id) {
     $pdo->beginTransaction();
     
@@ -292,9 +317,6 @@ function deleteUser($pdo, $id) {
     }
 }
 
-/**
- * Récupérer les notifications
- */
 function getNotifications($pdo) {
     $stmt = $pdo->prepare("
         SELECT n.idNotification, n.message, n.dateEnvoi, n.type, n.idReference, u.nom, u.email
@@ -311,9 +333,6 @@ function getNotifications($pdo) {
     echo json_encode(['success' => true, 'notifications' => $notifications]);
 }
 
-/**
- * Marquer une notification comme lue
- */
 function markNotificationAsRead($pdo, $id) {
     $stmt = $pdo->prepare("
         UPDATE notification 
@@ -332,9 +351,6 @@ function markNotificationAsRead($pdo, $id) {
     echo json_encode(['success' => true]);
 }
 
-/**
- * Approuver une demande
- */
 function approveRequest($pdo, $id, $type) {
     $pdo->beginTransaction();
     
@@ -419,9 +435,6 @@ function approveRequest($pdo, $id, $type) {
     }
 }
 
-/**
- * Rejeter une demande
- */
 function rejectRequest($pdo, $id, $type) {
     $pdo->beginTransaction();
     
@@ -495,6 +508,226 @@ function rejectRequest($pdo, $id, $type) {
         
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+        
+        $pdo->commit();
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
+/* ==============================================
+   NEW REQUEST MANAGEMENT FUNCTIONS
+   ============================================== */
+
+function getPendingRequests($pdo) {
+    $stmt = $pdo->prepare("
+        SELECT n.idNotification, n.message, n.dateEnvoi, n.type, n.idReference, u.nom as senderName
+        FROM notification n
+        JOIN utilisateur u ON n.destinataire = u.idUtilisateur
+        WHERE n.isRead = 0 
+        AND n.type IN ('profile_edit_request', 'subject_add_request')
+        ORDER BY n.dateEnvoi DESC
+    ");
+    
+    $stmt->execute();
+    $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true, 'requests' => $requests]);
+}
+
+function approveProfileEditRequest($pdo, $notificationId) {
+    $pdo->beginTransaction();
+    
+    try {
+        // Get the notification with changes
+        $stmt = $pdo->prepare("
+            SELECT n.idReference, n.destinataire, u.nom 
+            FROM notification n
+            JOIN utilisateur u ON n.destinataire = u.idUtilisateur
+            WHERE n.idNotification = ? AND n.type = 'profile_edit_request'
+        ");
+        $stmt->execute([$notificationId]);
+        $notification = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$notification) {
+            throw new Exception('Notification non trouvée');
+        }
+        
+        $changes = json_decode($notification['idReference'], true);
+        
+        // Update user profile
+        $updateSql = "UPDATE utilisateur SET nom = ?, email = ?";
+        $params = [$changes['new_name'], $changes['new_email']];
+        
+        if (!empty($changes['new_password'])) {
+            $updateSql .= ", motDePasse = ?";
+            $params[] = password_hash($changes['new_password'], PASSWORD_DEFAULT);
+        }
+        
+        $updateSql .= " WHERE idUtilisateur = ?";
+        $params[] = $notification['destinataire'];
+        
+        $stmt = $pdo->prepare($updateSql);
+        $stmt->execute($params);
+        
+        // Mark notification as read
+        $stmt = $pdo->prepare("UPDATE notification SET isRead = 1 WHERE idNotification = ?");
+        $stmt->execute([$notificationId]);
+        
+        // Create success notification for user
+        $stmt = $pdo->prepare("
+            INSERT INTO notification 
+            (destinataire, message, dateEnvoi, type, isRead, url)
+            VALUES (?, 'Votre demande de modification de profil a été approuvée', NOW(), 'profile_edit_approved', 0, '/compte')
+        ");
+        $stmt->execute([$notification['destinataire']]);
+        
+        $pdo->commit();
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
+function approveSubjectAddRequest($pdo, $notificationId) {
+    $pdo->beginTransaction();
+    
+    try {
+        // Get the notification with subject info
+        $stmt = $pdo->prepare("
+            SELECT n.idReference, n.destinataire 
+            FROM notification n
+            WHERE n.idNotification = ? AND n.type = 'subject_add_request'
+        ");
+        $stmt->execute([$notificationId]);
+        $notification = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$notification) {
+            throw new Exception('Notification non trouvée');
+        }
+        
+        $subjectInfo = json_decode($notification['idReference'], true);
+        
+        // Get current subjects for professor
+        $stmt = $pdo->prepare("SELECT matiereEnseignee FROM professeur WHERE idUtilisateur = ?");
+        $stmt->execute([$notification['destinataire']]);
+        $professor = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $currentSubjects = $professor ? explode(',', $professor['matiereEnseignee']) : [];
+        
+        // Add new subject if not already present
+        if (!in_array($subjectInfo['idMatiere'], $currentSubjects)) {
+            $currentSubjects[] = $subjectInfo['idMatiere'];
+            $updatedSubjects = implode(',', $currentSubjects);
+            
+            // Update professor subjects
+            $stmt = $pdo->prepare("
+                INSERT INTO professeur (idUtilisateur, matiereEnseignee)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE matiereEnseignee = ?
+            ");
+            $stmt->execute([$notification['destinataire'], $updatedSubjects, $updatedSubjects]);
+        }
+        
+        // Mark notification as read
+        $stmt = $pdo->prepare("UPDATE notification SET isRead = 1 WHERE idNotification = ?");
+        $stmt->execute([$notificationId]);
+        
+        // Create success notification for user
+        $stmt = $pdo->prepare("
+            INSERT INTO notification 
+            (destinataire, message, dateEnvoi, type, isRead, url)
+            VALUES (?, CONCAT('Votre demande d\\'ajout de matière (', ?, ') a été approuvée'), NOW(), 'subject_add_approved', 0, '/compte')
+        ");
+        $stmt->execute([$notification['destinataire'], $subjectInfo['subject']]);
+        
+        $pdo->commit();
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
+function rejectProfileRequest($pdo, $notificationId) {
+    $pdo->beginTransaction();
+    
+    try {
+        // Get notification to find user
+        $stmt = $pdo->prepare("
+            SELECT destinataire, idReference 
+            FROM notification 
+            WHERE idNotification = ? AND type = 'profile_edit_request'
+        ");
+        $stmt->execute([$notificationId]);
+        $notification = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$notification) {
+            throw new Exception('Notification non trouvée');
+        }
+        
+        // Mark notification as read
+        $stmt = $pdo->prepare("UPDATE notification SET isRead = 1 WHERE idNotification = ?");
+        $stmt->execute([$notificationId]);
+        
+        // Create rejection notification for user
+        $stmt = $pdo->prepare("
+            INSERT INTO notification 
+            (destinataire, message, dateEnvoi, type, isRead, url)
+            VALUES (?, 'Votre demande de modification de profil a été rejetée', NOW(), 'profile_edit_rejected', 0, '/compte')
+        ");
+        $stmt->execute([$notification['destinataire']]);
+        
+        $pdo->commit();
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw $e;
+    }
+}
+
+function rejectSubjectRequest($pdo, $notificationId) {
+    $pdo->beginTransaction();
+    
+    try {
+        // Get notification to find user
+        $stmt = $pdo->prepare("
+            SELECT destinataire, idReference 
+            FROM notification 
+            WHERE idNotification = ? AND type = 'subject_add_request'
+        ");
+        $stmt->execute([$notificationId]);
+        $notification = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$notification) {
+            throw new Exception('Notification non trouvée');
+        }
+        
+        $subjectInfo = json_decode($notification['idReference'], true);
+        
+        // Mark notification as read
+        $stmt = $pdo->prepare("UPDATE notification SET isRead = 1 WHERE idNotification = ?");
+        $stmt->execute([$notificationId]);
+        
+        // Create rejection notification for user
+        $stmt = $pdo->prepare("
+            INSERT INTO notification 
+            (destinataire, message, dateEnvoi, type, isRead, url)
+            VALUES (?, CONCAT('Votre demande d\\'ajout de matière (', ?, ') a été rejetée'), NOW(), 'subject_add_rejected', 0, '/compte')
+        ");
+        $stmt->execute([$notification['destinataire'], $subjectInfo['subject']]);
         
         $pdo->commit();
         
