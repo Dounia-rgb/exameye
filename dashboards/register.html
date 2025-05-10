@@ -4,27 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../src/css/register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Register Page</title>
-   
 </head>
 <body>
     <div class="welcome-text">Welcome to ExamEye</div>
     <div class="container">
+        <!-- Notification div -->
+        <div id="notification" class="notification" style="display: none;">
+            <span id="notification-message"></span>
+        </div>
+        
         <div class="register-box">
             <h2>Register</h2>
-            <form id="registerForm" action="../db/register.php" method="POST">
+            <form id="registerForm">
                 <div class="input-box">
-                    <input type="text" name="name" id="name" placeholder="Name" required>
+                    <input type="text" name="nom" id="nom" placeholder="Nom complet" required>
                 </div>
                 <div class="input-box">
                     <input type="email" name="email" id="email" placeholder="Email" required>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <input type="password" name="password" id="password" placeholder="Mot de passe" required>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirmer mot de passe" required>
                 </div>
 
                 <div class="role-selection">
-                    <label class="role-label">Select Role:</label>
+                    <label class="role-label">Sélectionner un rôle:</label>
                     <div class="input-box role-options">
                         <label>
                             <input type="radio" name="role" value="administrateur" required> Administrateur
@@ -35,41 +43,12 @@
                     </div>
                 </div>
 
-                <button type="submit" class="register-btn">Register</button>
-                <p>Already have an account? <a href="../index.html">Login</a></p>
+                <button type="submit" class="register-btn">S'inscrire</button>
+                <p>Vous avez déjà un compte? <a href="../index.html">Se connecter</a></p>
             </form>
         </div>
     </div>
 
-
-    <script>
-        document.getElementById("registerForm").addEventListener("submit", function(event) {
-            let isValid = true;
-
-          
-            const email = document.getElementById("email");
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailPattern.test(email.value.trim())) {
-                alert("Invalid email address.");
-                isValid = false;
-            }
-
-            const name = document.getElementById("name");
-            if (name.value.trim().length < 3) {
-                alert("Name must be at least 3 characters.");
-                isValid = false;
-            }
-
-           
-            const password = document.getElementById("password");
-            if (password.value.length < 6) {
-                alert("Password must be at least 6 characters.");
-                isValid = false;
-            }
-
-            if (!isValid) event.preventDefault();
-        });
-    </script>
- <script src="../src/js/register.js"></script>
+    <script src="../src/js/register.js"></script>
 </body>
 </html>

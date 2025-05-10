@@ -1,122 +1,165 @@
 <?php
+// Set headers first to prevent any output
+header('Content-Type: application/json');
 session_start();
-ob_start(); // Prevent header issues
 
 require_once 'config.php';
 require_once 'email_functions.php';
 
 // Process registration request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect input data
-    $nom = trim($_POST['nom']);
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $confirmPassword = trim($_POST['confirm_password']);
-    $role = trim($_POST['role']);
+    try {
+        // Collect and sanitize input data
+        $nom = trim($_POST['nom'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+        $confirmPassword = trim($_POST['confirm_password'] ?? '');
+        $role = trim($_POST['role'] ?? '');
 
-    // Validation
-    $errors = [];
+        // Validation
+        $errors = [];
 
-    // Validate name
-    if (empty($nom)) {
-        $errors[] = "Le nom est requis.";
-    }
-
-    // Validate email
-    if (empty($email)) {
-        $errors[] = "L'email est requis.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Format d'email invalide.";
-    } else {
-        // Check if email exists
-        $stmt = $conn->prepare("SELECT COUNT(*) FROM utilisateur WHERE email = ?");
-        $stmt->execute([$email]);
-        $emailExists = $stmt->fetchColumn();
-        
-        if ($emailExists) {
-            $errors[] = "Cet email est déjà utilisé.";
+        // Validate name
+        if (empty($nom)) {
+            $errors[] = "Le nom est requis.";
+        } elseif (strlen($nom) < 3) {
+            $errors[] = "Le nom doit contenir au moins 3 caractères.";
         }
-    }
 
-    // Validate password
-    if (empty($password)) {
-        $errors[] = "Le mot de passe est requis.";
-    } elseif (strlen($password) < 8) {
-        $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
-    }
-
-    // Validate password confirmation
-    if ($password !== $confirmPassword) {
-        $errors[] = "Les mots de passe ne correspondent pas.";
-    }
-
-    // Validate role
-    $allowedRoles = ['etudiant', 'professeur', 'surveillant'];
-    if (!in_array($role, $allowedRoles)) {
-        $errors[] = "Rôle invalide.";
-    }
-
-    // Process registration if no errors
-    if (empty($errors)) {
-        try {
-            $conn->beginTransaction();
-            
-            // Insert user into database with pending=1 (awaiting approval)
-            $stmt = $conn->prepare("INSERT INTO utilisateur (nom, email, motDePasse, role, pending) VALUES (?, ?, ?, ?, 1)");
-            $success = $stmt->execute([$nom, $email, $password, $role]);
-            
-            if ($success) {
-                $userId = $conn->lastInsertId();
-                
-                // Create notification for admin to approve
-                $notificationMessage = "Nouvelle demande d'inscription de $nom ($role).";
-                $stmt = $conn->prepare("
-                    INSERT INTO notification (destinataire, message, dateEnvoi, type, idReference, isRead) 
-                    VALUES ('admin', ?, NOW(), 'registration_request', ?, 0)
-                ");
-                $stmt->execute([$notificationMessage, $userId]);
-                
-                // Send confirmation email to user
-                $subject = "ExamEye - Confirmation de votre demande d'inscription";
-                $message = "
-                <html>
-                <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
-                    <h2>Demande d'inscription reçue</h2>
-                    <p>Bonjour $nom,</p>
-                    <p>Nous avons bien reçu votre demande d'inscription sur la plateforme ExamEye.</p>
-                    <p>Votre demande est actuellement en cours d'examen par notre équipe administrative. 
-                    Vous recevrez un email de confirmation dès que votre compte sera activé.</p>
-                    <p>Cordialement,<br>L'équipe ExamEye</p>
-                </body>
-                </html>";
-                
-                sendEmail($email, $subject, $message);
-                
-                $conn->commit();
-                
-                // Redirect to confirmation page
-                echo "<script>
-                    alert('Votre inscription a été soumise avec succès. Un administrateur va examiner votre demande.');
-                    window.location.href = '../dashboards/login.html';
-                </script>";
-                exit();
-            } else {
-                throw new Exception("Échec de l'insertion dans la base de données.");
+        // Validate email
+        if (empty($email)) {
+            $errors[] = "L'email est requis.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Format d'email invalide.";
+        } else {
+            // Check if email exists
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM utilisateur WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetchColumn() > 0) {
+                $errors[] = "Cet email est déjà utilisé.";
             }
-        } catch (Exception $e) {
-            $conn->rollBack();
-            $errors[] = "Erreur d'inscription: " . $e->getMessage();
         }
-    }
-    
-    // If there are errors, display them
-    if (!empty($errors)) {
-        $errorString = implode("\\n", $errors);
-        echo "<script>alert('$errorString'); window.history.back();</script>";
+
+        // Validate password
+        if (empty($password)) {
+            $errors[] = "Le mot de passe est requis.";
+        } elseif (strlen($password) < 8) {
+            $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
+        } elseif ($password !== $confirmPassword) {
+            $errors[] = "Les mots de passe ne correspondent pas.";
+        }
+
+        // Validate role
+        $allowedRoles = ['administrateur', 'professeur'];
+        if (!in_array($role, $allowedRoles)) {
+            $errors[] = "Rôle invalide.";
+        }
+
+        // If validation errors, return them
+        if (!empty($errors)) {
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors
+            ]);
+            exit();
+        }
+
+        // Start transaction
+        $conn->beginTransaction();
+
+        // Hash password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert into utilisateur table with consistent status field (pending = 1)
+        $stmt = $conn->prepare("INSERT INTO utilisateur (nom, email, motDePasse, role, status) VALUES (?, ?, ?, ?, 'pending')");
+        $stmt->execute([$nom, $email, $hashedPassword, $role]);
+        $userId = $conn->lastInsertId();
+
+        // Insert into role-specific table
+        if ($role === 'administrateur') {
+            $stmt = $conn->prepare("INSERT INTO administrateur (idUtilisateur) VALUES (?)");
+            $stmt->execute([$userId]);
+        } elseif ($role === 'professeur') {
+            $stmt = $conn->prepare("INSERT INTO professeur (idUtilisateur, matiereEnseignee) VALUES (?, NULL)");
+            $stmt->execute([$userId]);
+        }
+
+        // Create admin notifications by finding administrators
+        $notificationMessage = "Nouvelle demande d'inscription de $nom ($role).";
+        
+        // Find active administrators to notify
+        $stmt = $conn->prepare("SELECT idUtilisateur FROM utilisateur WHERE role = 'administrateur' AND status = 'active'");
+        $stmt->execute();
+        $adminIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        if (empty($adminIds)) {
+            // Fallback to finding any administrator
+            $stmt = $conn->prepare("SELECT idUtilisateur FROM administrateur");
+            $stmt->execute();
+            $adminIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        }
+        
+        // Create notifications for each admin
+        foreach ($adminIds as $adminId) {
+            $stmt = $conn->prepare("
+                INSERT INTO notification 
+                (destinataire, message, dateEnvoi, type, idReference, isRead, url) 
+                VALUES (?, ?, NOW(), 'registration_request', ?, 0, '../admin/gestion_demandes.php')
+            ");
+            $stmt->execute([$adminId, $notificationMessage, $userId]);
+        }
+
+        // Send confirmation email
+        $subject = "ExamEye - Demande d'inscription reçue";
+        $message = "
+        <html>
+        <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+            <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;'>
+                <h2 style='color: #2c3e50; text-align: center;'>Demande d'inscription reçue</h2>
+                
+                <p>Bonjour $nom,</p>
+                
+                <p>Nous avons bien reçu votre demande d'inscription à la plateforme ExamEye en tant que <strong>$role</strong>.</p>
+                
+                <p>Votre demande est actuellement <strong>en attente d'approbation</strong> par un administrateur.</p>
+                
+                <p>Vous recevrez un email dès que votre demande sera traitée.</p>
+                
+                <p>Cordialement,<br>L'équipe ExamEye</p>
+            </div>
+        </body>
+        </html>";
+        
+        sendEmail($email, $subject, $message);
+
+        // Commit transaction
+        $conn->commit();
+
+        // Return success
+        echo json_encode([
+            'success' => true,
+            'message' => 'Inscription soumise avec succès. En attente de validation par un administrateur.',
+            'redirect' => '../dashboards/login.html?registration=pending'
+        ]);
+        
+    } catch (PDOException $e) {
+        $conn->rollBack();
+        error_log("Database error: " . $e->getMessage());
+        echo json_encode([
+            'success' => false,
+            'errors' => ["Erreur de base de données. Veuillez réessayer."]
+        ]);
+    } catch (Exception $e) {
+        error_log("General error: " . $e->getMessage());
+        echo json_encode([
+            'success' => false,
+            'errors' => ["Une erreur est survenue. Veuillez réessayer."]
+        ]);
     }
 } else {
-    // Redirect to registration form if not POST
-    header("Location: ../dashboards/register.html");
-    exit();
+    echo json_encode([
+        'success' => false,
+        'errors' => ["Méthode non autorisée"]
+    ]);
 }
 ?>

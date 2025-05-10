@@ -369,7 +369,8 @@ function handleApproveRequest(PDO $conn) {
             }
             
             // Update user status to approved
-            $stmt = $conn->prepare("UPDATE utilisateur SET pending = 0 WHERE idUtilisateur = ?");
+            // FIXED: Using 'status' column instead of 'pending'
+            $stmt = $conn->prepare("UPDATE utilisateur SET status = 'active' WHERE idUtilisateur = ?");
             $stmt->execute([$userId]);
             
             // Send approval email
@@ -436,8 +437,8 @@ function handleRejectRequest(PDO $conn) {
                     // $stmt = $conn->prepare("DELETE FROM utilisateur WHERE idUtilisateur = ?");
                     // $stmt->execute([$userId]);
                     
-                    // Or mark as rejected
-                    $stmt = $conn->prepare("UPDATE utilisateur SET pending = 2 WHERE idUtilisateur = ?");
+                    // Or mark as rejected - FIXED: Using 'status' column instead of 'pending'
+                    $stmt = $conn->prepare("UPDATE utilisateur SET status = 'rejected' WHERE idUtilisateur = ?");
                     $stmt->execute([$userId]);
                     
                     // Log the rejection
