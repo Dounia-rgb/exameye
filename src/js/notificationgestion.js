@@ -1,6 +1,6 @@
 /**
- * Notification Management System
- * Full version compatible with ExamEye structure
+ * ExamEye Notification Management System
+ * Enhanced version with user registration approval features
  */
 ;(function() {
     'use strict';
@@ -11,10 +11,11 @@
         pathsToTry: [
             '../../db/notification_handler.php',  // From /dashboards/
             '../db/notification_handler.php',     // From /dashboards/subdir/
-            '/db/notification_handler.php'        // Absolute path
+            '/db/notification_handler.php',       // Absolute path
+            'notification_handler.php'            // Same directory
         ],
         currentPathIndex: 0,
-        refreshInterval: 120000, // 2 minutes
+        refreshInterval: 60000, // 1 minute
         maxRetries: 3
     };
 
@@ -25,7 +26,8 @@
         noRequests: document.getElementById('no-requests'),
         accountIcon: document.getElementById('accountIcon'),
         accountDropdown: document.getElementById('accountDropdown'),
-        retryBtn: null
+        retryBtn: null,
+        modalContainer: null
     };
 
     // State management
@@ -42,9 +44,58 @@
             return;
         }
 
+        createModalContainer();
         setupEventListeners();
         loadNotifications();
         startAutoRefresh();
+    }
+
+    // Create modal container for rejections
+    function createModalContainer() {
+        // Check if modal container already exists
+        if (document.getElementById('modalContainer')) {
+            return;
+        }
+        
+        const modalContainer = document.createElement('div');
+        modalContainer.id = 'modalContainer';
+        modalContainer.className = 'modal-container';
+        modalContainer.style.display = 'none';
+        
+        modalContainer.innerHTML = `
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <h3>Motif de rejet</h3>
+                <p>Veuillez indiquer un motif pour le rejet de cette demande :</p>
+                <textarea id="rejectionReason" rows="4" placeholder="Saisir un motif (optionnel)"></textarea>
+                <div class="modal-actions">
+                    <button id="confirmReject" class="btn btn-danger">Confirmer le rejet</button>
+                    <button id="cancelReject" class="btn">Annuler</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modalContainer);
+        dom.modalContainer = modalContainer;
+        
+        // Set up modal event listeners
+        const closeBtn = modalContainer.querySelector('.modal-close');
+        const cancelBtn = document.getElementById('cancelReject');
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeModal);
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', closeModal);
+        }
+        
+        // Close modal if clicked outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modalContainer) {
+                closeModal();
+            }
+        });
     }
 
     // Set up event listeners
@@ -54,10 +105,25 @@
             dom.accountIcon.addEventListener('click', function(e) {
                 e.stopPropagation();
                 dom.accountDropdown.classList.toggle('show');
+                
+                // Update aria-expanded attribute for accessibility
+                const expanded = dom.accountDropdown.classList.contains('show');
+                dom.accountIcon.setAttribute('aria-expanded', expanded);
             });
 
             document.addEventListener('click', function() {
                 dom.accountDropdown.classList.remove('show');
+                dom.accountIcon.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        // Logout functionality
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Redirect to logout endpoint or clear session
+                window.location.href = '../logout.php';
             });
         }
 
@@ -69,7 +135,7 @@
     // Main notification loader
     function loadNotifications() {
         if (state.retryCount >= config.maxRetries) {
-            showErrorState('Maximum retries reached');
+            showErrorState('Nombre maximum de tentatives atteint');
             return;
         }
 
@@ -92,7 +158,7 @@
     // Process notification data
     function processNotifications(data) {
         if (!data.success) {
-            throw new Error(data.message || 'Invalid response from server');
+            throw new Error(data.message || 'Réponse invalide du serveur');
         }
 
         state.retryCount = 0; // Reset retry counter on success
@@ -109,6 +175,9 @@
     // Render notifications to DOM
     function renderNotifications() {
         dom.container.innerHTML = '';
+        if (dom.noRequests) {
+            dom.noRequests.style.display = 'none';
+        }
 
         state.currentRequests.forEach(request => {
             const notification = createNotificationElement(request);
@@ -126,54 +195,65 @@
         element.dataset.type = request.type;
         element.dataset.senderId = request.senderId;
 
-        // Clean up senderName if it contains unwanted prefixes
-        if (request.senderName && 
-            (request.senderName.includes('Matière:') || 
-             request.senderName.includes('ID Matière:'))) {
-            request.senderName = 'Utilisateur';
-        }
-
-        // Store reference data for subject requests
+        // Store reference data for handling
         if (request.type === 'subject_add_request') {
-            // Parse the message to extract subject information if available
-            let subjectData = null;
-            try {
-                // Try to extract JSON data from the message if possible
-                const jsonMatch = request.message.match(/{.*}/);
-                if (jsonMatch) {
-                    subjectData = JSON.parse(jsonMatch[0]);
-                }
-            } catch (e) {
-                console.warn('Could not parse subject data from message');
-            }
-
             // Create the reference data object
             const referenceData = {
                 subject_id: request.idReference,
                 user_id: request.senderId
             };
             
-            // Add extra information if available
-            if (subjectData) {
-                Object.assign(referenceData, subjectData);
-            }
-            
             element.dataset.reference = JSON.stringify(referenceData);
+        } else if (request.type === 'registration_request') {
+            element.dataset.reference = request.idReference;
+        }
+
+        // Create the notification HTML based on type
+        let detailsContent = '';
+        let badgeClass = '';
+        
+        if (request.type === 'registration_request') {
+            badgeClass = 'badge-registration';
+            detailsContent = `
+                <div class="notification-details">
+                    <h4>Détails de l'utilisateur :</h4>
+                    <p><strong>Nom :</strong> ${escapeHtml(request.senderName)}</p>
+                    <p><strong>Email :</strong> ${escapeHtml(request.email || 'Non disponible')}</p>
+                    <p><strong>Rôle :</strong> ${formatRole(request.role)}</p>
+                </div>
+            `;
+        } else if (request.type === 'subject_add_request') {
+            badgeClass = 'badge-subject';
+            detailsContent = `
+                <div class="notification-details">
+                    <h4>Détails de la demande :</h4>
+                    <p><strong>Professeur :</strong> ${escapeHtml(request.senderName)}</p>
+                    <p><strong>ID Matière :</strong> ${escapeHtml(request.idReference)}</p>
+                </div>
+            `;
+        } else if (request.type === 'profile_edit_request') {
+            badgeClass = 'badge-profile';
+            detailsContent = `
+                <div class="notification-details">
+                    <h4>Détails de la modification :</h4>
+                    <p><strong>Utilisateur :</strong> ${escapeHtml(request.senderName)}</p>
+                </div>
+            `;
         }
 
         element.innerHTML = `
             <div class="notification-header">
-                <span class="notification-type">${getRequestTypeLabel(request.type)}</span>
+                <span class="notification-type ${badgeClass}">${getRequestTypeLabel(request.type)}</span>
                 <span class="notification-date">${formatDate(request.dateEnvoi)}</span>
             </div>
-            <div class="notification-message">${escapeHtml(request.message) || 'No message provided'}</div>
-            ${createNotificationDetails(request)}
+            <div class="notification-message">${escapeHtml(request.message) || 'Aucun message fourni'}</div>
+            ${detailsContent}
             <div class="notification-actions">
-                <button class="btn btn-approve" title="Approve request">
-                    <i class="fas fa-check"></i> Approve
+                <button class="btn btn-approve" title="Approuver la demande">
+                    <i class="fas fa-check"></i> Approuver
                 </button>
-                <button class="btn btn-reject" title="Reject request">
-                    <i class="fas fa-times"></i> Reject
+                <button class="btn btn-reject" title="Rejeter la demande">
+                    <i class="fas fa-times"></i> Rejeter
                 </button>
             </div>
         `;
@@ -181,27 +261,15 @@
         return element;
     }
 
-    // Create details section based on request type
-    function createNotificationDetails(request) {
-        if (request.type === 'subject_add_request') {
-            // Extract just the name part if senderName contains additional info
-            let displayName = request.senderName;
-            
-            // If senderName contains "Matière:" prefix, use the senderId instead
-            if (displayName && displayName.includes('Matière:')) {
-                // Try to find just a user name in the database via AJAX
-                displayName = 'ID utilisateur: ' + request.senderId;
-            }
-            
-            return `
-                <div class="notification-details">
-                    <h4>Détails de la matière:</h4>
-                    
-                    <p><strong>ID Matière:</strong> ${escapeHtml(request.idReference)}</p>
-                </div>
-            `;
-        }
-        return '';
+    // Format role for display
+    function formatRole(role) {
+        const roles = {
+            'admin': 'Administrateur',
+            'professeur': 'Professeur',
+            'etudiant': 'Étudiant',
+            'surveillant': 'Surveillant'
+        };
+        return roles[role] || role;
     }
 
     // Set up approve/reject button handlers
@@ -220,55 +288,76 @@
         const notification = this.closest('.notification-item');
         if (!notification) return;
 
-        if (confirm('Êtes-vous sûr de vouloir approuver cette demande?')) {
+        if (confirm('Êtes-vous sûr de vouloir approuver cette demande ?')) {
             const formData = new FormData();
             formData.append('action', 'approveRequest');
             formData.append('notificationId', notification.dataset.id);
             formData.append('type', notification.dataset.type);
 
-            // Fix: Correctly parse and handle the reference data
+            // Handle different notification types
             if (notification.dataset.type === 'subject_add_request') {
                 try {
                     // Get the reference data
                     const referenceString = notification.dataset.reference;
-                    console.log('Reference data:', referenceString);
                     
                     if (referenceString) {
-                        const referenceData = JSON.parse(referenceString);
-                        
-                        // Extract just the required fields for the PHP script
-                        const simplifiedReference = {
-                            subject_id: referenceData.subject_id, 
-                            user_id: referenceData.user_id
-                        };
-                        
-                        formData.append('referenceId', JSON.stringify(simplifiedReference));
+                        formData.append('referenceId', referenceString);
                     } else {
-                        throw new Error('Missing reference data for subject request');
+                        throw new Error('Données de référence manquantes pour la demande de matière');
                     }
                 } catch (e) {
                     console.error('Error processing reference data:', e);
-                    showToast('Error processing request data', 'error');
+                    showToast('Erreur lors du traitement des données de la demande', 'error');
                     return;
                 }
+            } else if (notification.dataset.type === 'registration_request') {
+                formData.append('referenceId', notification.dataset.reference);
             }
 
             sendActionRequest(formData);
         }
     }
 
-    // Handle reject action
+    // Show rejection modal
     function handleRejectAction() {
         const notification = this.closest('.notification-item');
         if (!notification) return;
 
-        if (confirm('Êtes-vous sûr de vouloir rejeter cette demande?')) {
-            const formData = new FormData();
-            formData.append('action', 'rejectRequest');
-            formData.append('notificationId', notification.dataset.id);
-            formData.append('type', notification.dataset.type);
+        // Store the notification reference for the modal
+        dom.modalContainer.dataset.notificationId = notification.dataset.id;
+        dom.modalContainer.dataset.notificationType = notification.dataset.type;
+        dom.modalContainer.dataset.reference = notification.dataset.reference || '';
 
-            sendActionRequest(formData);
+        // Show the modal
+        openModal();
+
+        // Set up confirmation button
+        const confirmBtn = document.getElementById('confirmReject');
+        if (confirmBtn) {
+            // Remove existing event listeners to prevent duplicates
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.addEventListener('click', function() {
+                const formData = new FormData();
+                formData.append('action', 'rejectRequest');
+                formData.append('notificationId', dom.modalContainer.dataset.notificationId);
+                formData.append('type', dom.modalContainer.dataset.notificationType);
+                
+                // Add reason if provided
+                const reason = document.getElementById('rejectionReason').value.trim();
+                if (reason) {
+                    formData.append('reason', reason);
+                }
+                
+                // Add reference data if available
+                if (dom.modalContainer.dataset.reference) {
+                    formData.append('referenceId', dom.modalContainer.dataset.reference);
+                }
+                
+                closeModal();
+                sendActionRequest(formData);
+            });
         }
     }
 
@@ -281,18 +370,16 @@
             body: formData
         })
         .then(response => {
-            // Check for non-200 status
             if (!response.ok) {
-                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                throw new Error(`Le serveur a retourné ${response.status}: ${response.statusText}`);
             }
             
-            // Try to parse as JSON, but handle case where server returns invalid JSON
             return response.text().then(text => {
                 try {
                     return JSON.parse(text);
                 } catch (e) {
                     console.error('Failed to parse server response as JSON:', text);
-                    throw new Error('Invalid server response format');
+                    throw new Error('Format de réponse du serveur invalide');
                 }
             });
         })
@@ -301,15 +388,41 @@
                 showToast('Action terminée avec succès', 'success');
                 loadNotifications(); // Refresh the list
             } else {
-                throw new Error(data.message || 'Action failed');
+                throw new Error(data.message || 'L\'action a échoué');
             }
         })
         .catch(error => {
             showToast(`Erreur: ${error.message}`, 'error');
             console.error('Action error:', error);
-            // Show error state and enable retry
-            showErrorState(error.message || 'Failed to complete action');
+            showErrorState(error.message || 'Impossible de terminer l\'action');
         });
+    }
+
+    // Modal functions
+    function openModal() {
+        if (dom.modalContainer) {
+            // Clear previous reason
+            const reasonInput = document.getElementById('rejectionReason');
+            if (reasonInput) {
+                reasonInput.value = '';
+            }
+            
+            dom.modalContainer.style.display = 'flex';
+            // Fade in animation
+            setTimeout(() => {
+                dom.modalContainer.classList.add('show');
+            }, 10);
+        }
+    }
+
+    function closeModal() {
+        if (dom.modalContainer) {
+            dom.modalContainer.classList.remove('show');
+            // Wait for animation before hiding
+            setTimeout(() => {
+                dom.modalContainer.style.display = 'none';
+            }, 300);
+        }
     }
 
     // Handle loading errors
@@ -323,7 +436,7 @@
             console.log(`Trying alternative path: ${config.pathsToTry[config.currentPathIndex]}`);
             loadNotifications();
         } else {
-            showErrorState(error.message || 'Failed to load notifications');
+            showErrorState(error.message || 'Impossible de charger les notifications');
         }
     }
 
@@ -391,11 +504,25 @@
         if (dom.count) {
             dom.count.textContent = count !== undefined ? count : state.currentRequests.length;
         }
+        
+        // Update document title to show count
+        if (count > 0) {
+            document.title = `(${count}) ExamEye - Gestion des Demandes`;
+        } else {
+            document.title = 'ExamEye - Gestion des Demandes';
+        }
     }
 
     function showToast(message, type) {
+        // Remove existing toasts first
+        const existingToasts = document.querySelectorAll('.toast');
+        existingToasts.forEach(toast => {
+            toast.remove();
+        });
+        
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
+        toast.setAttribute('role', 'alert');
         toast.innerHTML = `
             <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
             <span>${escapeHtml(message)}</span>
@@ -426,8 +553,9 @@
     // Helper functions
     function getRequestTypeLabel(type) {
         const labels = {
-            'profile_edit_request': 'Demande de modification de profil',
-            'subject_add_request': 'Demande d\'ajout de matière'
+            'profile_edit_request': 'Modification de profil',
+            'subject_add_request': 'Ajout de matière',
+            'registration_request': 'Inscription utilisateur'
         };
         return labels[type] || type;
     }

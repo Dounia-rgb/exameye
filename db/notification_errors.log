@@ -166,3 +166,16 @@
 [05-May-2025 23:32:02 UTC] New subjects: Mathématiques,1
 [05-May-2025 23:32:02 UTC] Update result: success
 [05-May-2025 23:32:02 UTC] Subject request details - ID: 74, Reference: {"subject_id":2,"subject_name":"algebre","user_id":10,"user_name":"Mme Hadj"}, Message: Demande d'ajout de matière: algebre par Mme Hadj (ID: 10)
+[07-May-2025 08:50:53 UTC] Subject request details - ID: 75, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[07-May-2025 11:38:49 UTC] Subject request details - ID: 79, Reference: {"subject_id":2,"subject_name":"algebre","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: algebre par Ougouti Souad (ID: 11)
+[07-May-2025 11:39:32 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 193
+[07-May-2025 11:39:32 UTC] PHP Stack trace:
+[07-May-2025 11:39:32 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[07-May-2025 11:39:32 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:51
+[07-May-2025 11:39:32 UTC] Received reference data: {"subject_id":"{\"subject_id\":2,\"subject_name\":\"algebre\",\"user_id\":11,\"user_name\":\"Ougouti Souad\"}","user_id":"{\"subject_id\":2,\"subject_name\":\"algebre\",\"user_id\":11,\"user_name\":\"Ougouti Souad\"}"}
+[07-May-2025 11:39:32 UTC] Processing with subjectId: 2, professorId: 11
+[07-May-2025 11:39:32 UTC] Processing subject add request: Subject ID=2, User ID=11, User Role=professeur
+[07-May-2025 11:39:32 UTC] Current subjects: Mathématiques,1
+[07-May-2025 11:39:32 UTC] New subjects: Mathématiques,1,2
+[07-May-2025 11:39:32 UTC] Update result: success
+[10-May-2025 00:26:29 UTC] Subject request details - ID: 81, Reference: {"subject_id":6,"subject_name":"sad","user_id":11,"user_name":"Ougouti Souad"}, Message: Demande d'ajout de matière: sad par Ougouti Souad (ID: 11)
