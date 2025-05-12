@@ -51,10 +51,12 @@
     }
 
     // Create modal container for rejections
+    // Create modal container for rejections
     function createModalContainer() {
-        // Check if modal container already exists
-        if (document.getElementById('modalContainer')) {
-            return;
+        // Remove existing modal if it exists
+        const existingModal = document.getElementById('modalContainer');
+        if (existingModal) {
+            existingModal.remove();
         }
         
         const modalContainer = document.createElement('div');
@@ -63,16 +65,16 @@
         modalContainer.style.display = 'none';
         
         modalContainer.innerHTML = `
-            <div class="modal-content">
-                <span class="modal-close">&times;</span>
-                <h3>Motif de rejet</h3>
-                <p>Veuillez indiquer un motif pour le rejet de cette demande :</p>
-                <textarea id="rejectionReason" rows="4" placeholder="Saisir un motif (optionnel)"></textarea>
-                <div class="modal-actions">
-                    <button id="confirmReject" class="btn btn-danger">Confirmer le rejet</button>
-                    <button id="cancelReject" class="btn">Annuler</button>
-                </div>
+           <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Motif de rejet</h3>
+            <p>Veuillez indiquer un motif pour le rejet de cette demande :</p>
+            <textarea id="rejectionReason" rows="4" placeholder="Saisir un motif (optionnel)"></textarea>
+            <div class="modal-actions">
+                <button id="confirmReject" class="btn btn-danger">Confirmer le rejet</button>
+                <button id="cancelReject" class="btn btn-secondary">Annuler</button>
             </div>
+        </div>
         `;
         
         document.body.appendChild(modalContainer);
@@ -96,6 +98,140 @@
                 closeModal();
             }
         });
+        
+        // Add missing CSS if needed
+        addModalStyles();
+    }
+    
+    // Add required modal styles
+    function addModalStyles() {
+        // Check if styles already exist
+        if (document.getElementById('modal-styles')) {
+            return;
+        }
+        
+        const styleElement = document.createElement('style');
+        styleElement.id = 'modal-styles';
+        styleElement.innerHTML = `
+            .modal-container {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-container.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .modal-content h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        #rejectionReason {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        #rejectionReason:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border-color: #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+        `;
+        document.head.appendChild(styleElement);
     }
 
     // Set up event listeners
@@ -319,10 +455,13 @@
     }
 
     // Show rejection modal
+    // Handle reject action
     function handleRejectAction() {
         const notification = this.closest('.notification-item');
         if (!notification) return;
 
+        console.log('Reject button clicked for notification:', notification.dataset.id);
+        
         // Store the notification reference for the modal
         dom.modalContainer.dataset.notificationId = notification.dataset.id;
         dom.modalContainer.dataset.notificationType = notification.dataset.type;
@@ -339,6 +478,8 @@
             confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
             
             newConfirmBtn.addEventListener('click', function() {
+                console.log('Confirm reject clicked');
+                
                 const formData = new FormData();
                 formData.append('action', 'rejectRequest');
                 formData.append('notificationId', dom.modalContainer.dataset.notificationId);
@@ -360,21 +501,75 @@
             });
         }
     }
+    
+    // Open the modal
+    function openModal() {
+        if (dom.modalContainer) {
+            console.log('Opening modal');
+            // Clear previous reason
+            const reasonInput = document.getElementById('rejectionReason');
+            if (reasonInput) {
+                reasonInput.value = '';
+            }
+            
+            dom.modalContainer.style.display = 'flex';
+            // Fade in animation
+            setTimeout(() => {
+                dom.modalContainer.classList.add('show');
+            }, 10);
+        } else {
+            console.error('Modal container not found');
+        }
+    }
+
+    // Close the modal
+    function closeModal() {
+        if (dom.modalContainer) {
+            console.log('Closing modal');
+            dom.modalContainer.classList.remove('show');
+            // Wait for animation before hiding
+            setTimeout(() => {
+                dom.modalContainer.style.display = 'none';
+            }, 300);
+        } else {
+            console.error('Modal container not found when closing');
+        }
+    }
 
     // Send action request to server
+    // Send action request to server with enhanced debugging
     function sendActionRequest(formData) {
         showLoadingState();
+        
+        // Debug what we're sending
+        console.log('Sending request to endpoint:', config.pathsToTry[config.currentPathIndex]);
+        console.log('Action:', formData.get('action'));
+        console.log('Notification ID:', formData.get('notificationId'));
+        console.log('Type:', formData.get('type'));
+        
+        if (formData.get('referenceId')) {
+            console.log('Reference ID:', formData.get('referenceId'));
+        }
+        
+        if (formData.get('reason')) {
+            console.log('Reason provided:', formData.get('reason'));
+        }
 
         fetch(config.pathsToTry[config.currentPathIndex], {
             method: 'POST',
             body: formData
         })
         .then(response => {
+            console.log('Raw response status:', response.status);
+            
             if (!response.ok) {
                 throw new Error(`Le serveur a retourné ${response.status}: ${response.statusText}`);
             }
             
             return response.text().then(text => {
+                // Log raw response for debugging
+                console.log('Raw response text:', text);
+                
                 try {
                     return JSON.parse(text);
                 } catch (e) {
@@ -384,9 +579,14 @@
             });
         })
         .then(data => {
+            console.log('Parsed response data:', data);
+            
             if (data.success) {
                 showToast('Action terminée avec succès', 'success');
-                loadNotifications(); // Refresh the list
+                // Short delay before refreshing to ensure server processing is complete
+                setTimeout(() => {
+                    loadNotifications(); // Refresh the list
+                }, 500);
             } else {
                 throw new Error(data.message || 'L\'action a échoué');
             }

@@ -1,342 +1,865 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="ExamEye - Plateforme universitaire de surveillance et gestion des examens présentiel">
-  <title>ExamEye | Portail académique</title>
-  <script src="/src/Js/tailwind.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/css/welcome.css">
-  <link href="css/tailwind.min.css" rel="stylesheet">
-  <link href="css/remixicon.css" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Surveillances d'Examens - USTO-MB</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+          --primary-color: #0d1b2a;  /* Dark navy blue */
+        --secondary-color: #1b263b;  /* Slightly lighter navy */
+        --accent-color: #415a77;  /* Soft blue */
+        --light-accent: #778da9;  /* Light blue-gray */
+        --light-bg: #f8f9fa;  /* Very light gray */
+        --dark-text: #212529;  /* Almost black */
+        --light-text: #f8f9fa;  /* Off-white */
+        --gray-100: #f1f3f5;  /* Light gray */
+        --gray-200: #e9ecef;  /* Medium light gray */
+        --gray-300: #dee2e6;  /* Medium gray */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color:var(--primary-color);
+            border-bottom: 1px solid var(--secondary-color);
+            color: var(--light-text);
+            position: sticky;
+            top: 0;
+             z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .app-name {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color:  var(--light-text);
+          }
+        
+        /* Navigation Styles */
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Hamburger Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 200;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--light-text);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Hamburger Animation */
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+        
+        .auth-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+        
+        .login-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .login-btn:hover {
+            background-color: varvar(--light-accent);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .signup-btn {
+            background-color:transparent;
+            color: var(--light-text);
+            border: 1px solid var(--light-text);
+        }
+        
+        .signup-btn:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            
+    display: none;
+    position: fixed;
+    top: 70px;
+    right: 1rem;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    transform: translateY(-20px);
+    opacity: 0;
+    width: calc(100% - 2rem);
+    max-width: 300px;
+    color: var(--light-text);
+}
+        
+        
+        .mobile-menu.open {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .mobile-menu .auth-button {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            color: var(--light-text);
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .hero h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.92;
+            line-height: 1.7;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            margin: 0 0.5rem 0.5rem;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Video section */
+        .video-section {
+            padding: 4rem 0;
+            background-color: white;
+            overflow: hidden;
+        }
+        
+        .video-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .video-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background-color: var(--light-bg);
+        }
+        
+        .section-heading {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title {
+            color: var(--dark-text);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .section-subtitle {
+            color: var(--accent-color);
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-description {
+            max-width: 700px;
+            margin: 0 auto 3.5rem;
+            text-align: center;
+            color: #64748b;
+            font-size: clamp(0.95rem, 2vw, 1.125rem);
+            padding: 0 1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .feature-card {
+          background-color: white;
+          border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.25s ease;
+            border: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gray-300);
+        }
+        
+        .feature-icon-wrapper {
+            margin-bottom: 1.5rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--light-accent), var(--accent-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .feature-icon {
+            color: white;
+            font-size: 1.75rem;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--dark-text);
+            font-weight: 600;
+        }
+        
+        .feature-description {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.7;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 4rem 0;
+            background-color: var(--light-bg);
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+        
+        .about-title {
+            color: var(--dark-text);
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.3rem, 3vw, 1.75rem);
+            font-weight: 700;
+        }
+        
+        .about-text {
+            font-size: clamp(0.95rem, 2vw, 1.125rem);
+            color: #4b5563;
+            line-height: 1.7;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 3rem 0 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-logo-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            background-color: white;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .footer-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .footer-logo-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+        
+        .footer-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            padding: 0 1rem;
+        }
+        
+        /* Responsive Media Queries */
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero {
+                padding: 3.5rem 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+            
+            .section-description {
+                padding: 0 1.5rem;
+            }
+            
+            .about-content {
+                margin: 0 1.5rem;
+            }
+            
+            .features-grid {
+                gap: 1.5rem;
+                padding: 0;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto 1rem;
+                justify-content: center;
+            }
+            
+            .about-content {
+                padding: 1.5rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-logo {
+                justify-content: center;
+            }
+            
+            .video-section {
+                padding: 3rem 0;
+            }
+            
+            .video-container {
+                margin: 0 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 2.5rem 0;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .section-description {
+                padding: 0 1rem;
+            }
+            
+            .video-section, .features, .about {
+                padding: 2.5rem 0;
+            }
+            
+            .about-content {
+                padding: 1.25rem;
+                margin: 0 1rem;
+            }
+            
+            footer {
+                padding: 2.5rem 0 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.25rem;
+            }
+            
+            .feature-icon-wrapper {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .feature-icon {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 375px) {
+            .app-name {
+                font-size: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero p {
+                font-size: 0.95rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .about-title {
+                font-size: 1.3rem;
+            }
+            
+            .cta-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .feature-title {
+                font-size: 1.1rem;
+            }
+            
+            .feature-description {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="wallpaper"></div>
-  <div class="overlay"></div>
-
- 
-<header class="navbar" id="navbar">
-  <div class="container mx-auto px-6 py-2"> <!-- Reduced py-3 to py-2 -->
-    <div class="flex justify-between items-center">
-      <!-- Logo and ExamEye text aligned to top left -->
-      <div class="flex items-center">
-        <img src="/src/img/logo.jpg" alt="Logo ExamEye" class="h-8 w-8 rounded-full border border-blue-300/30" /> <!-- Smaller size -->
-        <div class="ml-2 flex flex-col justify-start"> <!-- Added justify-start -->
-          <span class="text-xl font-bold text-white leading-tight">ExamEye</span> <!-- Smaller text and tight leading -->
-          <span class="text-xs text-blue-200">Gestion académique</span>
-        </div>
-      </div>
-      
-      <div class="hidden md:flex items-center space-x-6"> 
-        <a href="#features" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Fonctionnalités</a> <!-- Smaller text -->
-        <a href="#integration" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Intégration</a>
-        <a href="#stats" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Statistiques</a>
-        <a href="/dashboards/login.html" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Connexion</a>
-        <a href="/dashboards/register.html" class="text-sm text-blue-300 hover:text-white font-medium transition-colors">cree un compte</a>
-
-      </div>
-
-      <!-- Mobile menu button -->
-      <div class="md:hidden">
-        <button class="text-white p-1" id="mobileMenuBtn"> 
-          <i class="ri-menu-line text-xl"></i> 
-        </button>
-      </div>
-    </div>
-    
-    <!-- Mobile menu (hidden by default) -->
-    <div id="mobileMenu" class="hidden md:hidden mt-2 pb-2"> <!-- Smaller padding -->
-      <div class="flex flex-col space-y-2"> <!-- Tighter spacing -->
-        <a href="#features" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Fonctionnalités</a>
-        <a href="#integration" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Intégration</a>
-        <a href="#stats" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Statistiques</a>
-        <a href="/dashboards/login.html" class="text-sm text-blue-100 hover:text-white font-medium transition-colors">Connexion</a>
-        <a href="/dashboards/register.html" class="text-sm text-blue-300 hover:text-white font-medium transition-colors">cree un compte</a>
-      </div>
-    </div>
-  </div>
-</header>
-
-  <!-- Hero Section -->
-  <section class="section flex items-center min-h-screen">
-    <div class="container mx-auto px-6 text-center" >
-      <div class="flex justify-center mb-6" s>
-        <!-- Logo USTO au centre de la page d'accueil -->
-        <img src="/src/img/usto.jpg" alt="USTO Logo" class="w-20 h-20 rounded-full border-4 border-blue-300/30 shadow-lg" />
-      </div>
-      <span class="academic-badge inline-block text-blue-100 px-4 py-1 rounded-full text-sm font-medium mb-4">Plateforme réservée au personnel universitaire USTO</span>
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-        Gestion et surveillance d'examens <span class="highlight">présentiel</span>
-      </h1>
-      
-      <p class="text-xl text-blue-100 max-w-3xl mx-auto mb-10" style="padding: 2rem 0; ">
-        Une solution sécurisée, intuitive et complète pour l'administration des examens en présentiel à l'université.
-      </p>
-      
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="/dashboards/login.html" class="btn-primary text-white px-8 py-3 rounded-lg font-semibold text-lg flex items-center justify-center">
-          <i class="ri-login-box-line mr-2"></i> Connexion
-        </a>
-        <a href="/dashboards/register.html" class="btn-outline text-white px-8 py-3 rounded-lg font-semibold text-lg flex items-center justify-center">
-          <i class="ri-user-add-line mr-2"></i> Cree un compte 
-        </a>
-      </div>
-      
-      <!-- Trusted by -->
-      <div class="mt-16">
-        <p class="text-blue-200 mb-4 font-medium">Utilisé par les départements de l'USTO :</p>
-        <div class="flex flex-wrap justify-center gap-8 items-center">
-          <div class="text-blue-100/80 text-sm font-medium py-2 px-4">Faculté des informatique</div>
-        
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <!-- Features Section -->
-<section id="features" class="section bg-blue-900/10">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-16">
-      <span class="inline-block text-blue-300 font-semibold mb-2 uppercase tracking-wider text-sm">FONCTIONNALITÉS PRINCIPALES</span>
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Une solution <span class="text-blue-300">complète</span> et <span class="text-blue-300">sécurisée</span></h2>
-      <p class="text-blue-100 max-w-2xl mx-auto text-lg" style="padding: 2rem 0;">
-        Optimisez la gestion de vos examens en présentiel avec nos outils spécialement conçus pour l'USTO
-      </p>
-    </div>
-    
-    <!-- Main Features - 3 columns -->
-    <div class="grid md:grid-cols-3 gap-8">
-      <!-- Feature Card 1 -->
-      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
-        <div class="icon-wrapper mb-6 mx-auto">
-          <i class="ri-clipboard-line text-blue-300 text-3xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3 text-center text-white">Gestion des PV</h3>
-        <p class="text-blue-100 text-center mb-4">
-          Création et suivi des procès-verbaux d'examens avec signature numérique et traçabilité complète.
-        </p>
-        <ul class="mt-4 space-y-2">
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">PV numériques personnalisables</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Archivage automatique</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature Card 2 -->
-      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
-        <div class="icon-wrapper mb-6 mx-auto">
-          <i class="ri-fingerprint-line text-blue-300 text-3xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3 text-center text-white">Sécurité renforcée</h3>
-        <p class="text-blue-100 text-center mb-4">
-          Système de surveillance et contrôle d'accès biométrique pour une gestion sécurisée des examens.
-        </p>
-        <ul class="mt-4 space-y-2">
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Vérification d'identité</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Journal des activités</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Chiffrement des données</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature Card 3 -->
-      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
-        <div class="icon-wrapper mb-6 mx-auto">
-          <i class="ri-calendar-todo-line text-blue-300 text-3xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3 text-center text-white">Planification avancée</h3>
-        <p class="text-blue-100 text-center mb-4">
-          Organisation des sessions d'examens avec détection intelligente des conflits de planning.
-        </p>
-        <ul class="mt-4 space-y-2">
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Calendrier intelligent</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Attribution automatique des salles</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Gestion des surveillants</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Secondary Features - 2 columns -->
-    <div class="grid md:grid-cols-2 gap-8 mt-12">
-      <!-- Feature Card 4 -->
-      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
-        <div class="icon-wrapper mb-6 mx-auto">
-          <i class="ri-team-line text-blue-300 text-3xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3 text-center text-white">Gestion des surveillants</h3>
-        <p class="text-blue-100 text-center mb-4">
-          Attribution et suivi des tâches de surveillance avec système de notification.
-        </p>
-        <ul class="mt-4 space-y-2">
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Planification équitable des surveillances</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Notifications automatisées</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Suivi des présences</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature Card 5 -->
-      <div class="card p-8 rounded-xl hover:border-blue-400/50 transition-all duration-300">
-        <div class="icon-wrapper mb-6 mx-auto">
-          <i class="ri-bar-chart-grouped-line text-blue-300 text-3xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3 text-center text-white">Rapports et statistiques</h3>
-        <p class="text-blue-100 text-center mb-4">
-          Analyse détaillée des sessions d'examens et rapports administratifs.
-        </p>
-        <ul class="mt-4 space-y-2">
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Tableaux de bord personnalisables</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Export au format PDF</span>
-          </li>
-          <li class="flex items-start">
-            <i class="ri-checkbox-circle-fill text-blue-300 mt-1 mr-2 flex-shrink-0"></i>
-            <span class="text-blue-100">Indicateurs de performance</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    
-    <!-- Call to Action -->
-    <div class="text-center mt-16">
-      <a href="#integration" class="btn-primary inline-flex items-center px-8 py-3 rounded-lg font-semibold text-lg">
-        Découvrez l'intégration avec l'USTO
-        <i class="ri-arrow-down-line ml-2"></i>
-      </a>
-    </div>
-  </div>
-</section>
-
-  <!-- Integration Section -->
-<section id="integration" class="section">
-  <div class="container mx-auto px-6">
-    <div class="flex flex-col lg:flex-row items-center">
-      <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pr-10">
-      
-        <!-- Box avec fond foncé pour améliorer la lisibilité du texte blanc -->
-        <div class="bg-blue-900/80 p-6 rounded-xl shadow-lg mb-8">
-          <p class="text-white mb-6">
-            ExamEye s'interface parfaitement avec l'écosystème numérique de l'USTO :
-          </p>
-          <ul class="space-y-4">
-            <li class="flex items-start">
-              <div class="bg-blue-500/50 p-2 rounded-lg mr-4 flex-shrink-0">
-                <i class="ri-lock-password-line text-white"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-white">Authentification universitaire</h4>
-                <p class="text-blue-100 text-sm">Compatible avec le système d'identité de l'USTO</p>
-              </div>
-            </li>
-            <li class="flex items-start">
-              <div class="bg-blue-500/50 p-2 rounded-lg mr-4 flex-shrink-0">
-                <i class="ri-database-2-line text-white"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-white">Systèmes de scolarité</h4>
-                <p class="text-blue-100 text-sm">Synchronisation avec les données d'inscription</p>
-              </div>
-            </li>
-            <li class="flex items-start">
-              <div class="bg-blue-500/50 p-2 rounded-lg mr-4 flex-shrink-0">
-                <i class="ri-file-transfer-line text-white"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-white">Export des données</h4>
-                <p class="text-blue-100 text-sm">Communication avec les systèmes de notation</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        
-        
-      </div>
-      <div class="lg:w-1/2">
-        <div class="card p-6 rounded-xl shadow-lg">
-          <div class="flex items-center justify-center mb-4">
-            <img src="/src/img/usto.jpg" alt="USTO" class="h-16 w-16 rounded-full border-2 border-blue-300/30">
-          </div>
-          <h3 class="text-xl font-bold text-center mb-3 text-white">Université des Sciences et de la Technologie d'Oran</h3>
-          <p class="text-blue-100 text-center">
-            ExamEye est développé spécifiquement pour répondre aux besoins de gestion des examens de l'USTO.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-  <!-- Testimonial Section -->
-  <section class="section bg-gradient-to-r from-blue-900/40 to-indigo-900/40">
-    <div class="container mx-auto px-6">
-      <div class="text-center mb-12">
-        <span class="inline-block text-blue-300 font-semibold mb-2">TÉMOIGNAGES</span>
-        <h2 class="text-3xl md:text-4xl font-bold mb-2">Ce que disent nos utilisateurs</h2>
-      </div>
-      
-      <div class="max-w-4xl mx-auto">
-        <div class="card p-8 md:p-10 rounded-2xl">
-          <div class="flex items-center mb-6">
-            <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mr-4">
-              <i class="ri-user-line text-blue-300 text-xl"></i>
+    <!-- Header with animated logo and auth buttons -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="src/img/logo.jpg" alt="ExamEye">
+                </div>
+                <div class="app-name">ExamEye</div>
             </div>
-            <div>
-              <h4 class="font-bold text-white">Mme Ougouti Souad</h4>
-              <p class="text-blue-200 text-sm">Responsable des Examens - USTO</p>
+            
+            <!-- Hamburger menu toggle for mobile -->
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-          </div>
-          <p class="text-blue-100 italic mb-4">
-            "ExamEye a révolutionné notre façon de gérer les examens en présentiel. Nos surveillants peuvent facilement 
-            remplir les PV numériques, l'administration gagne un temps considérable sur la planification, et nous avons 
-            maintenant une traçabilité parfaite de toutes les copies d'examens."
-          </p>
-          <div class="flex text-yellow-400">
-            <i class="ri-star-fill"></i>
-            <i class="ri-star-fill"></i>
-            <i class="ri-star-fill"></i>
-            <i class="ri-star-fill"></i>
-            <i class="ri-star-fill"></i>
-          </div>
+            
+            
+            <div class="nav-buttons">
+                <a href="login.html" class="auth-button login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Se connecter
+                </a>
+                <a href="register.html" class="auth-button signup-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Créer un compte
+                </a>
+            </div>
         </div>
-      </div>
+    </header>
+   
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="login.html" class="auth-button login-btn">
+            <i class="fas fa-sign-in-alt"></i>
+            Se connecter
+        </a>
+        <a href="register.html" class="auth-button signup-btn">
+            <i class="fas fa-user-plus"></i>
+            Créer un compte
+        </a>
     </div>
-  </section>
- 
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Bienvenue sur la plateforme de gestion des surveillances d'examens du Département Informatique – USTO-MB</h1>
+            <p>Optimisez l'organisation des surveillances et simplifiez la communication entre administrateurs et enseignants grâce à notre solution numérique dédiée.</p>
+            <a href="#features" class="cta-button">
+                <i class="fas fa-info-circle"></i>
+                Découvrir nos services
+            </a>
+        </div>
+    </section>
+    
+    <!-- Video section -->
+    <section class="video-section">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-subtitle">Présentation</p>
+                <h2 class="section-title">Découvrez ExamEye en action</h2>
+            </div>
+            <p class="section-description">Visualisez comment notre plateforme simplifie la gestion des surveillances d'examens</p>
+            
+            <div class="video-container scroll-reveal">
+                <video autoplay muted loop playsinline>
+                    <source src="src/img/0510 (1).mp4" type="video/mp4">
+                    Votre navigateur ne prend pas en charge la vidéo HTML5.
+                </video>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-heading">
+                <p class="section-subtitle">Fonctionnalités</p>
+                <h2 class="section-title">Une solution complète pour vos besoins</h2>
+            </div>
+            <p class="section-description">Notre plateforme offre des outils puissants pour optimiser la gestion des surveillances d'examens à chaque étape du processus.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-calendar-alt feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Planification des surveillances</h3>
+                    <p class="feature-description">Création et gestion des plannings d'examens par l'administrateur avec une interface intuitive et efficace.</p>
+                </div>
+                
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-paper-plane feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Envoi des convocations</h3>
+                    <p class="feature-description">Transmission automatique des convocations aux enseignants concernés, avec notifications et rappels intégrés.</p>
+                </div>
+                
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-chalkboard-teacher feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Espace professeur</h3>
+                    <p class="feature-description">Consultation des plannings et des détails des convocations personnelles dans un espace dédié et sécurisé.</p>
+                </div>
+                
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Accès sécurisé et personnalisé</h3>
+                    <p class="feature-description">Connexion avec des rôles distincts pour administrateurs et enseignants, assurant une gestion des droits optimale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="about-title">À propos de notre plateforme</h2>
+                <p class="about-text">Cette application a été développée dans le cadre d'un projet de fin d'études pour améliorer la gestion des surveillances d'examens au sein du département Informatique de l'USTO-MB. Notre solution répond aux défis spécifiques de l'organisation des surveillances en offrant une plateforme centralisée, accessible et sécurisée.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <img src="src/img/usto.jpg" alt="USTO-MB Logo">
+                        </div>
+                        <div class="footer-logo-text">USTO-MB</div>
+                    </div>
+                    <p class="footer-description">
+                        Département Informatique<br>
+                        Université des Sciences et de la Technologie d'Oran Mohamed-Boudiaf
+                    </p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2025 – Département Informatique – USTO-MB</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            // Toggle mobile menu when hamburger is clicked
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                    mobileMenu.classList.toggle('open');
+                });
+            }
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function() {
+                if (mobileMenu.classList.contains('open')) {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('open');
+                }
+            });
+            
+            // Prevent mobile menu from closing when clicking inside it
+            mobileMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Scroll reveal functionality
+            const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+            
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 &&
+                    rect.bottom >= 0
+                );
+            }
+            
+            function checkVisibility() {
+                scrollRevealElements.forEach(element => {
+                    if (isElementInViewport(element) && !element.classList.contains('visible')) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Initial check
+            checkVisibility();
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkVisibility);
+        });
+    </script>
+</body>
+</html>

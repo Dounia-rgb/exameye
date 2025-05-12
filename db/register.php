@@ -1,10 +1,33 @@
 <?php
-// Set headers first to prevent any output
+// Ensure no output before headers
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Suppress error display
+ini_set('log_errors', 1); // Log errors instead
+
+// Set headers
 header('Content-Type: application/json');
 session_start();
 
-require_once 'config.php';
-require_once 'email_functions.php';
+// Try to require files safely
+try {
+    if (!file_exists('config.php')) {
+        throw new Exception("Missing config.php file");
+    }
+    require_once 'config.php';
+    
+    if (!file_exists('email_functions.php')) {
+        throw new Exception("Missing email_functions.php file");
+    }
+    require_once 'email_functions.php';
+} catch (Exception $e) {
+    // Log error but output JSON
+    error_log("File missing: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'errors' => ["Configuration error: " . $e->getMessage()]
+    ]);
+    exit();
+}
 
 // Process registration request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -67,12 +90,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Start transaction
         $conn->beginTransaction();
 
-        // Hash password
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        // Store password directly without hashing
+        $plainPassword = $password;
 
-        // Insert into utilisateur table with consistent status field (pending = 1)
+        // Insert into utilisateur table with consistent status field
         $stmt = $conn->prepare("INSERT INTO utilisateur (nom, email, motDePasse, role, status) VALUES (?, ?, ?, ?, 'pending')");
-        $stmt->execute([$nom, $email, $hashedPassword, $role]);
+        $stmt->execute([$nom, $email, $plainPassword, $role]);
         $userId = $conn->lastInsertId();
 
         // Insert into role-specific table
@@ -109,6 +132,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute([$adminId, $notificationMessage, $userId]);
         }
 
+        // Check if email_functions.php has the necessary function
+        if (!function_exists('sendEmail')) {
+            throw new Exception("Email function not found");
+        }
+
         // Send confirmation email
         $subject = "ExamEye - Demande d'inscription reçue";
         $message = "
@@ -143,17 +171,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ]);
         
     } catch (PDOException $e) {
-        $conn->rollBack();
+        // Rollback on database error
+        if ($conn->inTransaction()) {
+            $conn->rollBack();
+        }
         error_log("Database error: " . $e->getMessage());
         echo json_encode([
             'success' => false,
-            'errors' => ["Erreur de base de données. Veuillez réessayer."]
+            'errors' => ["Erreur de base de données: " . $e->getMessage()]
         ]);
     } catch (Exception $e) {
+        // Rollback if transaction active
+        if (isset($conn) && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
         error_log("General error: " . $e->getMessage());
         echo json_encode([
             'success' => false,
-            'errors' => ["Une erreur est survenue. Veuillez réessayer."]
+            'errors' => ["Une erreur est survenue: " . $e->getMessage()]
         ]);
     }
 } else {

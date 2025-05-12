@@ -34,9 +34,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verify user exists and password matches
     if ($user && $password === $user['motDePasse']) { 
-        // Check if user account is pending approval
+        // Check user account status
         if ($user['pending'] == 1) {
             echo "<script>alert('Your account is pending approval. You will receive an email when your account is approved.'); window.location.href = '../dashboards/login.html';</script>";
+            exit();
+        }
+        
+        // Check if user account is rejected
+        if ($user['status'] == 'rejected') {
+            echo "<script>alert('Your account registration has been rejected by the administrator.'); window.location.href = '../dashboards/login.html';</script>";
+            exit();
+        }
+        
+        // Check if user account is active
+        if ($user['status'] != 'active') {
+            echo "<script>alert('Your account is currently inactive. Please contact the administrator.'); window.location.href = '../dashboards/login.html';</script>";
             exit();
         }
         
