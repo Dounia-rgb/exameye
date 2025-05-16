@@ -167,7 +167,6 @@ function fetchPVData() {
             if (window.allPVs && window.allPVs.length > 0) {
                 const filteredPVs = clientSideFilterPVs(window.allPVs);
                 displayPVData(filteredPVs);
-                showNotification('Filtrage côté client appliqué (erreur serveur)', 'warning');
             } else {
                 pvContainer.innerHTML = `
                     <div class="error-message">

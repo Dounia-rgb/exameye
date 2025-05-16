@@ -381,3 +381,378 @@
     0% { background-color: rgba(114, 196, 255, 0.3); }
     100% { background-color: transparent; }
 }
+/* These styles fix the notification display and delete buttons */
+
+/* Notification list main styling */
+#notificationsList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Individual notification styling */
+.notification-item {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    border-left: 4px solid #3498db;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    position: relative;
+}
+
+/* Unread notification styling */
+.notification-item.unread {
+    background-color: #edf7fd;
+    border-left-color: #2ecc71;
+    font-weight: 500;
+}
+
+/* Header section with title and date */
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.notification-header strong {
+    font-size: 16px;
+    color: #333;
+}
+
+.notification-date {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Notification content */
+.notification-body {
+    margin-bottom: 15px;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* Action buttons container */
+.notification-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Button styling */
+.reply-btn, .delete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+}
+
+.reply-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.reply-btn:hover, .delete-btn:hover {
+    opacity: 0.9;
+}
+
+/* Loading and error states */
+.loading {
+    padding: 15px;
+    text-align: center;
+    color: #666;
+}
+
+.error-item {
+    padding: 15px;
+    color: #e74c3c;
+    text-align: center;
+    background-color: #fde8e7;
+    border-radius: 6px;
+}
+
+.empty-category {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+}
+
+/* Filter buttons */
+.notification-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Reply modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.close-modal {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #e74c3c;
+}
+
+.original-message {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.original-message h4 {
+    margin-top: 0;
+    color: #666;
+}
+
+.original-message h3 {
+    margin-top: 5px;
+    color: #333;
+}
+
+.reply-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.reply-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.cancel-btn, .send-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.cancel-btn {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.send-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Toast notifications */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+/* For smaller screens */
+@media screen and (max-width: 768px) {
+    .notification-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .reply-btn, .delete-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        width: 90%;
+        margin: 15% auto;
+    }
+}
+/* Delete button styles */
+.notification-item .delete-btn {
+    background: none;
+    border: none;
+    color: #ff5252;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.notification-item .delete-btn:hover {
+    color: #ff0000;
+}
+
+.notification-item .delete-btn i {
+    pointer-events: none;
+}
+
+/* Loading and error states */
+.loading-notifications,
+.no-notifications,
+.error {
+    padding: 15px;
+    text-align: center;
+    color: #666;
+}
+
+.error {
+    color: #ff5252;
+}
+/* Notification type toggle */
+.notification-type-toggle {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.notification-type-toggle button {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-bottom: 3px solid transparent;
+}
+
+.notification-type-toggle button.active {
+    border-bottom: 3px solid #4a6baf;
+    color: #4a6baf;
+    font-weight: bold;
+}
+
+/* Notification items */
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-item:hover {
+    background-color: #f9f9f9;
+}
+
+.notification-item .notification-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.notification-item .notification-date {
+    margin-right: 15px;
+}
+
+.notification-item .notification-content {
+    color: #333;
+    line-height: 1.5;
+}
+
+/* Delete button */
+.delete-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #ff5252;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    color: #ff0000;
+}

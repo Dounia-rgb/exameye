@@ -1,6 +1,135 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('PV page initialized'); // Debug message to confirm script is running
     
+    // ==================== MATIERE AUTOCOMPLETE ====================
+    // Initialize matiere selection and autocomplete
+    initMatiereAutocomplete();
+    
+    // Function to fetch matieres from the database
+    function fetchMatieres() {
+        return fetch('../db/matiere.php?action=lister')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    return data.matieres;
+                } else {
+                    console.error('Error fetching matieres:', data.message);
+                    return [];
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching matieres:', error);
+                showNotification('Erreur lors du chargement des matières', 'error');
+                return [];
+            });
+    }
+    
+    // Initialize matiere autocomplete
+    function initMatiereAutocomplete() {
+        const matiereInput = document.getElementById('matiere');
+        if (!matiereInput) return;
+        
+        // Create a container for the matiere selection
+        const matiereContainer = document.createElement('div');
+        matiereContainer.className = 'matiere-container';
+        matiereContainer.style.position = 'relative';
+        
+        // Create the dropdown for suggestions
+        const dropdown = document.createElement('div');
+        dropdown.className = 'matiere-dropdown';
+        dropdown.style.display = 'none';
+        dropdown.style.position = 'absolute';
+        dropdown.style.top = '100%';
+        dropdown.style.left = '0';
+        dropdown.style.right = '0';
+        dropdown.style.maxHeight = '200px';
+        dropdown.style.overflowY = 'auto';
+        dropdown.style.backgroundColor = 'white';
+        dropdown.style.border = '1px solid #ddd';
+        dropdown.style.borderTop = 'none';
+        dropdown.style.zIndex = '1000';
+        dropdown.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+        
+        // Insert the container where matiere input is
+        matiereInput.parentNode.replaceChild(matiereContainer, matiereInput);
+        
+        // Add the input and dropdown to the container
+        matiereContainer.appendChild(matiereInput);
+        matiereContainer.appendChild(dropdown);
+        
+        // Set up event listener for input changes
+        let matieres = [];
+        
+        // Fetch matieres when the page loads
+        fetchMatieres().then(fetchedMatieres => {
+            matieres = fetchedMatieres;
+            console.log('Matieres loaded:', matieres.length);
+        });
+        
+        // Function to update the dropdown with filtered options
+        function updateDropdown(filter) {
+            dropdown.innerHTML = '';
+            dropdown.style.display = 'none';
+            
+            if (!filter) return;
+            
+            const filteredMatieres = matieres.filter(item => 
+                item.matiere.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            if (filteredMatieres.length === 0) return;
+            
+            dropdown.style.display = 'block';
+            
+            filteredMatieres.forEach(item => {
+                const option = document.createElement('div');
+                option.className = 'matiere-option';
+                option.textContent = item.matiere;
+                option.style.padding = '8px 12px';
+                option.style.cursor = 'pointer';
+                option.style.borderBottom = '1px solid #eee';
+                
+                option.addEventListener('mouseover', () => {
+                    option.style.backgroundColor = '#f0f0f0';
+                });
+                
+                option.addEventListener('mouseout', () => {
+                    option.style.backgroundColor = 'white';
+                });
+                
+                option.addEventListener('click', () => {
+                    matiereInput.value = item.matiere;
+                    dropdown.style.display = 'none';
+                });
+                
+                dropdown.appendChild(option);
+            });
+        }
+        
+        // Add event listeners for the matiere input
+        matiereInput.addEventListener('input', () => {
+            updateDropdown(matiereInput.value);
+        });
+        
+        matiereInput.addEventListener('focus', () => {
+            if (matiereInput.value) {
+                updateDropdown(matiereInput.value);
+            }
+        });
+        
+        // Close the dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!matiereContainer.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+    
     // ==================== SIDEBAR TOGGLE ====================
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.querySelector('.sidebar');
@@ -360,6 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
     // ==================== NOTIFICATIONS ====================
     function showNotification(message, type = 'info') {
         // Create notification element if it doesn't exist

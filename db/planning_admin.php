@@ -37,17 +37,18 @@ if ($method === 'GET') {
         exit;
     }
     
-if ($action === 'get_all_salles') {
-    try {
-        $stmt = $conn->prepare("SELECT idSalle, nomSalle FROM salle");
-        $stmt->execute();
-        $salles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode(["success" => true, "salles" => $salles]);
-    } catch (PDOException $e) {
-        echo json_encode(["success" => false, "error" => $e->getMessage()]);
+    if ($action === 'get_all_salles') {
+        try {
+            $stmt = $conn->prepare("SELECT idSalle, nomSalle FROM salle");
+            $stmt->execute();
+            $salles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode(["success" => true, "salles" => $salles]);
+        } catch (PDOException $e) {
+            echo json_encode(["success" => false, "error" => $e->getMessage()]);
+        }
+        exit;
     }
-    exit;
-}
+    
     if ($action === 'get_recipients') {
         $stmt = $conn->prepare("SELECT idUtilisateur AS id, nom AS name, email FROM utilisateur WHERE role = 'professeur'");
         $stmt->execute();
@@ -57,17 +58,16 @@ if ($action === 'get_all_salles') {
     }
 
     if ($action === 'get_plannings') {
-        $sql = "SELECT p.idPlanning, p.dateDebut, p.dateFin, p.duree, p.anneeUniversitaire, p.idSalle,
-            e.date, e.heureDebut AS heureDebut, ADDTIME(e.heureDebut, p.duree) AS heureFin,
-            e.cycle, e.semestre, e.idMatiere, e.idExamen, 
-            g.niveau AS groupeNiveau, g.section AS groupeSection, g.groupe AS groupeNum, 
-            m.matiere AS matiere,
-            s.nomSalle AS salle
-            FROM planningexamen p
-            JOIN examen e ON p.idExamen = e.idExamen
-            JOIN groupe g ON p.idGroupe = g.idGroupe
-            JOIN matiere m ON e.idMatiere = m.idMatiere
-            LEFT JOIN salle s ON p.idSalle = s.idSalle";
+        $sql = "SELECT p.idPlanning, p.dateDebut, p.dateFin, p.duree, p.anneeUniversitaire, 
+                e.date, e.heureDebut AS heureDebut, ADDTIME(e.heureDebut, p.duree) AS heureFin,
+                e.cycle, e.semestre, e.idMatiere, e.idExamen, 
+                g.niveau AS groupeNiveau, g.section AS groupeSection, g.groupe AS groupeNum, 
+                m.matiere AS matiere
+                FROM planningexamen p
+                JOIN examen e ON p.idExamen = e.idExamen
+                JOIN groupe g ON p.idGroupe = g.idGroupe
+                JOIN matiere m ON e.idMatiere = m.idMatiere";
+                
         try {
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -87,23 +87,52 @@ if ($action === 'get_all_salles') {
                     ];
                 }
 
-                $plannings[$key]['exams'][] = [
+                // Récupérer toutes les salles pour cet examen
+                $sqlSalles = "SELECT s.nomSalle 
+                              FROM planningexamen pe 
+                              JOIN salle s ON pe.idSalle = s.idSalle 
+                              WHERE pe.idExamen = ?";
+                              
+                $stmtSalles = $conn->prepare($sqlSalles);
+                $stmtSalles->execute([$row['idExamen']]);
+                $salles = $stmtSalles->fetchAll(PDO::FETCH_COLUMN);
+                
+                $sallesStr = !empty($salles) ? implode(', ', $salles) : 'Non spécifiée';
+
+                // Ajouter l'examen avec toutes ses salles
+                $examInfo = [
                     'date' => $row['date'],
                     'heureDebut' => $row['heureDebut'],
                     'heureFin' => $row['heureFin'],
                     'matiere' => $row['matiere'],
-                    'salle' => $row['salle'] ? $row['salle'] : 'Non spécifiée', // Utilise la valeur de la BD
+                    'salles' => $sallesStr,
                     'groupe' => $row['groupeSection'] . ' - ' . $row['groupeNum']
                 ];
+                
+                // Vérifier si cet examen existe déjà dans le tableau
+                $examExists = false;
+                foreach ($plannings[$key]['exams'] as &$existingExam) {
+                    if ($existingExam['date'] === $examInfo['date'] && 
+                        $existingExam['heureDebut'] === $examInfo['heureDebut'] && 
+                        $existingExam['matiere'] === $examInfo['matiere']) {
+                        // L'examen existe déjà, on ne l'ajoute pas en double
+                        $examExists = true;
+                        break;
+                    }
+                }
+                
+                if (!$examExists) {
+                    $plannings[$key]['exams'][] = $examInfo;
+                }
             }
 
             echo json_encode(["success" => true, "plannings" => $plannings]);
-    } catch (PDOException $e) {
-        echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
+        } catch (PDOException $e) {
+            echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
+        }
+        exit;
     }
-    exit;
-    }
-    // Ajouter ceci dans la section "if ($method === 'GET')" de votre code
+
     if ($action === 'get_planning_detail') {
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         
@@ -113,54 +142,80 @@ if ($action === 'get_all_salles') {
         }    
     
         try {
-            $sql = "SELECT p.idPlanning, p.dateDebut, p.dateFin, p.duree, p.anneeUniversitaire, p.idSalle,
+            $sql = "SELECT p.idPlanning, p.dateDebut, p.dateFin, p.duree, p.anneeUniversitaire, 
                     e.date, e.heureDebut AS heureDebut, ADDTIME(e.heureDebut, p.duree) AS heureFin,
                     e.cycle, e.semestre, e.idMatiere, e.idExamen, 
                     g.niveau AS groupeNiveau, g.section AS groupeSection, g.groupe AS groupeNum, 
-                    m.matiere AS matiere,
-                    s.nomSalle AS salle
+                    m.matiere AS matiere
                     FROM planningexamen p
                     JOIN examen e ON p.idExamen = e.idExamen
                     JOIN groupe g ON p.idGroupe = g.idGroupe
                     JOIN matiere m ON e.idMatiere = m.idMatiere
-                    LEFT JOIN salle s ON p.idSalle = s.idSalle
                     WHERE p.idPlanning = ?";
         
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$id]);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        if (empty($rows)) {
-            echo json_encode(["success" => false, "error" => "Planning non trouvé"]);
-            exit;
-        }
-        
-        // Formater les données du planning
-        $planning = [
-            'id' => $rows[0]['idPlanning'],
-            'cycle' => $rows[0]['cycle'],
-            'anneeUniversitaire' => $rows[0]['anneeUniversitaire'],
-            'semester' => $rows[0]['semestre'],
-            'exams' => []
-        ];
-        
-        foreach ($rows as $row) {
-            $planning['exams'][] = [
-                'date' => $row['date'],
-                'heureDebut' => $row['heureDebut'],
-                'heureFin' => $row['heureFin'],
-                'matiere' => $row['matiere'],
-                'salle' => $row['salle'] ?: 'Non spécifiée', // Utiliser la valeur de la BD ou "Non spécifiée" si null
-                'groupe' => $row['groupeSection'] . ' - ' . $row['groupeNum']
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$id]);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (empty($rows)) {
+                echo json_encode(["success" => false, "error" => "Planning non trouvé"]);
+                exit;
+            }
+            
+            // Formater les données du planning
+            $planning = [
+                'id' => $rows[0]['idPlanning'],
+                'cycle' => $rows[0]['cycle'],
+                'anneeUniversitaire' => $rows[0]['anneeUniversitaire'],
+                'semester' => $rows[0]['semestre'],
+                'exams' => []
             ];
+            
+            foreach ($rows as $row) {
+                // Récupérer toutes les salles pour cet examen
+                $sqlSalles = "SELECT s.nomSalle 
+                              FROM planningexamen pe 
+                              JOIN salle s ON pe.idSalle = s.idSalle 
+                              WHERE pe.idExamen = ?";
+                              
+                $stmtSalles = $conn->prepare($sqlSalles);
+                $stmtSalles->execute([$row['idExamen']]);
+                $salles = $stmtSalles->fetchAll(PDO::FETCH_COLUMN);
+                
+                $sallesStr = !empty($salles) ? implode(', ', $salles) : 'Non spécifiée';
+                
+                $examInfo = [
+                    'date' => $row['date'],
+                    'heureDebut' => $row['heureDebut'],
+                    'heureFin' => $row['heureFin'],
+                    'matiere' => $row['matiere'],
+                    'salles' => $sallesStr,
+                    'groupe' => $row['groupeSection'] . ' - ' . $row['groupeNum']
+                ];
+                
+                // Vérifier si cet examen existe déjà dans le tableau
+                $examExists = false;
+                foreach ($planning['exams'] as $existingExam) {
+                    if ($existingExam['date'] === $examInfo['date'] && 
+                        $existingExam['heureDebut'] === $examInfo['heureDebut'] && 
+                        $existingExam['matiere'] === $examInfo['matiere']) {
+                        // L'examen existe déjà, on ne l'ajoute pas en double
+                        $examExists = true;
+                        break;
+                    }
+                }
+                
+                if (!$examExists) {
+                    $planning['exams'][] = $examInfo;
+                }
+            }
+            
+            echo json_encode(["success" => true, "planning" => $planning]);
+        } catch (PDOException $e) {
+            echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
         }
-        
-        echo json_encode(["success" => true, "planning" => $planning]);
-    } catch (PDOException $e) {
-        echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
+        exit;
     }
-    exit;
-}
 
     echo json_encode(["success" => false, "error" => "Action non reconnue"]);
     exit;
@@ -171,74 +226,98 @@ if ($method === 'POST') {
     $action = $input['action'] ?? '';
 
     if ($action === 'save_planning') {
-        $cycle = $input['cycle'];
-        $anneeUniversitaire = $input['anneeUniversitaire'];
-        $semester = $input['semester'];
-        $exams = $input['exams'];
+        $cycle = $input['cycle'] ?? null;
+        $anneeUniversitaire = $input['anneeUniversitaire'] ?? null;
+        $semester = $input['semester'] ?? null;
+        $exams = $input['exams'] ?? [];
+        if (empty($cycle) ){
+            echo json_encode(["success" => false, "error" => "Le champ 'cycle' est requis"]);
+            exit;
+        }
+        if (empty($anneeUniversitaire)) {
+            echo json_encode(["success" => false, "error" => "Le champ 'année universitaire' est requis"]);
+            exit;
+        }
+        if (empty($semester)) {
+            echo json_encode(["success" => false, "error" => "Le champ 'semestre' est requis"]);
+            exit;
+        }
+        if (empty($exams)) {
+            echo json_encode(["success" => false, "error" => "Aucun examen à sauvegarder"]);
+            exit;
+        }
 
         try {
+            $conn->beginTransaction();
+            
             $stmtExamen = $conn->prepare("INSERT INTO examen (date, heureDebut, cycle, semestre, idMatiere) VALUES (?, ?, ?, ?, ?)");
             $stmtPlanning = $conn->prepare("INSERT INTO planningexamen (dateDebut, dateFin, idAdministrateur, idProfesseur, idExamen, idGroupe, idSalle, duree, anneeUniversitaire) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            $lastPlanningId = null;
+            
             foreach ($exams as $exam) {
-                error_log(json_encode($exam)); // ← ajoute ça
-
                 $date = $exam['date'] ?? null;
-    $heureDebut = $exam['heureDebut'] ?? null;
-    $idMatiere = $exam['idMatiere'] ?? null;
-    $idGroupe = $exam['idGroupe'] ?? null;
-    $idSalle = $exam['idSalle'] ?? null;
-
-    if (!$idGroupe) {
-        echo json_encode(["success" => false, "error" => "Le champ 'idGroupe' est vide ou non défini."]);
-        exit;
-    }
+                $heureDebut = $exam['heureDebut'] ?? null;
+                $idMatiere = $exam['idMatiere'] ?? null;
+                $idGroupe = $exam['idGroupe'] ?? null;
+                $idSalles = $exam['idSalles'] ?? []; // Maintenant c'est un tableau de salles
+                
+                if (!$idGroupe) {
+                    $conn->rollBack();
+                    echo json_encode(["success" => false, "error" => "Le champ 'idGroupe' est vide ou non défini."]);
+                    exit;
+                }
+                
+                if (empty($idSalles)) {
+                    $idSalles = [null]; // Si aucune salle n'est spécifiée, on utilise null
+                }
+                
                 // Étape 1 : Créer un nouvel examen
                 $stmtExamen->execute([$date, $heureDebut, $cycle, $semester, $idMatiere]);
                 $idExamen = $conn->lastInsertId();
-
-                // Étape 2 : Lier cet examen à un planning
+                
+                // Étape 2 : Lier cet examen à un planning pour chaque salle
                 $idAdministrateur = 1; // à ajuster dynamiquement si nécessaire
                 $idProfesseur = null;
                 $dateDebut = $date;
                 $dateFin = $date;
                 $duree = '01:00:00'; // à ajuster si nécessaire
-               
-                $stmtPlanning->execute([$dateDebut, $dateFin, $idAdministrateur, $idProfesseur, $idExamen, $idGroupe, $idSalle, $duree, $anneeUniversitaire]);
-
-                $lastPlanningId = $conn->lastInsertId(); // ← ✅ Maintenant ici, après l'insertion du planning
+                
+                foreach ($idSalles as $idSalle) {
+                    $stmtPlanning->execute([
+                        $dateDebut, 
+                        $dateFin, 
+                        $idAdministrateur, 
+                        $idProfesseur, 
+                        $idExamen, 
+                        $idGroupe, 
+                        $idSalle, 
+                        $duree, 
+                        $anneeUniversitaire
+                    ]);
+                    
+                    $lastPlanningId = $conn->lastInsertId();
+                }
             }
+            
+            $conn->commit();
             echo json_encode(["success" => true, "planningId" => $lastPlanningId]);
-
         } catch (PDOException $e) {
+            $conn->rollBack();
             echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
         }
         exit;
     }
 
     if ($action === 'send_planning') {
-        $planningId = $input['planningId']; // ID of the created planning
-        $professorIds = $input['professorIds']; // Array of professor IDs to notify
+        $planningId = $input['planningId'] ?? null;
+        $professorIds = $input['professorIds'] ?? [];
     
-        try {
-            foreach ($professorIds as $id) {
-                $planningUrl = "planning.html?id=" . $planningId; // URL to the planning page
-                
-                // Prepare SQL query to insert notification
-                $stmt = $conn->prepare("INSERT INTO notification (destinataire, message, dateEnvoi, type, url, idReference) 
-                                        VALUES (?, ?, NOW(), 'planning', ?, ?)");
-                $stmt->execute([$id, "Un nouveau planning d'examen vous a été assigné (ID: $planningId)", $planningUrl, $planningId]);
-            }
-            echo json_encode(["success" => true, "planningId" => $lastPlanningId]);
-
-        } catch (PDOException $e) {
-            echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
+        if (!$planningId || empty($professorIds)) {
+            echo json_encode(["success" => false, "error" => "Paramètres manquants pour l'envoi du planning"]);
+            exit;
         }
-        exit;
-    }
-    if (isset($input['planningId']) && isset($input['professorIds'])) {
-        $planningId = $input['planningId']; // ID of the created planning
-        $professorIds = $input['professorIds']; // Array of professor IDs to notify
-    
+        
         try {
             foreach ($professorIds as $id) {
                 $planningUrl = "planning.html?id=" . $planningId; // URL to the planning page
@@ -249,7 +328,26 @@ if ($method === 'POST') {
                 $stmt->execute([$id, "Un nouveau planning d'examen vous a été assigné (ID: $planningId)", $planningUrl, $planningId]);
             }
             echo json_encode(["success" => true, "planningId" => $planningId]);
+        } catch (PDOException $e) {
+            echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
+        }
+        exit;
+    }
     
+    // Alternative pour send_planning si les paramètres sont au niveau racine
+    if (isset($input['planningId']) && isset($input['professorIds']) && $action !== 'send_planning') {
+        $planningId = $input['planningId']; 
+        $professorIds = $input['professorIds'];
+    
+        try {
+            foreach ($professorIds as $id) {
+                $planningUrl = "planning.html?id=" . $planningId;
+                
+                $stmt = $conn->prepare("INSERT INTO notification (destinataire, message, dateEnvoi, type, url, idReference) 
+                                        VALUES (?, ?, NOW(), 'planning', ?, ?)");
+                $stmt->execute([$id, "Un nouveau planning d'examen vous a été assigné (ID: $planningId)", $planningUrl, $planningId]);
+            }
+            echo json_encode(["success" => true, "planningId" => $planningId]);
         } catch (PDOException $e) {
             echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
         }

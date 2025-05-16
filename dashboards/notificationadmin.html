@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="/src/css/chefdep.css">
     <link rel="stylesheet" href="../src/css/notificationadmin.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="../src/js/send_notification.js" defer></script>
+ 
+    <script src="../src/js/notification_manager.js"></script>
 </head>
 
 <body>
@@ -59,6 +60,12 @@
                 </div>
             </div>
 
+            <!-- Add the notification type toggle -->
+            <div class="notification-type-toggle">
+                <button class="sent-tab active">Notifications envoyées</button>
+                <button class="received-tab">Réponses reçues</button>
+            </div>
+
             <div class="notification-panel">
                 <div class="card">
                     <h2>Envoyer une Notification</h2>
@@ -106,18 +113,28 @@
                     </div>
                 </div>
                 
+                <!-- Sent Notifications Card -->
                 <div class="card recent-notifications">
-                    <h2>Notifications récentes</h2>
+                    <h2>Notifications envoyées</h2>
                     <div class="notification-list">
-                        <!-- Les notifications seront chargées dynamiquement ici -->
+                        <!-- Sent notifications will be loaded here -->
                         <div class="loading-notifications">Chargement des notifications...</div>
+                    </div>
+                </div>
+                
+                <!-- Received Replies Card (initially hidden) -->
+                <div class="card received-replies" style="display: none;">
+                    <h2>Réponses reçues</h2>
+                    <div class="replies-list">
+                        <!-- Received replies will be loaded here -->
+                        <div class="loading-replies">Chargement des réponses...</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal pour sélectionner les professeurs -->
+    <!-- Modal for selecting professors -->
     <div id="recipients-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,7 +151,7 @@
                     <button id="deselect-all" class="btn small-btn">Tout désélectionner</button>
                 </div>
                 <div class="professors-list" id="professors-container">
-                    <!-- Sera rempli par JavaScript -->
+                    <!-- Will be filled by JavaScript -->
                 </div>
             </div>
             <div class="modal-footer">

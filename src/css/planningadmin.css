@@ -827,3 +827,191 @@
       padding: 15px;
     }
   }
+  /* Add this to your existing CSS or in a style tag in the head */
+
+/* Planning Container Styles */
+#planningsContainer {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.planning-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.planning-container:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.planning-header {
+  background-color: #81a2c4;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.planning-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.planning-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.action-btn i {
+  font-size: 0.9em;
+}
+
+.print-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.print-btn:hover {
+  background-color: #2980b9;
+}
+
+.send-btn {
+  background-color: #27ae60;
+  color: white;
+}
+
+.send-btn:hover {
+  background-color: #219653;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Planning Table Styles */
+.planning-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.planning-table th {
+  background-color: #f8f9fa;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.planning-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.planning-table tr:last-child td {
+  border-bottom: none;
+}
+
+.planning-table tr:hover td {
+  background-color: #f8f9fa;
+}
+
+/* Action Buttons in Table */
+.edit-btn, .delete-btn {
+  padding: 5px 8px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #f39c12;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #d35400;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* No Exams Message */
+.no-exams {
+  text-align: center;
+  padding: 20px;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .planning-header {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  
+  .planning-actions {
+      width: 100%;
+      margin-top: 10px;
+  }
+  
+  .action-btn {
+      flex-grow: 1;
+      justify-content: center;
+  }
+  
+  .planning-table {
+      display: block;
+      overflow-x: auto;
+  }
+}
+
+/* For the "No Plannings" message */
+#noPlanningsMessage {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin: 20px 0;
+  border: 1px dashed #dee2e6;
+}

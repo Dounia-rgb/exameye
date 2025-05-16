@@ -6462,3 +6462,682 @@ Message:
 
 [11-May-2025 23:34:57 UTC] [Email] Success sending to: nesrineazidane@gmail.com
 [11-May-2025 23:34:57 UTC] Inscription rejetée pour l'utilisateur ID: 58, Nom: nesrineeeeee, Email envoyé: Oui
+[12-May-2025 16:32:18 UTC] PHP Warning:  require_once(C:\wamp64\www\exameye\dbemail_functions.php): Failed to open stream: No such file or directory in C:\wamp64\www\exameye\db\notification_handler.php on line 23
+[12-May-2025 16:32:18 UTC] PHP Stack trace:
+[12-May-2025 16:32:18 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[12-May-2025 16:32:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\exameye\dbemail_functions.php' (include_path='.;C:\php\pear') in C:\wamp64\www\exameye\db\notification_handler.php:23
+Stack trace:
+#0 {main}
+  thrown in C:\wamp64\www\exameye\db\notification_handler.php on line 23
+[12-May-2025 16:32:18 UTC] PHP Warning:  require_once(C:\wamp64\www\exameye\dbemail_functions.php): Failed to open stream: No such file or directory in C:\wamp64\www\exameye\db\notification_handler.php on line 23
+[12-May-2025 16:32:18 UTC] PHP Stack trace:
+[12-May-2025 16:32:18 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[12-May-2025 16:32:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\exameye\dbemail_functions.php' (include_path='.;C:\php\pear') in C:\wamp64\www\exameye\db\notification_handler.php:23
+Stack trace:
+#0 {main}
+  thrown in C:\wamp64\www\exameye\db\notification_handler.php on line 23
+[12-May-2025 16:32:18 UTC] PHP Warning:  require_once(C:\wamp64\www\exameye\dbemail_functions.php): Failed to open stream: No such file or directory in C:\wamp64\www\exameye\db\notification_handler.php on line 23
+[12-May-2025 16:32:18 UTC] PHP Stack trace:
+[12-May-2025 16:32:18 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[12-May-2025 16:32:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\exameye\dbemail_functions.php' (include_path='.;C:\php\pear') in C:\wamp64\www\exameye\db\notification_handler.php:23
+Stack trace:
+#0 {main}
+  thrown in C:\wamp64\www\exameye\db\notification_handler.php on line 23
+[12-May-2025 16:34:02 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 474
+[12-May-2025 16:34:02 UTC] PHP Stack trace:
+[12-May-2025 16:34:02 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[12-May-2025 16:34:02 UTC] PHP   2. handleRejectRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:56
+[12-May-2025 16:34:02 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 485
+[12-May-2025 16:34:02 UTC] PHP Stack trace:
+[12-May-2025 16:34:02 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[12-May-2025 16:34:02 UTC] PHP   2. handleRejectRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:56
+[12-May-2025 16:34:02 UTC] [Email Function] Sending rejection email to: douniaanis979@gmail.com, Name: douniaaaa
+[12-May-2025 16:34:02 UTC] [Email] Attempting to send to: douniaanis979@gmail.com, Subject: ExamEye - Votre demande d'inscription
+[12-May-2025 16:34:02 UTC] PHPMailer [2] : SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-442d687bdc0sm130064415e9.39 - gsmtp
+
+[12-May-2025 16:34:02 UTC] PHPMailer [1] : CLIENT -> SERVER: EHLO exameye.local
+
+[12-May-2025 16:34:02 UTC] PHPMailer [2] : SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.96.238.96]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[12-May-2025 16:34:02 UTC] PHPMailer [1] : CLIENT -> SERVER: STARTTLS
+
+[12-May-2025 16:34:02 UTC] PHPMailer [2] : SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[12-May-2025 16:34:02 UTC] PHPMailer [1] : CLIENT -> SERVER: EHLO exameye.local
+
+[12-May-2025 16:34:02 UTC] PHPMailer [2] : SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.96.238.96]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[12-May-2025 16:34:02 UTC] PHPMailer [1] : CLIENT -> SERVER: AUTH LOGIN
+
+[12-May-2025 16:34:02 UTC] PHPMailer [2] : SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: [credentials hidden]
+[12-May-2025 16:34:03 UTC] PHPMailer [2] : SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: [credentials hidden]
+[12-May-2025 16:34:03 UTC] PHPMailer [2] : SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: MAIL FROM:<dounianis2@gmail.com>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-442d687bdc0sm130064415e9.39 - gsmtp
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: RCPT TO:<douniaanis979@gmail.com>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-442d687bdc0sm130064415e9.39 - gsmtp
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: DATA
+
+[12-May-2025 16:34:03 UTC] PHPMailer [2] : SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-442d687bdc0sm130064415e9.39 - gsmtp
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Date: Mon, 12 May 2025 16:34:02 +0000
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: To: douniaanis979@gmail.com
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: From: Exameye <dounianis2@gmail.com>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Reply-To: Exameye Support <dounianis2@gmail.com>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Subject: ExamEye - Votre demande d'inscription
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Message-ID: <Og73Pq247Z97NV57jjMLK2EdUlCsRKCGRYH1bj30@exameye.local>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: MIME-Version: 1.0
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:  boundary="b1=_Og73Pq247Z97NV57jjMLK2EdUlCsRKCGRYH1bj30"
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_Og73Pq247Z97NV57jjMLK2EdUlCsRKCGRYH1bj30
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:         
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:                 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             Demande d'inscription
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             Bonjour douniaaaa,
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             Nous vous informons que votre demande d'inscription à ExamEye n'a pas été approuvée.
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur.
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             Cordialement,
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: L'équipe ExamEye
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:         
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_Og73Pq247Z97NV57jjMLK2EdUlCsRKCGRYH1bj30
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     <html>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:         <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;'>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             <div style='text-align: center; margin-bottom: 20px;'>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:                 <img src='https://i.imgur.com/4DdNUpc.jpg' alt='ExamEye Logo' style='max-width: 150px; height: auto; display: block; margin: 0 auto; border: none; object-fit: contain;'>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             </div>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             <h2 style='color: #2c3e50; text-align: center;'>Demande d'inscription</h2>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Bonjour douniaaaa,</p>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Nous vous informons que votre demande d'inscription à ExamEye n'a pas été approuvée.</p>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur.</p>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Cordialement,<br>L'équipe ExamEye</p>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:         </div>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     </body>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     </html>
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_Og73Pq247Z97NV57jjMLK2EdUlCsRKCGRYH1bj30--
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[12-May-2025 16:34:03 UTC] PHPMailer [1] : CLIENT -> SERVER: .
+
+[12-May-2025 16:34:04 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.0.0 OK  1747067644 5b1f17b1804b1-442d687bdc0sm130064415e9.39 - gsmtp
+
+[12-May-2025 16:34:04 UTC] PHPMailer [1] : CLIENT -> SERVER: QUIT
+
+[12-May-2025 16:34:05 UTC] PHPMailer [2] : SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-442d687bdc0sm130064415e9.39 - gsmtp
+
+[12-May-2025 16:34:05 UTC] [Email] Success sending to: douniaanis979@gmail.com
+[12-May-2025 16:34:05 UTC] Inscription rejetée pour l'utilisateur ID: 59, Nom: douniaaaa, Email envoyé: Oui
+[14-May-2025 12:59:24 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 211
+[14-May-2025 12:59:24 UTC] PHP Stack trace:
+[14-May-2025 12:59:24 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[14-May-2025 12:59:24 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:52
+[14-May-2025 12:59:24 UTC] [Email Function] Sending approval email to: douniaanis979@gmail.com, Name: douniaaaa, Role: professeur
+[14-May-2025 12:59:24 UTC] [Email] Attempting to send to: douniaanis979@gmail.com, Subject: ExamEye - Votre inscription a été approuvée
+[14-May-2025 12:59:31 UTC] PHPMailer [2] : SERVER -> CLIENT: 220 smtp.gmail.com ESMTP ffacd0b85a97d-3a1f5a4c76dsm19876513f8f.92 - gsmtp
+
+[14-May-2025 12:59:31 UTC] PHPMailer [1] : CLIENT -> SERVER: EHLO exameye.local
+
+[14-May-2025 12:59:31 UTC] PHPMailer [2] : SERVER -> CLIENT: 250-smtp.gmail.com at your service, [154.121.90.215]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[14-May-2025 12:59:31 UTC] PHPMailer [1] : CLIENT -> SERVER: STARTTLS
+
+[14-May-2025 12:59:32 UTC] PHPMailer [2] : SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[14-May-2025 12:59:32 UTC] PHPMailer [1] : CLIENT -> SERVER: EHLO exameye.local
+
+[14-May-2025 12:59:32 UTC] PHPMailer [2] : SERVER -> CLIENT: 250-smtp.gmail.com at your service, [154.121.90.215]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[14-May-2025 12:59:32 UTC] PHPMailer [1] : CLIENT -> SERVER: AUTH LOGIN
+
+[14-May-2025 12:59:32 UTC] PHPMailer [2] : SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[14-May-2025 12:59:32 UTC] PHPMailer [1] : CLIENT -> SERVER: [credentials hidden]
+[14-May-2025 12:59:32 UTC] PHPMailer [2] : SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[14-May-2025 12:59:32 UTC] PHPMailer [1] : CLIENT -> SERVER: [credentials hidden]
+[14-May-2025 12:59:32 UTC] PHPMailer [2] : SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[14-May-2025 12:59:32 UTC] PHPMailer [1] : CLIENT -> SERVER: MAIL FROM:<dounianis2@gmail.com>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.1.0 OK ffacd0b85a97d-3a1f5a4c76dsm19876513f8f.92 - gsmtp
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: RCPT TO:<douniaanis979@gmail.com>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.1.5 OK ffacd0b85a97d-3a1f5a4c76dsm19876513f8f.92 - gsmtp
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: DATA
+
+[14-May-2025 12:59:33 UTC] PHPMailer [2] : SERVER -> CLIENT: 354 Go ahead ffacd0b85a97d-3a1f5a4c76dsm19876513f8f.92 - gsmtp
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Date: Wed, 14 May 2025 12:59:24 +0000
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: To: douniaanis979@gmail.com
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: From: Exameye <dounianis2@gmail.com>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Reply-To: Exameye Support <dounianis2@gmail.com>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Subject: =?UTF-8?Q?ExamEye_-_Votre_inscription_a_=C3=A9t=C3=A9_approuv=C3=A9e?=
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Message-ID: <eFDHAX8lkeVLLOsipSJuMaihQZWfaNKiy3nUr7SGBeg@exameye.local>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: MIME-Version: 1.0
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:  boundary="b1=_eFDHAX8lkeVLLOsipSJuMaihQZWfaNKiy3nUr7SGBeg"
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_eFDHAX8lkeVLLOsipSJuMaihQZWfaNKiy3nUr7SGBeg
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:         
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:                 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             Bienvenue sur ExamEye !
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             Bonjour douniaaaa,
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             Nous avons le plaisir de vous informer que votre demande d'inscription a été approuvée.
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             Vous pouvez maintenant vous connecter à votre compte ExamEye avec le rôle de Professeur en utilisant l'email et le mot de passe que vous avez fournis lors de votre inscription.
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             En tant que Professeur, vous pouvez gérer vos examens et surveiller les résultats des étudiants dans vos matières.
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:                 Se connecter
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             Si vous avez des questions ou besoin d'assistance, n'hésitez pas à contacter notre équipe de support à support@exameye.com.
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             Cordialement,
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: L'équipe ExamEye
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:         
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_eFDHAX8lkeVLLOsipSJuMaihQZWfaNKiy3nUr7SGBeg
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     <html>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:         <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;'>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <div style='text-align: center; margin-bottom: 20px;'>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:                 <img src='https://i.imgur.com/4DdNUpc.jpg' alt='ExamEye Logo' style='max-width: 150px; height: auto; display: block; margin: 0 auto; border: none; object-fit: contain;'>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             </div>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <h2 style='color: #2c3e50; text-align: center;'>Bienvenue sur ExamEye !</h2>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Bonjour douniaaaa,</p>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Nous avons le plaisir de vous informer que votre demande d'inscription a été <strong style='color: #27ae60;'>approuvée</strong>.</p>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Vous pouvez maintenant vous connecter à votre compte ExamEye avec le rôle de <strong>Professeur</strong> en utilisant l'email et le mot de passe que vous avez fournis lors de votre inscription.</p>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>En tant que Professeur, vous pouvez gérer vos examens et surveiller les résultats des étudiants dans vos matières.</p>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <div style='text-align: center; margin: 30px 0;'>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:                 <a href='https://exameye.com/login.html' style='background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;'>Se connecter</a>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             </div>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Si vous avez des questions ou besoin d'assistance, n'hésitez pas à contacter notre équipe de support à <a href='mailto:support@exameye.com'>support@exameye.com</a>.</p>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Cordialement,<br>L'équipe ExamEye</p>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:         </div>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     </body>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     </html>
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_eFDHAX8lkeVLLOsipSJuMaihQZWfaNKiy3nUr7SGBeg--
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[14-May-2025 12:59:33 UTC] PHPMailer [1] : CLIENT -> SERVER: .
+
+[14-May-2025 12:59:34 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.0.0 OK  1747227571 ffacd0b85a97d-3a1f5a4c76dsm19876513f8f.92 - gsmtp
+
+[14-May-2025 12:59:34 UTC] PHPMailer [1] : CLIENT -> SERVER: QUIT
+
+[14-May-2025 12:59:34 UTC] PHPMailer [2] : SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a1f5a4c76dsm19876513f8f.92 - gsmtp
+
+[14-May-2025 12:59:34 UTC] [Email] Success sending to: douniaanis979@gmail.com
+[14-May-2025 12:59:34 UTC] Inscription approuvée pour l'utilisateur ID: 60, Nom: douniaaaa, Rôle: professeur, Email envoyé: Oui
+[15-May-2025 20:11:11 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 211
+[15-May-2025 20:11:11 UTC] PHP Stack trace:
+[15-May-2025 20:11:11 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[15-May-2025 20:11:11 UTC] PHP   2. handleApproveRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:52
+[15-May-2025 20:11:11 UTC] [Email Function] Sending approval email to: douniaanis979@gmail.com, Name: Dounia, Role: professeur
+[15-May-2025 20:11:11 UTC] [Email] Attempting to send to: douniaanis979@gmail.com, Subject: ExamEye - Votre inscription a été approuvée
+[15-May-2025 20:11:11 UTC] PHPMailer [2] : SERVER -> CLIENT: 220 smtp.gmail.com ESMTP ffacd0b85a97d-3a35ca5a84csm494020f8f.31 - gsmtp
+
+[15-May-2025 20:11:11 UTC] PHPMailer [1] : CLIENT -> SERVER: EHLO exameye.local
+
+[15-May-2025 20:11:11 UTC] PHPMailer [2] : SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.99.41.168]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[15-May-2025 20:11:11 UTC] PHPMailer [1] : CLIENT -> SERVER: STARTTLS
+
+[15-May-2025 20:11:11 UTC] PHPMailer [2] : SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[15-May-2025 20:11:11 UTC] PHPMailer [1] : CLIENT -> SERVER: EHLO exameye.local
+
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.99.41.168]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: AUTH LOGIN
+
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: [credentials hidden]
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: [credentials hidden]
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: MAIL FROM:<dounianis2@gmail.com>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.1.0 OK ffacd0b85a97d-3a35ca5a84csm494020f8f.31 - gsmtp
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: RCPT TO:<douniaanis979@gmail.com>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.1.5 OK ffacd0b85a97d-3a35ca5a84csm494020f8f.31 - gsmtp
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: DATA
+
+[15-May-2025 20:11:12 UTC] PHPMailer [2] : SERVER -> CLIENT: 354 Go ahead ffacd0b85a97d-3a35ca5a84csm494020f8f.31 - gsmtp
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Date: Thu, 15 May 2025 20:11:11 +0000
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: To: douniaanis979@gmail.com
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: From: Exameye <dounianis2@gmail.com>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Reply-To: Exameye Support <dounianis2@gmail.com>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Subject: =?UTF-8?Q?ExamEye_-_Votre_inscription_a_=C3=A9t=C3=A9_approuv=C3=A9e?=
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Message-ID: <v51HNRDSD34A0MqmzSmHSTA885ntrHXBXW938NSbWw@exameye.local>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: X-Mailer: PHPMailer 6.10.0 (https://github.com/PHPMailer/PHPMailer)
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: MIME-Version: 1.0
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:  boundary="b1=_v51HNRDSD34A0MqmzSmHSTA885ntrHXBXW938NSbWw"
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_v51HNRDSD34A0MqmzSmHSTA885ntrHXBXW938NSbWw
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:         
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:                 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             Bienvenue sur ExamEye !
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             Bonjour Dounia,
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             Nous avons le plaisir de vous informer que votre demande d'inscription a été approuvée.
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             Vous pouvez maintenant vous connecter à votre compte ExamEye avec le rôle de Professeur en utilisant l'email et le mot de passe que vous avez fournis lors de votre inscription.
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             En tant que Professeur, vous pouvez gérer vos examens et surveiller les résultats des étudiants dans vos matières.
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             Cordialement,
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: L'équipe ExamEye
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:         
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_v51HNRDSD34A0MqmzSmHSTA885ntrHXBXW938NSbWw
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     <html>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:         <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;'>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <div style='text-align: center; margin-bottom: 20px;'>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:                 <img src='https://i.imgur.com/4DdNUpc.jpg' alt='ExamEye Logo' style='max-width: 150px; height: auto; display: block; margin: 0 auto; border: none; object-fit: contain;'>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             </div>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <h2 style='color: #2c3e50; text-align: center;'>Bienvenue sur ExamEye !</h2>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Bonjour Dounia,</p>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Nous avons le plaisir de vous informer que votre demande d'inscription a été <strong style='color: #27ae60;'>approuvée</strong>.</p>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Vous pouvez maintenant vous connecter à votre compte ExamEye avec le rôle de <strong>Professeur</strong> en utilisant l'email et le mot de passe que vous avez fournis lors de votre inscription.</p>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>En tant que Professeur, vous pouvez gérer vos examens et surveiller les résultats des étudiants dans vos matières.</p>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:             <p>Cordialement,<br>L'équipe ExamEye</p>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:         </div>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     </body>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     </html>
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER:     
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: --b1=_v51HNRDSD34A0MqmzSmHSTA885ntrHXBXW938NSbWw--
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: 
+
+[15-May-2025 20:11:12 UTC] PHPMailer [1] : CLIENT -> SERVER: .
+
+[15-May-2025 20:11:13 UTC] PHPMailer [2] : SERVER -> CLIENT: 250 2.0.0 OK  1747339872 ffacd0b85a97d-3a35ca5a84csm494020f8f.31 - gsmtp
+
+[15-May-2025 20:11:13 UTC] PHPMailer [1] : CLIENT -> SERVER: QUIT
+
+[15-May-2025 20:11:13 UTC] PHPMailer [2] : SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-3a35ca5a84csm494020f8f.31 - gsmtp
+
+[15-May-2025 20:11:13 UTC] [Email] Success sending to: douniaanis979@gmail.com
+[15-May-2025 20:11:13 UTC] Inscription approuvée pour l'utilisateur ID: 61, Nom: Dounia, Rôle: professeur, Email envoyé: Oui

@@ -6,10 +6,13 @@
     <title>ExamEye - Espace Chef de Département</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-   <link rel="stylesheet" href="/src/css/chefdep.css">
+    <link rel="stylesheet" href="/src/css/chefdep.css">
+    <link rel="stylesheet" href="/src/css/matiere.css">
 </head>
 <body>
     <script src="/src/js/chefdep.js" defer></script>
+    <script src="/src/js/matiere.js" defer></script>
+    <script src="/src/js/logout.js" defer></script>
     <button class="sidebar-toggle" id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
@@ -49,8 +52,8 @@
                                     <i class="fas fa-user"></i> Mon Compte
                                 </a>
                             </li>
-                            <li><a href="#"><i class="fas fa-cog"></i> Paramètres</a></li>
-                            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+    
+                            <li><a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
                         </ul>
                     </div>
                 </div>
@@ -72,17 +75,45 @@
                     </div>
                 </div>
                 <div class="dashboard-stats">
-                    <div class="stat-badge received">
-                        <span class="stat-icon">🔵</span>
-                        <span class="stat-value">3</span>
-                        <span class="stat-label">Nouveaux PVs</span>
+                    <div class="stat-badge received" onclick="openMatiereModal()">
+                      <span class="stat-icon">🔵</span>
+                      <span class="stat-label">Gestion des Matières</span>
                     </div>
                 </div>
                 
                 <button class="dashboard-action">
-                    <i class="fas fa-calendar-plus"></i>
-                    Publier Planning
+                    <a href="planningadmin.html" class="action-btn primary">
+                        <i class="fas fa-calendar-plus"></i> Publier Planning
+                    </a>
                 </button>
+                
+                <!-- Modal pour la gestion des matières -->
+                <div id="matiereModal" class="modal-overlay" style="display: none;">
+                    <div class="modal">
+                        <span class="close" onclick="closeMatiereModal()">&times;</span>
+                        <h2>Gestion des Matières</h2>
+                        
+                        <!-- Formulaire d'ajout -->
+                        <form id="matiereForm" onsubmit="ajouterMatiere(event)">
+                            <label for="matiereInput">Ajouter une nouvelle matière :</label>
+                            <input type="text" id="matiereInput" name="matiere" placeholder="Nom de la matière" required />
+                            <button type="submit">Ajouter</button>
+                        </form>
+                        
+                        <!-- Liste des matières -->
+                        <div class="matieres-container">
+                            <h3>Liste des matières</h3>
+                            <div id="listeMatieres" class="matieres-liste">
+                                <!-- Les matières seront chargées ici dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Toast notification -->
+                <div id="toast" class="toast-notification">
+                    <span id="toastMessage"></span>
+                </div>
             </div>
         </div>
     </main>

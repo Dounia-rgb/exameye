@@ -7,7 +7,7 @@ let recipients = [];
 let allMatieres = [];
 let allGroupes = [];
 let allSalles = [];
-
+let activeFilter = "all"; // Default to show all plannings
 async function chargerSalles() {
     try {
         const res = await fetch('../db/planning_admin.php?action=get_all_salles');
@@ -22,24 +22,16 @@ async function chargerSalles() {
 }
 
 function remplirSelectSalles() {
-    console.log("Tentative de remplissage des selects de salles");
     const selects = document.querySelectorAll('select[name="salle"]');
-    console.log(`${selects.length} select(s) de salle trouvé(s) dans le DOM`);
-    console.log("Données de salles disponibles:", allSalles);
     
-    if (!selects.length) {
-        console.warn("Aucun élément select[name='salle'] trouvé dans le DOM");
-        return;
-    }
-
-    if (!allSalles || !allSalles.length) {
-        console.warn("Aucune donnée de salle disponible pour remplir les selects");
-        return;
-    }
-
     selects.forEach(select => {
+        // Add 'multiple' attribute
+        select.setAttribute('multiple', 'true');
+        // Add size attribute for better UX
+        select.setAttribute('size', '4');
+        
         // vider avant de remplir
-        select.innerHTML = '<option value="">-- Choisir une salle --</option>';
+        select.innerHTML = '<option value="">-- Choisir une ou plusieurs salles --</option>';
         allSalles.forEach(s => {
             const option = document.createElement('option');
             option.value = s.nomSalle;
@@ -48,12 +40,19 @@ function remplirSelectSalles() {
             select.appendChild(option);
         });
     });
-    console.log("Remplissage des selects de salles terminé");
 }
 
-function getIdSalle(nomSalle) {
-    const salle = allSalles.find(s => s.nomSalle === nomSalle);
-    return salle ? salle.idSalle : null;
+function getIdSalle(nomSalles) {
+    // If it's a string (single room), convert to array
+    if (typeof nomSalles === 'string') {
+        const salle = allSalles.find(s => s.nomSalle === nomSalles);
+        return salle ? [salle.idSalle] : [];
+    } 
+    // If it's already an array (multiple rooms)
+    return nomSalles.map(nomSalle => {
+        const salle = allSalles.find(s => s.nomSalle === nomSalle);
+        return salle ? salle.idSalle : null;
+    }).filter(id => id !== null);
 }
 
 
@@ -157,7 +156,13 @@ function updateCycleSubtitle(cycle) {
         subtitle.textContent = 'Licence & Master';
     }
 }
+// Save planning to display area
 
+
+// Check if two time periods overlap
+function horairesChevauchent(debut1, fin1, debut2, fin2) {
+    return (debut1 < fin2 && debut2 < fin1);
+}
 // Load recipients from database
 // Helper function to convert promise-based fetch to async/await for cleaner code
 async function loadRecipients() {
@@ -181,7 +186,132 @@ async function loadRecipients() {
         console.error('Error loading recipients:', error);
     }
 }
+function savePlanningToDisplay(cycle, anneeUniversitaire) {
+    const planningKey = currentPlanningKey;
+    if (!planningKey || !allPlannings[planningKey]) {
+        console.error("No planning key or data to display");
+        return;
+    }
+    
+    const planningData = allPlannings[planningKey];
+    
+    // Check if a container already exists for this planning
+    let planningContainer = document.getElementById(`planning-${planningKey}`);
+    
+    if (!planningContainer) {
+        // Create new container for planning
+        planningContainer = document.createElement('div');
+        planningContainer.id = `planning-${planningKey}`;
+        planningContainer.className = 'planning-container';
+        
+        // Find the saved plannings container and append
+        const savedPlanningsContainer = document.getElementById('planningsContainer');
 
+        if (savedPlanningsContainer) {
+            savedPlanningsContainer.appendChild(planningContainer);
+        } else {
+            console.error("❌ Élément #planningsContainer introuvable dans le DOM.");
+            return;
+        }
+        
+        
+        // Hide the "No plannings" message if exists
+        const noPlanningsMessage = document.getElementById('noPlanningsMessage');
+        if (noPlanningsMessage) {
+            noPlanningsMessage.style.display = 'none';
+        }
+    }
+    
+    // Create the content for the planning
+    let content = `
+        <div class="planning-header">
+            <h3>${cycle} ${anneeUniversitaire} - ${planningData.semester}</h3>
+            <div class="planning-actions">
+                <button class="action-btn print-btn" onclick="printPlanning('${planningKey}')">
+                    <i class="fas fa-print"></i> Imprimer
+                </button>
+                <button class="action-btn send-btn" onclick="showRecipientModal('${planningKey}')">
+                    <i class="fas fa-envelope"></i> Envoyer
+                </button>
+                <button class="action-btn delete-btn" onclick="deletePlanning('${planningKey}')">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
+            </div>
+        </div>
+        <table class="planning-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Heure Début</th>
+                    <th>Heure Fin</th>
+                    <th>Matière</th>
+                    <th>Salle</th>
+                    <th>Groupe</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    // Add each exam row
+    if (planningData.exams.length === 0) {
+        content += `
+            <tr>
+                <td colspan="7" class="no-exams">Aucun examen planifié</td>
+            </tr>
+        `;
+    } else {
+        // Sort exams by date and time
+        const sortedExams = [...planningData.exams].sort((a, b) => {
+            const dateA = new Date(a.date + 'T' + a.heureDebut);
+            const dateB = new Date(b.date + 'T' + b.heureDebut);
+            return dateA - dateB;
+        });
+        
+        sortedExams.forEach((exam, index) => {
+            content += `
+                <tr>
+                    <td>${formatDate(exam.date)}</td>
+                    <td>${exam.heureDebut}</td>
+                    <td>${exam.heureFin}</td>
+                    <td>${exam.matiere}</td>
+                    <td>${exam.salles || 'Non spécifiée'}</td>
+                    <td>${exam.groupe}</td>
+                    <td>
+                        <button class="edit-btn" onclick="showEditOptions('${planningKey}', ${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-btn" onclick="deleteExam('${planningKey}', ${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    
+    content += `
+            </tbody>
+        </table>
+    `;
+    
+    planningContainer.innerHTML = content;
+    
+    // Add some styling for the icons if Font Awesome isn't loaded
+    if (!document.getElementById('fa-style')) {
+        const style = document.createElement('style');
+        style.id = 'fa-style';
+        style.textContent = `
+            .fas.fa-print:before { content: "🖨️"; }
+            .fas.fa-envelope:before { content: "✉️"; }
+            .fas.fa-trash:before { content: "🗑️"; }
+            .fas.fa-edit:before { content: "✏️"; }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    return planningContainer;
+}
 // Load saved plannings from database
 // Load saved plannings from database
 async function loadSavedPlannings() {
@@ -195,8 +325,10 @@ async function loadSavedPlannings() {
                 Object.assign(allPlannings, data.plannings);
                 for (const [key, planning] of Object.entries(data.plannings)) {
                     currentPlanningKey = key;
-                    savePlanningToDisplay(planning.cycle, planning.year);
+                    savePlanningToDisplay(planning.cycle, planning.anneeUniversitaire);
                 }
+                console.log("✅ Plannings chargés :", allPlannings);
+
                 currentPlanningKey = null;
                 const noPlanningsMessage = document.getElementById('noPlanningsMessage');
                 if (noPlanningsMessage) {
@@ -441,97 +573,56 @@ async function finishPlanning() {
 
 
 // Save planning to display area (continued)
-function savePlanningToDisplay(cycle, year) {
-    const semester = allPlannings[currentPlanningKey].semester;
+function savePlanning() {
     const planningKey = currentPlanningKey;
     const planningData = allPlannings[planningKey];
-    const planningsContainer = document.getElementById('planningsContainer');
-    const noPlanningsMessage = document.getElementById('noPlanningsMessage');
-
-    if (!planningData || !planningData.exams) {
-        console.error("No planning data found for key:", planningKey);
+    
+    if (!planningData) {
+        console.error("No planning data to save");
         return;
     }
 
-    // Hide "no plannings" message if there are plannings
-    if (noPlanningsMessage) {
-        noPlanningsMessage.style.display = Object.keys(allPlannings).length > 0 ? 'none' : 'block';
-    }
+    const examsToSave = planningData.exams.map(exam => {
+        return {
+            date: exam.date,
+            heureDebut: exam.heureDebut,
+            idMatiere: exam.idMatiere, // Make sure this exists
+            idGroupe: exam.idGroupe,    // This is the critical field
+            idSalles: exam.idSalles    // Should be an array of room IDs
+        };
+    });
 
-    // Create or update the planning display div
-    let planningDiv = document.getElementById(`planning-${planningKey}`);
-    if (!planningDiv) {
-        planningDiv = document.createElement('div');
-        planningDiv.className = 'saved-planning';
-        planningDiv.id = `planning-${planningKey}`;
-        planningsContainer.appendChild(planningDiv);
-    }
-    // Build the HTML for the planning table
-    let tableHTML = `
-        <div class="planning-actions">
-            <button class="planning-btn send-btn" onclick="showRecipientModal('${planningKey}')">
-                <i class="fas fa-paper-plane"></i> Envoyer
-            </button>
-            <button class="planning-btn delete-btn" onclick="deletePlanning('${planningKey}')">
-                <i class="fas fa-trash"></i> Supprimer
-            </button>
-            <button class="planning-btn print-btn" onclick="printPlanning('${planningKey}')">
-                <i class="fas fa-print"></i> Imprimer
-            </button>
-        </div>
-        <h3>Planning - ${cycle} ${planningData.anneeUniversitaire} - ${semester}</h3>
+    const saveData = {
+        action: 'save_planning',
+        cycle: planningData.cycle,
+        anneeUniversitaire: planningData.anneeUniversitaire,
+        semester: planningData.semester,
+        exams: examsToSave
+    };
 
-        <div class="table-responsive">
-            <table class="completed-planning-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Heure Début</th>
-                        <th>Heure Fin</th>
-                        <th>Matière</th>
-                        <th>Salle</th>
-                        <th>Groupe</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+    console.log("Saving planning data:", saveData); // Debug log
 
-    if (planningData.exams.length === 0) {
-        tableHTML += `
-            <tr>
-                <td colspan="7" class="empty-planning">
-                    Aucun examen planifié
-                </td>
-            </tr>
-        `;
-    }  else {
-        planningData.exams.forEach((exam, index) => {
-            tableHTML += `
-                <tr>
-                    <td>${formatDate(exam.date)}</td>
-                    <td>${exam.heureDebut}</td>
-                    <td>${exam.heureFin}</td>
-                    <td>${exam.matiere}</td>
-                    <td>${exam.salle || 'Non spécifiée'}</td>
-                    <td>${exam.groupe}</td>
-                    <td class="action-buttons">
-                        <button class="action-btn edit-btn" onclick="showEditOptions('${planningKey}', ${index})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn delete-btn" onclick="deleteExam('${planningKey}', ${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    tableHTML += `</tbody></table></div>`;
-    planningDiv.innerHTML = tableHTML;
-    
-    console.log("Planning displayed:", planningKey, planningData);
+    fetch('planning_admin.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(saveData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Planning sauvegardé avec succès!');
+            // Handle success (e.g., show the saved planning)
+        } else {
+            console.error('Erreur lors de la sauvegarde:', data.error);
+            alert('Erreur: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue');
+    });
 }
 
 // Format date for display
@@ -557,10 +648,16 @@ function ajouterLigne(event) {
         heureDebut: row.querySelector('input[name="heure_debut"]'),
         heureFin: row.querySelector('input[name="heure_fin"]'),
         matiere: row.querySelector('input[name="matiere"]'),
-        salle: row.querySelector('select[name="salle"]'), // Changed from input to select
+        salle: row.querySelector('select[name="salle"]'), // This is now a multiple select
         groupe: row.querySelector('select[name="groupe"]')
     };
 
+    const selectedSalles = Array.from(inputs.salle.selectedOptions).map(option => option.value);
+    if (selectedSalles.length === 0) {
+        alert(`Veuillez sélectionner au moins une salle`);
+        inputs.salle.focus();
+        return;
+    }
     // Validate required fields
     for (const [key, input] of Object.entries(inputs)) {
         if (!input.value) {
@@ -587,7 +684,10 @@ function ajouterLigne(event) {
         groupe: inputs.groupe.value,
         idMatiere: getIdMatiere(inputs.matiere.value),
         idGroupe: getIdGroupe(inputs.groupe.value),
-        idSalle: getIdSalle(inputs.salle.value) // Add this line
+        idSalle: getIdSalle(inputs.salle.value), // Add this line
+        salle: selectedSalles.join(', '), // Join for display
+        salles: selectedSalles, // Store as array for data
+        idSalles: getIdSalle(selectedSalles) // Get array of IDs
     };
     const exams = allPlannings[currentPlanningKey].exams;
     const conflit = exams.find(e =>
@@ -734,6 +834,10 @@ function createRecipientModal() {
                 <input type="text" id="recipientSearch" placeholder="Rechercher un professeur..." 
                        style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
             </div>
+            <div class="select-all-container" style="margin-bottom: 10px;">
+                <button class="select-all-btn" onclick="selectAllRecipients()">Sélectionner tous</button>
+                <button class="deselect-all-btn" onclick="deselectAllRecipients()">Désélectionner tous</button>
+            </div>
             <div id="recipientList" class="recipient-list">
                 <!-- This will be filled dynamically -->
             </div>
@@ -746,7 +850,59 @@ function createRecipientModal() {
     document.body.appendChild(modal);
     return modal;
 }
+function selectAllRecipients() {
+    const checkboxes = document.querySelectorAll('#recipientList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
 
+function deselectAllRecipients() {
+    const checkboxes = document.querySelectorAll('#recipientList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+// Update the CSS to style the select all buttons
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .select-all-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .select-all-btn, .deselect-all-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .select-all-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .deselect-all-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .select-all-btn {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+        
+        .select-all-btn:hover {
+            background-color: #0b5ed7;
+        }
+    `;
+    document.head.appendChild(style);
+});
 // Close edit modal
 function closeEditModal() {
     const modal = document.getElementById('editModal');
@@ -806,6 +962,17 @@ function showEditFieldsModal(fields, planningKey, examIndex) {
             inputField = `<input type="date" name="${field}" value="${exam.date}" class="edit-field-input">`;
         } else if (field === 'heureDebut' || field === 'heureFin') {
             inputField = `<input type="time" name="${field}" value="${exam[field]}" class="edit-field-input">`;
+        } else if (field === 'salle') {
+            // Create a multiple select for salles when editing
+            inputField = `<select name="${field}" multiple class="edit-field-input" size="4">`;
+            // Create array of selected salles
+            const selectedSalles = exam[field].split(', ');
+            
+            allSalles.forEach(s => {
+                const isSelected = selectedSalles.includes(s.nomSalle) ? 'selected' : '';
+                inputField += `<option value="${s.nomSalle}" ${isSelected}>${s.nomSalle}</option>`;
+            });
+            inputField += `</select>`;
         } else {
             inputField = `<input type="text" name="${field}" value="${exam[field]}" class="edit-field-input">`;
         }
@@ -841,7 +1008,14 @@ function saveEditedFields() {
     selectedFieldsToEdit.forEach(field => {
         const input = document.querySelector(`#editFieldsContent input[name="${field}"], #editFieldsContent select[name="${field}"]`);
         if (input) {
-            exam[field] = input.value;
+            if (field === 'salle' && input.multiple) {
+                const selectedOptions = Array.from(input.selectedOptions).map(opt => opt.value);
+                exam[field] = selectedOptions.join(', ');
+                exam.salles = selectedOptions;
+                exam.idSalles = getIdSalle(selectedOptions);
+            } else {
+                exam[field] = input.value;
+            }
         }
     });
 
@@ -1223,7 +1397,274 @@ window.onclick = function(event) {
         }
     });
 }
+function filterPlanningsByCycle(cycle) {
+    activeFilter = cycle;
+    const planningContainers = document.querySelectorAll('.planning-container');
+    const noPlanningsMessage = document.getElementById('noPlanningsMessage');
+    
+    let visibleCount = 0;
+    
+    planningContainers.forEach(container => {
+        const planningHeader = container.querySelector('.planning-header h3');
+        if (!planningHeader) return;
+        
+        const planningText = planningHeader.textContent;
+        
+        if (cycle === "all" || planningText.startsWith(cycle)) {
+            container.style.display = 'block';
+            visibleCount++;
+        } else {
+            container.style.display = 'none';
+        }
+    });
+    
+    // Update filter buttons to show active state
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+        if (btn.dataset.filter === cycle) {
+            btn.classList.add('active-filter');
+        } else {
+            btn.classList.remove('active-filter');
+        }
+    });
+    
+    // Show or hide no plannings message
+    if (noPlanningsMessage) {
+        if (visibleCount === 0 && Object.keys(allPlannings).length > 0) {
+            noPlanningsMessage.textContent = "Aucun planning trouvé pour ce filtre";
+            noPlanningsMessage.style.display = 'block';
+        } else if (Object.keys(allPlannings).length === 0) {
+            noPlanningsMessage.textContent = "Aucun planning enregistré";
+            noPlanningsMessage.style.display = 'block';
+        } else {
+            noPlanningsMessage.style.display = 'none';
+        }
+    }
+}
 
+// Add this function to create the filter bar
+function createFilterBar() {
+    const filterBar = document.createElement('div');
+    filterBar.className = 'planning-filter-bar';
+    filterBar.innerHTML = `
+        <div class="filter-label">Filtrer par cycle :</div>
+        <div class="filter-buttons">
+            <button class="filter-btn active-filter" data-filter="all" onclick="filterPlanningsByCycle('all')">Tous</button>
+            <button class="filter-btn" data-filter="Licence" onclick="filterPlanningsByCycle('Licence')">Licence</button>
+            <button class="filter-btn" data-filter="Master" onclick="filterPlanningsByCycle('Master')">Master</button>
+            <button class="filter-btn" data-filter="ING" onclick="filterPlanningsByCycle('ING')">Ingéniorat</button>
+        </div>
+    `;
+    return filterBar;
+}
+
+// Modify the loadSavedPlannings function to respect active filter
+async function loadSavedPlannings() {
+    try {
+        const response = await fetch('../db/planning_admin.php?action=get_plannings');
+        const text = await response.text(); // Get raw text instead of JSON
+        
+        try {
+            const data = JSON.parse(text); // Try to parse as JSON
+            if (data.success) {
+                Object.assign(allPlannings, data.plannings);
+                for (const [key, planning] of Object.entries(data.plannings)) {
+                    currentPlanningKey = key;
+                    savePlanningToDisplay(planning.cycle, planning.anneeUniversitaire);
+                }
+                console.log("✅ Plannings chargés :", allPlannings);
+
+                currentPlanningKey = null;
+                const noPlanningsMessage = document.getElementById('noPlanningsMessage');
+                if (noPlanningsMessage) {
+                    noPlanningsMessage.style.display = Object.keys(allPlannings).length > 0 ? 'none' : 'block';
+                }
+                
+                // Apply active filter after loading all plannings
+                if (activeFilter !== "all") {
+                    filterPlanningsByCycle(activeFilter);
+                }
+            } else {
+                console.error('Failed to load plannings:', data.error);
+            }
+        } catch (jsonError) {
+            console.error('Invalid JSON response:', jsonError);
+            console.error('Response text:', text.substring(0, 200) + '...'); // Log first 200 chars
+        }
+    } catch (error) {
+        console.error('Error loading plannings:', error);
+    }
+}
+
+// Modify the DOM Ready event to add the filter bar
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize header dates
+    updateHeaderDates();
+    
+    // Account dropdown toggle
+    document.getElementById('accountIcon').addEventListener('click', function() {
+        const dropdown = document.getElementById('accountDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('#accountContainer')) {
+            document.getElementById('accountDropdown').style.display = 'none';
+        }
+    });
+    
+    // Initially hide the planning form and finish button
+    document.getElementById('planningForm').style.display = 'none';
+    document.getElementById('finishPlanningBtn').style.display = 'none';
+
+    // Create modals on page load to ensure they exist
+    createEditModal();
+    createEditFieldsModal();
+    createRecipientModal();
+    
+    // Add filter bar to plannings container
+    const planningsContainer = document.getElementById('planningsContainer');
+    if (planningsContainer) {
+        const filterBar = createFilterBar();
+        planningsContainer.parentNode.insertBefore(filterBar, planningsContainer);
+    }
+    
+    // Load data from backend
+    loadRecipients();
+    loadSavedPlannings();
+});
+
+// Add this to the finishPlanning function to respect active filter after adding new planning
+async function finishPlanning() {
+    const cycle = document.getElementById('cycle').value;
+    const year = document.getElementById('year').value;
+    const semester = document.getElementById('semester').value;
+    const planningForm = document.getElementById('planningForm');
+    const startBtn = document.getElementById('startPlanningBtn');
+    const finishBtn = document.getElementById('finishPlanningBtn');
+
+    if (!currentPlanningKey || !allPlannings[currentPlanningKey]) {
+        alert("Aucun planning actif à terminer.");
+        return;
+    }
+
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.id = 'loadingIndicator';
+    loadingIndicator.className = 'loading-indicator';
+    loadingIndicator.innerHTML = '<div class="spinner"></div><p>Sauvegarde en cours...</p>';
+    document.body.appendChild(loadingIndicator);
+
+    console.log("Données envoyées au backend :", {
+        action: 'save_planning',
+        planningKey: currentPlanningKey,
+        cycle,
+        anneeUniversitaire: year,
+        semester,
+        exams: allPlannings[currentPlanningKey].exams
+    });
+
+    const response = await fetch('../db/planning_admin.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: 'save_planning',
+            planningKey: currentPlanningKey,
+            cycle,
+            anneeUniversitaire: year, 
+            semester,
+            exams: allPlannings[currentPlanningKey].exams
+        })
+    });
+
+    const data = await response.json();
+    document.getElementById('loadingIndicator').remove();
+
+    if (data.success) {
+        allPlannings[currentPlanningKey].id = data.planningId;
+        planningForm.style.display = 'none';
+        startBtn.style.display = 'inline-block';
+        finishBtn.style.display = 'none';
+        const tempTable = document.querySelector(`#temp-${currentPlanningKey.replace(/ /g, '_')}`);
+        if (tempTable) tempTable.remove();
+        
+        // Save the planning to display
+        savePlanningToDisplay(
+            allPlannings[currentPlanningKey].cycle,
+            allPlannings[currentPlanningKey].anneeUniversitaire
+        );
+        
+        // Apply filter if any is active
+        if (activeFilter !== "all") {
+            filterPlanningsByCycle(activeFilter);
+        }
+        
+        document.getElementById('cycle').value = '';
+        document.getElementById('year').value = '';
+        document.getElementById('year').disabled = true;
+        document.getElementById('semester').value = '';
+        document.getElementById('semester').disabled = true;
+        startBtn.disabled = true;
+        updateCycleSubtitle('');
+        setTimeout(() => {
+            const savedPlanning = document.getElementById(`planning-${currentPlanningKey}`);
+            if (savedPlanning && savedPlanning.style.display !== 'none') {
+                savedPlanning.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            currentPlanningKey = null;
+        }, 100);
+    } else {
+        alert("Erreur lors de la sauvegarde du planning: " + data.error);
+    }
+}
+
+// Add CSS for the filter bar
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .planning-filter-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            margin-right: 15px;
+            color: #495057;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .filter-btn.active-filter {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+    `;
+    document.head.appendChild(style);
+});
 // Add CSS for loading spinner
 document.addEventListener('DOMContentLoaded', function() {
     const style = document.createElement('style');

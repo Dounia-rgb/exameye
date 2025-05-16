@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             console.log("Données reçues:", data);
             
+            // DÉBUGGAGE: Afficher la structure des données reçues
+            console.log("Structure complète des données:", JSON.stringify(data));
+            
             // Traiter les données selon la structure reçue
             if (planningId) {
                 // Cas d'un planning spécifique
@@ -36,6 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 
                 const planning = data.planning;
+                
+                // DÉBUGGAGE: Afficher la structure du premier examen
+                if (planning.exams && planning.exams.length > 0) {
+                    console.log("Structure du premier examen:", JSON.stringify(planning.exams[0]));
+                }
                 
                 // Mettre à jour le titre du planning
                 if (planningTitleElement) {
@@ -62,15 +70,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 planning.exams.forEach(exam => {
                     const row = document.createElement("tr");
                     
+                    // DÉBUGGAGE: Afficher la valeur brute de la salle pour cet examen
+                    console.log(`Salle pour l'examen ${exam.matiere}:`, exam.salle, exam.salles);
+                    
+                    // Essayer les deux formes possibles (salle ou salles)
+                    const salleValue = exam.salles !== undefined ? exam.salles : (exam.salle !== undefined ? exam.salle : 'Non spécifiée');
+                    const sallesDisplay = formatSalles(salleValue);
+                    
                     row.innerHTML = `
                         <td>${planning.semester}</td>
                         <td>${formatDate(exam.date)}</td>
                         <td>${exam.heureDebut}</td>
                         <td>${exam.heureFin}</td>
                         <td>${exam.matiere}</td>
-                        <td>${exam.salle || '-'}</td>
+                        <td>${sallesDisplay}</td>
                         <td>${exam.groupe}</td>
-                        
                     `;
                     
                     tableBody.appendChild(row);
@@ -84,19 +98,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 tableBody.innerHTML = ""; // Effacer les données précédentes
                 
+                // DÉBUGGAGE: Afficher la structure du premier planning
+                const firstPlanningKey = Object.keys(data.plannings)[0];
+                if (firstPlanningKey && data.plannings[firstPlanningKey].exams && data.plannings[firstPlanningKey].exams.length > 0) {
+                    console.log("Structure du premier examen (vue globale):", JSON.stringify(data.plannings[firstPlanningKey].exams[0]));
+                }
+                
                 // Traiter la liste des plannings
                 Object.values(data.plannings).forEach(planning => {
                     planning.exams.forEach(exam => {
                         const row = document.createElement("tr");
                         
-                        row.innerHTML = ` <td>${planning.semester}</td>
+                        // Essayer les deux formes possibles (salle ou salles)
+                        const salleValue = exam.salles !== undefined ? exam.salles : (exam.salle !== undefined ? exam.salle : 'Non spécifiée');
+                        const sallesDisplay = formatSalles(salleValue);
+                        
+                        row.innerHTML = ` 
+                            <td>${planning.semester}</td>
                             <td>${formatDate(exam.date)}</td>
                             <td>${exam.heureDebut}</td>
                             <td>${exam.heureFin}</td>
                             <td>${exam.matiere}</td>
-                            <td>${exam.salle || '-'}</td>
+                            <td>${sallesDisplay}</td>
                             <td>${exam.groupe}</td>
-                           
                         `;
                         
                         tableBody.appendChild(row);
@@ -115,6 +139,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const date = new Date(dateString);
         return date.toLocaleDateString('fr-FR');
     }
+    
+    // Fonction pour formater l'affichage des salles multiples
+    function formatSalles(salles) {
+        if (!salles) return '-';
+        
+        // DÉBUGGAGE: Afficher le type et la valeur des salles reçues
+        console.log("Type des salles:", typeof salles, "Valeur:", salles);
+        
+        // Si c'est une chaîne de caractères simple
+        if (typeof salles === 'string') {
+            // Vérifier si c'est potentiellement une chaîne JSON (format array)
+            if (salles.startsWith('[') && salles.endsWith(']')) {
+                try {
+                    const sallesArray = JSON.parse(salles);
+                    return Array.isArray(sallesArray) ? sallesArray.join(', ') : salles;
+                } catch (e) {
+                    return salles; // Si ce n'est pas du JSON valide, retourner la chaîne telle quelle
+                }
+            }
+            return salles;
+        }
+        
+        // Si c'est déjà un tableau
+        if (Array.isArray(salles)) {
+            return salles.join(', ');
+        }
+        
+        return String(salles);
+    }
+    
     function deletePlanning(id) {
         fetch(`../db/delete_planning.php`, {
             method: 'POST',

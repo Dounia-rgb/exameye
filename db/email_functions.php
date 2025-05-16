@@ -159,11 +159,7 @@ function sendApprovalEmail($email, $name, $role) {
             
             <p>$roleSpecificMsg</p>
             
-            <div style='text-align: center; margin: 30px 0;'>
-                <a href='https://exameye.com/login.html' style='background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;'>Se connecter</a>
-            </div>
             
-            <p>Si vous avez des questions ou besoin d'assistance, n'hésitez pas à contacter notre équipe de support à <a href='mailto:support@exameye.com'>support@exameye.com</a>.</p>
             
             <p>Cordialement,<br>L'équipe ExamEye</p>
         </div>
@@ -186,8 +182,11 @@ function sendApprovalEmail($email, $name, $role) {
 function sendRejectionEmail($email, $name, $reason = '') {
     $subject = "ExamEye - Votre demande d'inscription";
     
-    $reasonHtml = !empty($reason) ? 
-        "<p>Motif: <em>\"" . htmlspecialchars($reason) . "\"</em></p>" : 
+    // Sanitize and escape the reason to prevent potential XSS
+    $escapedReason = htmlspecialchars($reason, ENT_QUOTES, 'UTF-8');
+    
+    $reasonHtml = !empty($escapedReason) ? 
+        "<p>Motif: <em>\"" . $escapedReason . "\"</em></p>" : 
         "<p>Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur.</p>";
     
     $message = "
@@ -200,12 +199,11 @@ function sendRejectionEmail($email, $name, $reason = '') {
             
             <h2 style='color: #2c3e50; text-align: center;'>Demande d'inscription</h2>
             
-            <p>Bonjour $name,</p>
+            <p>Bonjour " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ",</p>
             
             <p>Nous vous informons que votre demande d'inscription à ExamEye n'a pas été approuvée.</p>
             
-            $reasonHtml
-            
+            " . $reasonHtml . "
             
             <p>Cordialement,<br>L'équipe ExamEye</p>
         </div>
