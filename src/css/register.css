@@ -1,39 +1,46 @@
-body {
+* {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background: url('/src/img/background.png') no-repeat center center/cover;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url('/src/img/Design\ sans\ titre\ \(14\).png') no-repeat center center/cover;
   height: 100vh;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  position: relative;
+  color: #333;
   flex-direction: column;
+  position: relative;
 }
 
-/* Welcome text OUTSIDE the box */
+/* Welcome text styling */
 .welcome-text {
   position: absolute;
-  top: 2%;
-  font-size: 36px;
-  font-family: 'Poppins', sans-serif;
+  top: 5%;
+  font-size: 42px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: #184c83;
   text-transform: uppercase;
   text-align: center;
-  animation: fadeInMove 2s ease-in-out forwards;
+  animation: fadeInMove 1.5s ease-in-out forwards;
   z-index: 2;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
+  width: 100%;
 }
 
 @keyframes fadeInMove {
   0% {
-    opacity: 0;
-    transform: translateX(-50%);
+      opacity: 0;
+      transform: translateX(-30px);
   }
   100% {
-    opacity: 1;
-    transform: translateX(0);
+      opacity: 1;
+      transform: translateX(0);
   }
 }
 
@@ -44,91 +51,300 @@ body {
   align-items: center;
   height: 100%;
   width: 100%;
-  padding-top: 60px; /* just in case welcome text overlaps */
+  padding: 15px;
+  padding-top: 80px; /* Space for welcome text */
 }
 
-/* Register box styling */
+/* Register box enhanced styling */
 .register-box {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  padding: 40px 30px;
-  width: 25vw;
-  max-width: 90vw;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  padding: 35px 30px;
+  width: 380px;
+  max-width: 100%;
   text-align: center;
-  animation: fadeInUp 1.2s ease-out forwards;
+  animation: fadeInUp 1s ease-out forwards;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes fadeInUp {
   from {
-    opacity: 0;
-    transform: translateY(50px);
+      opacity: 0;
+      transform: translateY(30px);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+      opacity: 1;
+      transform: translateY(0);
   }
 }
 
 .register-box h2 {
   font-family: 'Playfair Display', serif;
-  color: #fff;
-  font-size: 24px;
-  margin-bottom: 20px;
+  color: #184c83;
+  font-size: 32px;
+  margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 10px;
 }
 
+.register-box h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: #184c83;
+  border-radius: 2px;
+}
+
+/* Input Fields Styling */
 .input-box {
-  margin-bottom: 15px;
-  text-align: center;
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative;
 }
 
-.input-box input {
-  width: 85%;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+.input-box input[type="text"],
+.input-box input[type="email"],
+.input-box input[type="password"] {
+  width: 100%;
+  padding: 15px 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #f8f9fa;
+  color: #333;
   outline: none;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
 }
 
 .input-box input:focus {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  border-color: #184c83;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(24, 76, 131, 0.1);
 }
 
 .input-box input::placeholder {
-  color: rgba(68, 65, 65, 0.911);
+  color: #999;
+  font-weight: 300;
 }
 
+/* Role Selection Styling */
+.role-selection {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.role-label {
+  display: block;
+  color: #333;
+  font-size: 15px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.role-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.role-options label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #333;
+  background-color: #f0f4f8;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e4e8;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.role-options label:hover {
+  background-color: #e6ebf2;
+}
+
+.role-options input[type="radio"]:checked + label,
+.role-options label:has(input[type="radio"]:checked) {
+  background-color: rgba(24, 76, 131, 0.1);
+  border-color: #184c83;
+}
+
+.role-options input[type="radio"] {
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: #184c83;
+}
+
+/* Register Button Enhanced Styling */
 .register-btn {
-  background: #007BFF;
-  color: #fff;
+  background: linear-gradient(to right, #184c83, #2a6db8);
+  color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 14px 20px;
   font-size: 16px;
   width: 100%;
-  transition: all 0.3s ease-in-out;
-  border-radius: 10px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+  box-shadow: 0 4px 6px rgba(24, 76, 131, 0.2);
 }
 
 .register-btn:hover {
-  background: #0056b3;
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.5);
+  background: linear-gradient(to right, #15406f, #1e5798);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(24, 76, 131, 0.3);
 }
 
+.register-btn:active {
+  transform: translateY(1px);
+}
+
+/* Login Link Styling */
 .register-box p {
-  margin-top: 15px;
-  color: #fff;
+  margin-top: 25px;
+  color: #555;
   font-size: 14px;
 }
 
 .register-box p a {
-  color: #fff;
+  color: #184c83;
   text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.register-box p a:hover {
+  color: #0d2e50;
+  text-decoration: underline;
+}
+
+/* Notification Styling */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  background-color: rgba(24, 76, 131, 0.9);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  max-width: 90%;
+  font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .register-box {
+      width: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-text {
+      font-size: 32px;
+      top: 3%;
+  }
+  
+  .container {
+      width: 90%;
+      padding-top: 70px;
+  }
+  
+  .register-box {
+      width: 100%;
+      max-width: 450px;
+      padding: 30px 25px;
+  }
+  
+  .register-box h2 {
+      font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-text {
+      font-size: 24px;
+      margin-bottom: 25px;
+      top: 2%;
+  }
+  
+  .container {
+      padding-top: 60px;
+  }
+  
+  .register-box {
+      padding: 25px 20px;
+  }
+  
+  .register-box h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+  }
+  
+  .input-box {
+      margin-bottom: 15px;
+  }
+  
+  .input-box input {
+      padding: 12px 15px;
+      font-size: 14px;
+  }
+  
+  .role-options {
+      flex-direction: column;
+  }
+  
+  .role-options label {
+      font-size: 14px;
+  }
+  
+  .register-btn {
+      padding: 12px 15px;
+      font-size: 15px;
+  }
+}
+
+@media (max-width: 350px) {
+  .welcome-text {
+      font-size: 20px;
+  }
+  
+  .register-box h2 {
+      font-size: 22px;
+  }
+}
+
+/* Fix for device orientation changes */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  body {
+      height: auto;
+      min-height: 100vh;
+  }
+  
+  .welcome-text {
+      position: relative;
+      top: 0;
+      margin: 15px 0;
+  }
+  
+  .container {
+      height: auto;
+      padding-top: 20px;
+      margin: 15px 0;
+  }
 }

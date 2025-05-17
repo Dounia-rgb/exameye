@@ -7141,3 +7141,13 @@ Stack trace:
 
 [15-May-2025 20:11:13 UTC] [Email] Success sending to: douniaanis979@gmail.com
 [15-May-2025 20:11:13 UTC] Inscription approuvée pour l'utilisateur ID: 61, Nom: Dounia, Rôle: professeur, Email envoyé: Oui
+[17-May-2025 08:50:27 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 474
+[17-May-2025 08:50:27 UTC] PHP Stack trace:
+[17-May-2025 08:50:27 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[17-May-2025 08:50:27 UTC] PHP   2. handleRejectRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:56
+[17-May-2025 08:50:27 UTC] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in C:\wamp64\www\exameye\db\notification_handler.php on line 485
+[17-May-2025 08:50:27 UTC] PHP Stack trace:
+[17-May-2025 08:50:27 UTC] PHP   1. {main}() C:\wamp64\www\exameye\db\notification_handler.php:0
+[17-May-2025 08:50:27 UTC] PHP   2. handleRejectRequest($conn = class PDO {  }) C:\wamp64\www\exameye\db\notification_handler.php:56
+[17-May-2025 08:50:27 UTC] Rejet de demande de matière - ID Notification: 106
+[17-May-2025 08:50:27 UTC] Données de référence reçues: {"subject_id":"{\"subject_id\":2,\"subject_name\":\"algebre\",\"user_id\":46,\"user_name\":\"inesaaaaaaaaaaaaa\"}","user_id":"{\"subject_id\":2,\"subject_name\":\"algebre\",\"user_id\":46,\"user_name\":\"inesaaaaaaaaaaaaa\"}"}

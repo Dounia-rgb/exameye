@@ -360,13 +360,20 @@
             `;
         } else if (request.type === 'subject_add_request') {
             badgeClass = 'badge-subject';
-            detailsContent = `
-                <div class="notification-details">
-                    <h4>Détails de la demande :</h4>
-                    <p><strong>Professeur :</strong> ${escapeHtml(request.senderName)}</p>
-                    <p><strong>ID Matière :</strong> ${escapeHtml(request.idReference)}</p>
-                </div>
-            `;
+            let subjectData = {};
+            try {
+                subjectData = JSON.parse(request.idReference);
+            } catch (e) {
+                console.error('Error parsing subject data:', e);
+            }
+            
+           detailsContent = `
+                 <div class="notification-details">
+            <h4>Détails de la demande :</h4>
+            <p><strong>Professeur :</strong> ${escapeHtml(subjectData.user_name || request.senderName)}</p>
+            <p><strong>Matière :</strong> ${escapeHtml(subjectData.subject_name || 'Inconnue')}</p>
+        </div>
+    `;
         } else if (request.type === 'profile_edit_request') {
             badgeClass = 'badge-profile';
             detailsContent = `

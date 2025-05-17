@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
         convocation: "Convocation",
         planning: "Planning",
         message: "Message",  // Changed from rappel to message
-    
     };
 
     // Create buttons for each category
@@ -42,16 +41,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Store the notifications data
             groupedNotifications = data;
+            
             // Default to convocation, or first available category if no convocations
             const defaultType = data.convocation && data.convocation.length > 0 ? 
                 "convocation" : Object.keys(data)[0] || "general";
             
-            document.querySelector(`[data-type="${defaultType}"]`).classList.add("active");
+            // Make sure the button for the default type exists before activating it
+            const defaultButton = document.querySelector(`[data-type="${defaultType}"]`);
+            if (defaultButton) {
+                defaultButton.classList.add("active");
+            }
+            
             showNotificationsByType(defaultType);
         })
         .catch(err => {
             notificationList.innerHTML = `<li>Erreur de chargement: ${err}</li>`;
+            console.error("Error loading notifications:", err);
         });
 
     function showNotificationsByType(type) {
@@ -67,11 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
         notifs.forEach(notif => {
             const li = document.createElement("li");
             li.className = "notification-item";
+            if (!notif.isRead) {
+                li.classList.add("unread");
+            }
 
             const content = `
                 <div class="notification-header">
                     <strong>${notif.title}</strong>
-                    <span class="notification-date">${notif.date}</span>
+                    <span class="notification-date">${formatDate(notif.date)}</span>
                 </div>
                 <div class="notification-body">${notif.message}</div>
                 <div class="notification-actions">
@@ -96,12 +106,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                if (notif.type === "convocation") {
-                    window.location.href = `convocation.html?id=${notif.idReference}`;
-                } else if (notif.type === "planning") {
-                    window.location.href = `planning.html?id=${notif.idReference}`;
+                // Mark as read when clicked
+                if (!notif.isRead) {
+                    markAsRead(notif.idNotification);
+                    li.classList.remove("unread");
+                    notif.isRead = true;
+                }
+
+                // IMPORTANT FIX: Handle convocation notifications correctly
+                if (notif.type === "convocation" && notif.idReference) {
+                    // Here's the important change: Use convocationGroupId for convocation pages
+                    // We're assuming idReference is the correct convocationGroupId
+                    window.location.href = `convocation.html?id=${notif.idReference}&notification_id=${notif.idNotification}`;
+                    
+                    // For debugging
+                    console.log(`Navigating to convocation with GroupID: ${notif.idReference}`);
+                } else if (notif.type === "planning" && notif.idReference) {
+                    window.location.href = `planning.html?id=${notif.idReference}&notification_id=${notif.idNotification}`;
+                } else if (notif.url) {
+                    // If there's a custom URL defined, use that
+                    window.location.href = notif.url;
                 } else {
-                    console.log("Type inconnu:", notif.type);
+                    console.log("No navigation target for notification:", notif);
                 }
             });
             
@@ -152,18 +178,60 @@ document.addEventListener("DOMContentLoaded", () => {
                             item.remove();
                             
                             // Remove from groupedNotifications too
-                            groupedNotifications[type] = groupedNotifications[type].filter(n => n.idNotification != notifId);
+                            for (const category in groupedNotifications) {
+                                groupedNotifications[category] = groupedNotifications[category].filter(
+                                    n => n.idNotification != notifId
+                                );
+                            }
                             
                             // If no notifications left in this category, show message
                             if (groupedNotifications[type].length === 0) {
                                 notificationList.innerHTML = `<li>Aucune notification dans cette catégorie.</li>`;
                             }
+                            
+                            showToast("Notification supprimée avec succès");
                         } else {
                             alert("Erreur lors de la suppression: " + res.error);
                         }
+                    })
+                    .catch(err => {
+                        console.error("Error deleting notification:", err);
+                        alert("Erreur lors de la suppression: " + err);
                     });
                 }
             });
+        });
+    }
+
+    // Function to mark notification as read
+    function markAsRead(notificationId) {
+        fetch('../db/mark_notification_read.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: notificationId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                console.error("Failed to mark notification as read:", data.error);
+            }
+        })
+        .catch(err => {
+            console.error("Error marking notification as read:", err);
+        });
+    }
+
+    // Helper function to format date
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     }
 
@@ -272,6 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 sendBtn.disabled = false;
                 
                 alert("Erreur lors de l'envoi: " + err);
+                console.error("Error sending reply:", err);
             });
         });
     }

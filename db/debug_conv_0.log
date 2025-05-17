@@ -1,9 +1,9 @@
 Array
 (
-    [matiere] => asd
-    [date] => 2025-05-12
-    [heure] => 02:55
+    [matiere] => ANG2
+    [date] => 2025-05-18
+    [heure] => 09:00
     [heureFin] => 
-    [cycle] => M2
+    [cycle] => S2
     [semestre] => 2
 )

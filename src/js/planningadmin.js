@@ -7,7 +7,8 @@ let recipients = [];
 let allMatieres = [];
 let allGroupes = [];
 let allSalles = [];
-let activeFilter = "all"; // Default to show all plannings
+let activeFilter = "all";// Default to show all plannings
+
 async function chargerSalles() {
     try {
         const res = await fetch('../db/planning_admin.php?action=get_all_salles');
@@ -20,27 +21,190 @@ async function chargerSalles() {
         console.error("Erreur lors du chargement des salles :", error);
     }
 }
+function addSelectButtons(selectElement) {
+    // Create container for buttons
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'select-all-container';
+    
+    // Create Select All button
+    const selectAllBtn = document.createElement('button');
+    selectAllBtn.type = 'button';
+    selectAllBtn.className = 'select-all-btn';
+    selectAllBtn.textContent = 'Tout sélectionner';
+    selectAllBtn.addEventListener('click', () => {
+        Array.from(selectElement.options).forEach(option => {
+            if (!option.disabled) option.selected = true;
+        });
+        selectElement.dispatchEvent(new Event('change'));
+    });
+    
+    // Create Deselect All button
+    const deselectAllBtn = document.createElement('button');
+    deselectAllBtn.type = 'button';
+    deselectAllBtn.className = 'deselect-all-btn';
+    deselectAllBtn.textContent = 'Tout désélectionner';
+    deselectAllBtn.addEventListener('click', () => {
+        Array.from(selectElement.options).forEach(option => option.selected = false);
+        selectElement.dispatchEvent(new Event('change'));
+    });
+    
+    // Append buttons to container
+    buttonContainer.appendChild(selectAllBtn);
+    buttonContainer.appendChild(deselectAllBtn);
+    
+    // Insert button container before the select element
+    selectElement.parentNode.insertBefore(buttonContainer, selectElement);
+}
 
+function remplirSelectGroupes() {
+    const selects = document.querySelectorAll('select[name="groupe"]');
+    
+    selects.forEach((select, index) => {
+        select.id = `groupe-${index}`;
+        
+        // Clear existing options
+        select.innerHTML = '<option value="" disabled>-- Choisir un ou plusieurs groupes --</option>';
+
+        // Set multiple attribute directly
+        select.setAttribute('multiple', 'true');
+        select.setAttribute('size', '4');
+        select.classList.add('enhanced-multi-select');
+        
+        allGroupes.forEach(g => {
+            const label = `${g.section} - ${g.groupe}`;
+            const option = document.createElement('option');
+            option.value = label;
+            option.textContent = label;
+            select.appendChild(option);
+        });
+        
+        // Add custom click handler to allow simple clicking for selection/deselection
+        setupSimpleClickSelect(select);
+    });
+}
 function remplirSelectSalles() {
     const selects = document.querySelectorAll('select[name="salle"]');
     
-    selects.forEach(select => {
-        // Add 'multiple' attribute
-        select.setAttribute('multiple', 'true');
-        // Add size attribute for better UX
-        select.setAttribute('size', '4');
+    selects.forEach((select, index) => {
+        select.id = `salle-${index}`;
         
-        // vider avant de remplir
-        select.innerHTML = '<option value="">-- Choisir une ou plusieurs salles --</option>';
+        // Clear existing options but keep select as a standard select first
+        select.innerHTML = '<option value="" disabled>-- Choisir une ou plusieurs salles --</option>';
+        
         allSalles.forEach(s => {
             const option = document.createElement('option');
             option.value = s.nomSalle;
-            option.dataset.id = s.idSalle;
             option.textContent = s.nomSalle;
             select.appendChild(option);
         });
+        
+        // Make it a multi-select
+        select.multiple = true;
+        select.size = 4;
+        select.classList.add('enhanced-multi-select');
+        
+        // Add direct click handler to this specific select
+        fixSalleSelectClicks(select);
     });
 }
+
+function fixSalleSelectClicks(select) {
+    // Remove any existing handlers by cloning
+    const clone = select.cloneNode(true);
+    select.parentNode.replaceChild(clone, select);
+    
+    // Add mousedown handler to prevent default behavior and toggle selection
+    clone.addEventListener('mousedown', function(e) {
+        if (e.target.tagName === 'OPTION' && !e.target.disabled) {
+            e.preventDefault();
+            e.target.selected = !e.target.selected;
+            
+            // Manually trigger change event
+            setTimeout(() => {
+                clone.dispatchEvent(new Event('change'));
+                console.log('Salle selected:', Array.from(clone.selectedOptions).map(o => o.value));
+            }, 0);
+            
+            return false;
+        }
+    });
+    
+    // Add debugging click handler
+    clone.addEventListener('click', function(e) {
+        console.log('Click on salle select detected');
+    });
+}
+function addOrUpdateSalleStyles() {
+    // Remove existing style element if it exists
+    const existingStyle = document.getElementById('salle-select-styles');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    const style = document.createElement('style');
+    style.id = 'salle-select-styles';
+    style.innerHTML = `
+        select[name="salle"] {
+            min-height: 100px;
+            padding: 5px;
+            border: 2px solid #0d6efd;
+            border-radius: 4px;
+            width: 100%;
+            background-color: white;
+        }
+        
+        select[name="salle"] option {
+            padding: 8px 12px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        select[name="salle"] option:hover {
+            background-color: #e9ecef;
+        }
+        
+        select[name="salle"] option:checked {
+            background-color: #0d6efd !important;
+            color: white !important;
+            font-weight: bold !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    console.log('Salle selection styles added');
+}
+function setupSimpleClickSelect(selectElement) {
+    selectElement.addEventListener('mousedown', function(e) {
+        const option = e.target.closest('option');
+        if (!option || option.disabled) return;
+        
+        // Prevent default behavior which requires Ctrl/Cmd key for multiple selection
+        e.preventDefault();
+        
+        // Toggle the selection state
+        option.selected = !option.selected;
+        
+        // Trigger change event
+        selectElement.dispatchEvent(new Event('change'));
+    });
+}
+
+/*
+function setupEnhancedSelect(selectElement) {
+    selectElement.setAttribute('multiple', 'true');
+    selectElement.setAttribute('size', '4');
+    selectElement.classList.add('enhanced-multi-select');
+
+    selectElement.addEventListener('mousedown', function (e) {
+        const option = e.target.closest('option');
+        if (!option || option.disabled) return; // 👈 this is important
+
+        e.preventDefault();
+        option.selected = !option.selected;
+        selectElement.dispatchEvent(new Event('change'));
+    });
+}*/
 
 function getIdSalle(nomSalles) {
     // If it's a string (single room), convert to array
@@ -55,13 +219,13 @@ function getIdSalle(nomSalles) {
     }).filter(id => id !== null);
 }
 
-
 async function chargerGroupes() {
     try {
         const res = await fetch('../db/planning_admin.php?action=get_all_groupes');
         const data = await res.json();
         if (data.success) {
             allGroupes = data.groupes;
+            console.log("Groupes chargés:", allGroupes);
             remplirSelectGroupes();
         }
     } catch (error) {
@@ -69,26 +233,46 @@ async function chargerGroupes() {
     }
 }
 
-function remplirSelectGroupes() {
-    const selects = document.querySelectorAll('select[name="groupe"]');
-    if (!selects.length) return;
 
-    selects.forEach(select => {
-        // vider avant de remplir
-        select.innerHTML = '<option value="">-- Choisir un groupe --</option>';
-        allGroupes.forEach(g => {
-            const label = `${g.section} - ${g.groupe}`;
-            const option = document.createElement('option');
-            option.value = label;
-            option.textContent = label;
-            select.appendChild(option);
-        });
-    });
-}
 
 window.addEventListener('DOMContentLoaded', chargerGroupes);
 
 
+function addMultiSelectStyles() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+        select.enhanced-multi-select {
+            min-height: 100px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+        
+        select.enhanced-multi-select option {
+            padding: 8px 12px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        select.enhanced-multi-select option:hover {
+            background-color: #e9ecef;
+        }
+        
+        select.enhanced-multi-select option:checked {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        select.enhanced-multi-select option[value=""] {
+            color: #6c757d;
+            font-style: italic;
+        }
+    `;
+    document.head.appendChild(style);
+}
 async function chargerMatieresEtGroupes() {
     try {
         const [matiereRes, groupeRes, salleRes] = await Promise.all([
@@ -121,10 +305,20 @@ function getIdMatiere(nomMatiere) {
     return matiere ? matiere.idMatiere : null;
 }
 
-function getIdGroupe(nomGroupe) {
-    const [section, groupe] = nomGroupe.split(' - ');
-    const match = allGroupes.find(g => g.section === section && g.groupe === groupe);
-    return match ? match.idGroupe : null;
+
+function getIdGroupe(nomGroupes) {
+    // Si c'est une chaîne (groupe unique), convertir en tableau
+    if (typeof nomGroupes === 'string') {
+        const [section, groupe] = nomGroupes.split(' - ');
+        const match = allGroupes.find(g => g.section === section && g.groupe === groupe);
+        return match ? match.idGroupe : null;
+    } 
+    // Si c'est déjà un tableau (groupes multiples)
+    return nomGroupes.map(nomGroupe => {
+        const [section, groupe] = nomGroupe.split(' - ');
+        const match = allGroupes.find(g => g.section === section && g.groupe === groupe);
+        return match ? match.idGroupe : null;
+    }).filter(id => id !== null);
 }
 // Appeler au démarrage
 // Assurez-vous que cette fonction est appelée après que le DOM soit complètement chargé
@@ -349,8 +543,15 @@ async function loadSavedPlannings() {
 // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize header dates
-    updateHeaderDates();
     
+    updateHeaderDates();
+    addMultiSelectStyles();
+    addOrUpdateSalleStyles()
+    // Load data from backend
+    chargerMatieresEtGroupes();
+    loadRecipients();
+    loadSavedPlannings();
+    //setupEnhancedMultiSelects();
     // Account dropdown toggle
     document.getElementById('accountIcon').addEventListener('click', function() {
         const dropdown = document.getElementById('accountDropdown');
@@ -583,12 +784,15 @@ function savePlanning() {
     }
 
     const examsToSave = planningData.exams.map(exam => {
+        // S'assurer que idGroupe est un tableau pour la cohérence
+        const idGroupe = Array.isArray(exam.idGroupe) ? exam.idGroupe : [exam.idGroupe];
+        
         return {
             date: exam.date,
             heureDebut: exam.heureDebut,
-            idMatiere: exam.idMatiere, // Make sure this exists
-            idGroupe: exam.idGroupe,    // This is the critical field
-            idSalles: exam.idSalles    // Should be an array of room IDs
+            idMatiere: exam.idMatiere,
+            idGroupe: idGroupe,     // Tableau de groupes
+            idSalles: Array.isArray(exam.idSalles) ? exam.idSalles : [exam.idSalles]  // Tableau de salles
         };
     });
 
@@ -602,7 +806,7 @@ function savePlanning() {
 
     console.log("Saving planning data:", saveData); // Debug log
 
-    fetch('planning_admin.php', {
+    fetch('../db/planning_admin.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -613,7 +817,8 @@ function savePlanning() {
     .then(data => {
         if (data.success) {
             alert('Planning sauvegardé avec succès!');
-            // Handle success (e.g., show the saved planning)
+            // Actualiser l'affichage du planning sauvegardé
+            savePlanningToDisplay(planningData.cycle, planningData.anneeUniversitaire);
         } else {
             console.error('Erreur lors de la sauvegarde:', data.error);
             alert('Erreur: ' + data.error);
@@ -635,12 +840,12 @@ function formatDate(dateString) {
 // Add a new exam row
 function ajouterLigne(event) {
     event.preventDefault();
-
+  
     if (!currentPlanningKey) {
         alert("Aucun planning actif. Veuillez d'abord commencer une planification.");
         return;
     }
-
+  
     const semester = allPlannings[currentPlanningKey].semester;
     const row = event.target.closest('tr');
     const inputs = {
@@ -648,90 +853,63 @@ function ajouterLigne(event) {
         heureDebut: row.querySelector('input[name="heure_debut"]'),
         heureFin: row.querySelector('input[name="heure_fin"]'),
         matiere: row.querySelector('input[name="matiere"]'),
-        salle: row.querySelector('select[name="salle"]'), // This is now a multiple select
+        salle: row.querySelector('select[name="salle"]'),
         groupe: row.querySelector('select[name="groupe"]')
     };
-
+  
+    // Get selected salles and groupes as arrays
     const selectedSalles = Array.from(inputs.salle.selectedOptions).map(option => option.value);
+    const selectedGroupes = Array.from(inputs.groupe.selectedOptions).map(option => option.value);
+    const idGroupes = getIdGroupe(selectedGroupes);
+
+    if (idGroupes.length === 0) {
+        alert("Aucun ID de groupe valide trouvé. Veuillez vérifier les groupes sélectionnés.");
+        return;
+    }
+
     if (selectedSalles.length === 0) {
         alert(`Veuillez sélectionner au moins une salle`);
         inputs.salle.focus();
         return;
     }
-    // Validate required fields
+    
+    if (selectedGroupes.length === 0) {
+        alert(`Veuillez sélectionner au moins un groupe`);
+        inputs.groupe.focus();
+        return;
+    }
+  
+    // Validate other required fields
     for (const [key, input] of Object.entries(inputs)) {
-        if (!input.value) {
+        if (!input.value && key !== 'salle' && key !== 'groupe') {
             alert(`Veuillez remplir le champ ${key}`);
             input.focus();
             return;
         }
     }
-
-    // Validate time
-    if (inputs.heureDebut.value >= inputs.heureFin.value) {
-        alert("L'heure de fin doit être après l'heure de début");
-        inputs.heureFin.focus();
-        return;
-    }
-
-    const newExam = { 
+  
+    // Create new exam object with multiple salles and groupes
+    const newExam = {
         semestre: semester,
         date: inputs.date.value,
         heureDebut: inputs.heureDebut.value,
         heureFin: inputs.heureFin.value,
         matiere: inputs.matiere.value,
-        salle: inputs.salle.value,
-        groupe: inputs.groupe.value,
+        groupe: selectedGroupes.join(', '), // Join for display
+        groupes: selectedGroupes, // Store as array for data
         idMatiere: getIdMatiere(inputs.matiere.value),
-        idGroupe: getIdGroupe(inputs.groupe.value),
-        idSalle: getIdSalle(inputs.salle.value), // Add this line
+        idGroupe: getIdGroupe(selectedGroupes), // Get array of IDs
         salle: selectedSalles.join(', '), // Join for display
         salles: selectedSalles, // Store as array for data
         idSalles: getIdSalle(selectedSalles) // Get array of IDs
     };
-    const exams = allPlannings[currentPlanningKey].exams;
-    const conflit = exams.find(e =>
-        e.date === newExam.date &&
-        (
-            // Conflit de salle
-            (e.salle === newExam.salle && horairesChevauchent(e.heureDebut, e.heureFin, newExam.heureDebut, newExam.heureFin)) ||
-            // Conflit de groupe
-            (e.groupe === newExam.groupe && horairesChevauchent(e.heureDebut, e.heureFin, newExam.heureDebut, newExam.heureFin))
-        )
-    );
-
-    if (conflit) {
-        alert("⚠️ Conflit détecté : la salle ou le groupe est déjà occupé à cette date et heure.");
-        return;
-    }
-    
+  
     // Add to planning data
     allPlannings[currentPlanningKey].exams.push(newExam);
-
-    // Find the table where we want to show added lines
-    const planningTable = document.querySelector('#planningForm table');
-
-    // Check if temp tbody already exists
-    let tempTbody = document.getElementById(`temp-${currentPlanningKey}`);
-    if (!tempTbody) {
-        tempTbody = document.createElement('tbody');
-        tempTbody.id = `temp-${currentPlanningKey}`;
-        planningTable.appendChild(tempTbody);
-    }
-
-    // Create a new row to show the data just added
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td>${formatDate(newExam.date)}</td>
-        <td>${newExam.heureDebut}</td>
-        <td>${newExam.heureFin}</td>
-        <td>${newExam.matiere}</td>
-        <td>${newExam.salle}</td>
-        <td>${newExam.groupe}</td>
-        <td></td>
-    `;
-    tempTbody.appendChild(newRow);
-
+  
+    // Update display
+    refreshPlanningDisplay(currentPlanningKey);
+  
     // Clear form inputs
     for (const input of Object.values(inputs)) {
         if (input.type !== 'button') input.value = '';
@@ -818,8 +996,6 @@ function createEditFieldsModal() {
     document.body.appendChild(modal);
     return modal;
 }
-
-// Create recipient modal if it doesn't exist
 function createRecipientModal() {
     const modal = document.createElement('div');
     modal.id = 'recipientModal';
@@ -963,14 +1139,24 @@ function showEditFieldsModal(fields, planningKey, examIndex) {
         } else if (field === 'heureDebut' || field === 'heureFin') {
             inputField = `<input type="time" name="${field}" value="${exam[field]}" class="edit-field-input">`;
         } else if (field === 'salle') {
-            // Create a multiple select for salles when editing
+            // Multiple select for salles
             inputField = `<select name="${field}" multiple class="edit-field-input" size="4">`;
-            // Create array of selected salles
-            const selectedSalles = exam[field].split(', ');
+            const selectedSalles = exam.salles || [];
             
             allSalles.forEach(s => {
                 const isSelected = selectedSalles.includes(s.nomSalle) ? 'selected' : '';
                 inputField += `<option value="${s.nomSalle}" ${isSelected}>${s.nomSalle}</option>`;
+            });
+            inputField += `</select>`;
+        } else if (field === 'groupe') {
+            // Multiple select for groupes
+            inputField = `<select name="${field}" multiple class="edit-field-input" size="4">`;
+            const selectedGroupes = exam.groupes || [];
+            
+            allGroupes.forEach(g => {
+                const label = `${g.section} - ${g.groupe}`;
+                const isSelected = selectedGroupes.includes(label) ? 'selected' : '';
+                inputField += `<option value="${label}" ${isSelected}>${label}</option>`;
             });
             inputField += `</select>`;
         } else {
@@ -1013,6 +1199,11 @@ function saveEditedFields() {
                 exam[field] = selectedOptions.join(', ');
                 exam.salles = selectedOptions;
                 exam.idSalles = getIdSalle(selectedOptions);
+            } else if (field === 'groupe' && input.multiple) {
+                const selectedOptions = Array.from(input.selectedOptions).map(opt => opt.value);
+                exam[field] = selectedOptions.join(', ');
+                exam.groupes = selectedOptions;
+                exam.idGroupe = getIdGroupe(selectedOptions);
             } else {
                 exam[field] = input.value;
             }
@@ -1069,13 +1260,13 @@ function deletePlanning(planningKey) {
     document.body.appendChild(loadingIndicator);
     
     // Send delete request to server
-    fetch('../db/planning_admin.php', {
+    fetch('../db/delete_planning.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            planningId: planningId
+            idPlanning: planningId  // Changed from planningId to idPlanning to match PHP
         }),
     })
     .then(response => response.json())
@@ -1099,7 +1290,7 @@ function deletePlanning(planningKey) {
                 noPlanningsMessage.style.display = Object.keys(allPlannings).length > 0 ? 'none' : 'block';
             }
         } else {
-            alert("Erreur lors de la suppression du planning: " + data.error);
+            alert("Erreur lors de la suppression du planning: " + (data.message || 'Erreur inconnue'));  // Changed data.error to data.message
         }
     })
     .catch(error => {
@@ -1661,6 +1852,27 @@ document.addEventListener('DOMContentLoaded', function() {
             background-color: #0d6efd;
             color: white;
             border-color: #0d6efd;
+        }
+            select[multiple] {
+            min-height: 100px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        select[multiple] option {
+            padding: 5px;
+            margin: 2px 0;
+            border-radius: 3px;
+        }
+        
+        select[multiple] option:hover {
+            background-color: #e9ecef;
+        }
+        
+        select[multiple] option:checked {
+            background-color: #0d6efd;
+            color: white;
         }
     `;
     document.head.appendChild(style);

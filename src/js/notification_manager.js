@@ -524,16 +524,16 @@ function addNotificationToList(id, message, recipientCount, dateStr, recipients)
                 return;
             }
             
-            // Prepare notification
+            // Préparation de la notification
             const notification = {
                 message: message,
                 recipients: selectedProfessors.map(p => p.id),
                 dateEnvoi: new Date().toISOString(),
-                type: 'message' // 'message' type for this case
+                type: 'message'
             };
             
-            // Send notification to server
-            fetch('../db/send_notification.php', {
+            // Envoi de la notification au serveur
+            fetch('../db/send_admin.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -543,14 +543,24 @@ function addNotificationToList(id, message, recipientCount, dateStr, recipients)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Add notification to recent notifications list
-                    const notificationItem = addNotificationToList(data.notificationId || 'new', message, selectedProfessors.length);
+                    // Utiliser la fonction correcte avec tous les paramètres nécessaires
+                    const recipientNames = data.recipients || selectedProfessors.map(p => p.nom).join(', ');
+                    const notificationItem = addSentNotificationToList(
+                        data.notificationId || data.allNotificationIds[0] || 'new', 
+                        message, 
+                        selectedProfessors.length, 
+                        new Date().toISOString(),
+                        recipientNames
+                    );
                     
-                    // Add highlight class to new notification
+                    // Ajouter une classe de surbrillance à la nouvelle notification
                     notificationItem.classList.add('new-notification');
                     setTimeout(() => {
                         notificationItem.classList.remove('new-notification');
                     }, 3000);
+                    
+                    // Rafraîchir la liste des notifications
+                    loadRecentNotifications();
                     
                     alert('Notification envoyée avec succès à ' + selectedProfessors.length + ' professeur(s)');
                     clearForm();

@@ -42,13 +42,43 @@ try {
         // Map the 'type' to a more user-friendly title
         $title = isset($titleMap[$row['type']]) ? $titleMap[$row['type']] : 'Notification';
 
-        // Prepare URL based on notification type
+        // For convocation notifications, we need to make sure idReference points to convocationGroupId
+        // instead of idExam (which appears to be the issue)
+        $idReference = $row['idReference'] ?? null;
+        
+        // If this is a convocation notification, check if idReference refers to an idExam
+        // If it does, we need to find the corresponding convocationGroupId
+        if ($row['type'] === 'convocation' && $idReference) {
+            // First, create a log to understand what we're working with
+            error_log("Original idReference for convocation notification {$row['idNotification']}: $idReference");
+            
+            // Check if this is actually an idExam by looking for the convocationGroupId
+            $checkStmt = $conn->prepare("
+                SELECT DISTINCT convocationGroupId 
+                FROM surveillance 
+                WHERE idExamen = ? 
+                AND idProfesseur = ? 
+                AND convocationGroupId IS NOT NULL
+                LIMIT 1
+            ");
+            $checkStmt->execute([$idReference, $idUtilisateur]);
+            $convocationData = $checkStmt->fetch(PDO::FETCH_ASSOC);
+            
+            // If we found a convocationGroupId, use that instead
+            if ($convocationData && $convocationData['convocationGroupId']) {
+                $idReference = $convocationData['convocationGroupId'];
+                error_log("Updated idReference to convocationGroupId: $idReference");
+            }
+        }
+        
+        // Prepare URL based on notification type (don't use this anymore, we handle in the JS)
         $url = '';
         if ($row['type'] === 'planning') {
-            $url = 'planning.html?id=' . $row['idReference']; // Redirection to planning page
+            $url = 'planning.html'; // Base URL without parameters
         } elseif ($row['type'] === 'convocation') {
-            $url = 'convocation.html?id=' . $row['idReference']; // Redirection to convocation page
+            $url = 'convocation.html'; // Base URL without parameters
         }
+        
         // Prepare notification data
         $notifications[] = [
             'idNotification' => $row['idNotification'],
@@ -57,8 +87,8 @@ try {
             'date' => $row['dateEnvoi'],
             'isRead' => $row['isRead'] == 1,
             'type' => $row['type'],
-            'idReference' => $row['idReference'] ?? null,
-            'url' => $url // Include the URL to be used for redirection
+            'idReference' => $idReference,
+            'url' => $url // Include the base URL to be used for redirection
         ];
     }
 

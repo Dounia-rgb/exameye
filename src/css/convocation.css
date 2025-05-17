@@ -112,3 +112,106 @@ body {
   flex-direction: column;
   gap: 20px;
 }
+.highlighted-convocation {
+  border: 2px solid #4caf50;
+  background-color: rgba(76, 175, 80, 0.05);
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  animation: highlight-pulse 2s ease-in-out 1;
+}
+
+@keyframes highlight-pulse {
+  0% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.5); }
+  100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.2); }
+}
+
+.view-all-link {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.view-all-link a {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.view-all-link a:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Additional styles for the convocation sections for better visibility */
+.convocation-section {
+  margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.convocation-section:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.convocation-section h3 {
+  margin-top: 0;
+  color: #444;
+  font-size: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.convocation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.convocation-table th {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.convocation-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.convocation-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.delete-btn-wrapper {
+  text-align: right;
+  margin-top: 15px;
+}
+
+.delete-convocation-btn {
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.delete-convocation-btn:hover {
+  background-color: #ff1744;
+}

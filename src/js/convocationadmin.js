@@ -6,51 +6,51 @@ document.addEventListener("DOMContentLoaded", () => {
   const previewBtn = document.getElementById("previewBtn");
   const convocationForm = document.getElementById("convocationForm");
 
-  // Simplifiée: Récupération des professeurs
-  // Améliorations à apporter à convocationadmin.js pour la partie fetch des professeurs
+  // Amélioré: Récupération des professeurs
+  fetch("../db/professeurs.php")
+    .then(response => {
+      // Vérifier d'abord si la requête a réussi
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Données reçues des professeurs:", data); // Pour le débogage
+      
+      // Initialisation du sélecteur
+      profSelect.innerHTML = '<option value="">Sélectionnez un professeur</option>';
+      
+      // Vérifier que data est bien un tableau et ne contient pas d'erreur
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
+          console.warn("Aucun professeur trouvé dans la base de données");
+          profSelect.innerHTML += '<option value="" disabled>Aucun professeur disponible</option>';
+        } else {
+          // C'est un tableau avec des données, on peut l'utiliser
+          data.forEach(prof => {
+            // Utiliser uniquement le nom puisqu'il n'y a pas de prénom
+            const nom = prof.nom || "";
+            const option = document.createElement("option");
+            option.value = prof.idUtilisateur;
+            option.textContent = nom.trim();
+            profSelect.appendChild(option);
+          });
+        }
+      } else if (data.error) {
+        // Le serveur a renvoyé une erreur
+        console.error("Erreur du serveur:", data.error);
+        profSelect.innerHTML += '<option value="" disabled>Erreur: ' + data.error + '</option>';
+      } else {
+        console.error("Format des données inattendu:", data);
+        profSelect.innerHTML += '<option value="" disabled>Erreur de format de données</option>';
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors du chargement des professeurs:", error);
+      profSelect.innerHTML += '<option value="" disabled>Erreur de chargement: ' + error.message + '</option>';
+    });
 
-// Remplacer ce bloc de code dans convocationadmin.js:
-fetch("../db/professeurs.php")
-.then(response => {
-  // Vérifier d'abord si la requête a réussi
-  if (!response.ok) {
-    throw new Error(`Erreur HTTP: ${response.status}`);
-  }
-  return response.json();
-})
-.then(data => {
-  console.log("Données reçues des professeurs:", data); // Pour le débogage
-  
-  // Initialisation du sélecteur
-  profSelect.innerHTML = '<option value="">Sélectionnez un professeur</option>';
-  
-  // Vérifier que data est bien un tableau et ne contient pas d'erreur
-  if (Array.isArray(data)) {
-    if (data.length === 0) {
-      console.warn("Aucun professeur trouvé dans la base de données");
-      profSelect.innerHTML += '<option value="" disabled>Aucun professeur disponible</option>';
-    } else {
-      // C'est un tableau avec des données, on peut l'utiliser
-      data.forEach(prof => {
-        const option = document.createElement("option");
-        option.value = prof.idUtilisateur;
-        option.textContent = `${prof.nom} ${prof.prenom}`;
-        profSelect.appendChild(option);
-      });
-    }
-  } else if (data.error) {
-    // Le serveur a renvoyé une erreur
-    console.error("Erreur du serveur:", data.error);
-    profSelect.innerHTML += '<option value="" disabled>Erreur: ' + data.error + '</option>';
-  } else {
-    console.error("Format des données inattendu:", data);
-    profSelect.innerHTML += '<option value="" disabled>Erreur de format de données</option>';
-  }
-})
-.catch(error => {
-  console.error("Erreur lors du chargement des professeurs:", error);
-  profSelect.innerHTML += '<option value="" disabled>Erreur de chargement: ' + error.message + '</option>';
-});
   profSelect.addEventListener("change", () => {
     const selected = profSelect.options[profSelect.selectedIndex];
     profName.textContent = selected.textContent || "Sélectionnez un professeur";
@@ -93,7 +93,6 @@ fetch("../db/professeurs.php")
 
   previewBtn.addEventListener("click", () => {
     const profNameText = profName.textContent;
-    const annee = document.getElementById("annee").value;
     const semestre = document.getElementById("semestre").value;
 
     const modalContent = `
@@ -148,13 +147,14 @@ fetch("../db/professeurs.php")
       const day = getDayOfWeek(date);
       const time = entry.querySelector('input[name="heure[]"]').value;
       const matiere = entry.querySelector('input[name="matiere[]"]').value;
+      const semestre = document.getElementById("semestre").value;
 
       const row = `
         <tr>
           <td>${formattedDate}</td>
           <td>${day}</td>
           <td>${formatTime(time)}</td>
-          <td>${getCycleName(annee)}-S${semestre}</td>
+          <td>S${semestre}</td>
           <td>${matiere}</td>
         </tr>
       `;
@@ -177,7 +177,6 @@ fetch("../db/professeurs.php")
     }
 
     const semestre = document.getElementById("semestre").value;
-    const annee = document.getElementById("annee").value;
 
     const convocations = [];
 
@@ -191,7 +190,7 @@ fetch("../db/professeurs.php")
         date,
         heure,
         heureFin: null,
-        cycle: getCycleName(annee),
+        cycle: "S" + semestre, // Modifié pour utiliser simplement S + semestre
         semestre
       });
     });
@@ -234,17 +233,6 @@ fetch("../db/professeurs.php")
   function formatTime(timeString) {
     if (!timeString) return '';
     return timeString.replace(/^(\d{2}):(\d{2})$/, '$1h$2');
-  }
-
-  function getCycleName(anneeValue) {
-    const cycles = {
-      '1': 'L1',
-      '2': 'L2',
-      '3': 'L3',
-      '4': 'M1',
-      '5': 'M2'
-    };
-    return cycles[anneeValue] || '';
   }
 
   // Entrée initiale

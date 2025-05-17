@@ -1015,3 +1015,25 @@
   margin: 20px 0;
   border: 1px dashed #dee2e6;
 }
+select[multiple] {
+  min-height: 100px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+select[multiple] option {
+  padding: 5px;
+  margin: 2px 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+select[multiple] option:hover {
+  background-color: #e9ecef;
+}
+
+select[multiple] option:checked {
+  background-color: #0d6efd;
+  color: white;
+}

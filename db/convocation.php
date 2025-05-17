@@ -46,10 +46,10 @@ if (!$idProfesseur || empty($convocations)) {
 
 // Get professor name for notification
 try {
-    $stmtProf = $conn->prepare("SELECT nom, prenom FROM utilisateur WHERE idUtilisateur = ?");
+    $stmtProf = $conn->prepare("SELECT nom FROM utilisateur WHERE idUtilisateur = ?");
     $stmtProf->execute([$idProfesseur]);
     $prof = $stmtProf->fetch(PDO::FETCH_ASSOC);
-    $profName = $prof ? $prof['nom'] . ' ' . $prof['prenom'] : 'Professeur';
+    $profName = $prof ? $prof['nom'] : 'Professeur';
 } catch (PDOException $e) {
     $profName = 'Professeur';
 }
@@ -73,16 +73,15 @@ try {
         $date = $conv["date"] ?? null;
         $heureDebut = $conv["heureDebut"] ?? $conv["heure"] ?? null;
         $heureFin = $conv["heureFin"] ?? null;
-        $cycle = $conv["cycle"] ?? null;
+        $cycle = $conv["cycle"] ?? "S" . ($conv["semestre"] ?? ""); // Modifié pour utiliser S + semestre
         $semestre = $conv["semestre"] ?? null;
 
         if (!$matiere) $errors[] = "Matière manquante pour la convocation #".($index+1);
         if (!$date) $errors[] = "Date manquante pour la convocation #".($index+1);
         if (!$heureDebut) $errors[] = "Heure de début manquante pour la convocation #".($index+1);
-        if (!$cycle) $errors[] = "Cycle manquant pour la convocation #".($index+1);
         if (!$semestre) $errors[] = "Semestre manquant pour la convocation #".($index+1);
 
-        if (!$matiere || !$date || !$heureDebut || !$cycle || !$semestre) {
+        if (!$matiere || !$date || !$heureDebut || !$semestre) {
             continue;
         }
 

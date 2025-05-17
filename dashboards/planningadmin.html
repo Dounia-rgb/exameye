@@ -11,7 +11,7 @@
     
 </head>
 <body>
-  <script src="../src/js/planningadmin.js " defer></script>
+ 
   <div class="sidebar left-sidebar">
     <div class="logo">
       <img src="/src/img/logo.jpg" alt="ExamEye Logo" />
@@ -108,13 +108,15 @@
                 <td><input type="time" name="heure_debut" required /></td>
                 <td><input type="time" name="heure_fin" required /></td>
                 <td><input type="text" name="matiere" placeholder="Ex: Algèbre 2" required /></td>
-  <td>
-<select name="salle" required>
-  <option value="">-- Choisir une salle --</option>
-  
-</select> </td>
                 <td>
-                    <select name="groupe" required>
+                  <select name="salle" multiple required class="salle-select">
+                    <option value="" disabled selected>-- Choisir une ou plusieurs salles --</option>
+                  </select>
+                </td>
+                
+                <td>
+                  <select name="groupe" class="groupe-select" required>
+
                       <option value="">-- Choisir un groupe --</option>
                     </select>
                   </td>
@@ -134,5 +136,6 @@
       </div>
     </div>
   </div>
+  <script src="../src/js/planningadmin.js " defer></script>
 </body>
 </html>
