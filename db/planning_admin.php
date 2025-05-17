@@ -412,11 +412,267 @@ if ($method === 'GET') {
     exit;
 }
 
-// Les requêtes POST (s'il y en a pour le côté professeur)
+// Les requêtes POST
 if ($method === 'POST') {
     $input = json_decode(file_get_contents("php://input"), true);
     $action = $input['action'] ?? '';
 
+    // Traitement de l'action save_planning
+    if ($action === 'save_planning') {
+        try {
+            $cycle = $input['cycle'] ?? '';
+            $anneeUniversitaire = $input['anneeUniversitaire'] ?? '';
+            $semester = $input['semester'] ?? '';
+            $exams = $input['exams'] ?? [];
+            $planningKey = $input['planningKey'] ?? null;
+            
+            // MODIFICATION: Set the admin ID to 1 always, as requested
+            $idAdministrateur = 1;
+            
+            // Validation de base des données
+            if (empty($cycle) || empty($anneeUniversitaire) || empty($semester) || empty($exams)) {
+                echo json_encode(["success" => false, "error" => "Données incomplètes"]);
+                exit;
+            }
+            
+            // Démarrer une transaction
+            $conn->beginTransaction();
+            
+            // ID pour le nouveau planning (si c'est un nouveau planning)
+            $planningId = null;
+            
+            // Traiter chaque examen
+            foreach ($exams as $exam) {
+                // Vérifier si l'examen existe déjà
+                $sqlCheckExam = "SELECT idExamen FROM examen 
+                                  WHERE date = ? AND heureDebut = ? AND idMatiere = ? 
+                                  AND cycle = ? AND semestre = ?";
+                $stmtCheckExam = $conn->prepare($sqlCheckExam);
+                $stmtCheckExam->execute([
+                    $exam['date'], 
+                    $exam['heureDebut'], 
+                    $exam['idMatiere'], 
+                    $cycle, 
+                    $semester
+                ]);
+                $existingExam = $stmtCheckExam->fetch(PDO::FETCH_ASSOC);
+                
+                // ID de l'examen
+                $examId = null;
+                
+                if ($existingExam) {
+                    // Utiliser l'examen existant
+                    $examId = $existingExam['idExamen'];
+                } else {
+                    // Créer un nouvel examen
+                    $sqlInsertExam = "INSERT INTO examen (date, heureDebut, idMatiere, cycle, semestre) 
+                                      VALUES (?, ?, ?, ?, ?)";
+                    $stmtInsertExam = $conn->prepare($sqlInsertExam);
+                    $stmtInsertExam->execute([
+                        $exam['date'], 
+                        $exam['heureDebut'], 
+                        $exam['idMatiere'], 
+                        $cycle, 
+                        $semester
+                    ]);
+                    $examId = $conn->lastInsertId();
+                }
+                
+                // Assurer que idGroupe est un tableau
+                $groupeIds = is_array($exam['idGroupe']) ? $exam['idGroupe'] : [$exam['idGroupe']];
+                $salleIds = is_array($exam['idSalles']) ? $exam['idSalles'] : [$exam['idSalles']];
+                
+                // Durée standard pour un examen (à adapter selon vos besoins)
+                $duree = "02:00:00"; // 2 heures par défaut
+                
+                // Récupérer l'ID du professeur associé à cette matière (si nécessaire)
+                $idProfesseur = null;
+                if (isset($exam['idProfesseur'])) {
+                    $idProfesseur = $exam['idProfesseur'];
+                } else {
+                    // Optionnellement, on pourrait rechercher un professeur par défaut pour cette matière
+                    // ... (code pour rechercher un professeur si nécessaire)
+                }
+                
+                // Pour chaque groupe et chaque salle
+                foreach ($groupeIds as $groupeId) {
+                    foreach ($salleIds as $salleId) {
+                        // Insérer dans planningexamen avec idAdministrateur fixé à 1
+                        $sqlInsertPlanning = "INSERT INTO planningexamen 
+                                             (idExamen, idGroupe, idSalle, dateDebut, dateFin, duree, anneeUniversitaire, idAdministrateur, idProfesseur) 
+                                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        $stmtInsertPlanning = $conn->prepare($sqlInsertPlanning);
+                        $stmtInsertPlanning->execute([
+                            $examId,
+                            $groupeId,
+                            $salleId,
+                            $exam['date'],     // dateDebut = date de l'examen
+                            $exam['date'],     // dateFin = date de l'examen (même jour)
+                            $duree,            // durée standard
+                            $anneeUniversitaire,
+                            $idAdministrateur, // Toujours égal à 1
+                            $idProfesseur      // Peut être NULL si non spécifié
+                        ]);
+                        
+                        // Si c'est le premier enregistrement, on garde l'ID
+                        if ($planningId === null) {
+                            $planningId = $conn->lastInsertId();
+                        }
+                        
+                        // Si plus d'un groupe, ajouter également dans la table de relation
+                        if (count($groupeIds) > 1) {
+                            $currentPlanningId = $conn->lastInsertId();
+                            $sqlInsertPlanningGroupes = "INSERT INTO planningexamen_groupes 
+                                                        (idPlanning, idGroupe) VALUES (?, ?)";
+                            $stmtInsertPlanningGroupes = $conn->prepare($sqlInsertPlanningGroupes);
+                            $stmtInsertPlanningGroupes->execute([$currentPlanningId, $groupeId]);
+                        }
+                    }
+                }
+            }
+            
+            // Valider la transaction
+            $conn->commit();
+            
+            echo json_encode([
+                "success" => true, 
+                "message" => "Planning sauvegardé avec succès", 
+                "planningId" => $planningId
+            ]);
+            
+        } catch (PDOException $e) {
+            // Annuler la transaction en cas d'erreur
+            $conn->rollBack();
+            echo json_encode(["success" => false, "error" => "Erreur de base de données: " . $e->getMessage()]);
+        } catch (Exception $e) {
+            $conn->rollBack();
+            echo json_encode(["success" => false, "error" => "Erreur: " . $e->getMessage()]);
+        }
+        exit;
+    }
+
+    else if ($action === 'send_planning') {
+        try {
+            $planningId = $input['planningId'] ?? null;
+            $professorIds = $input['professorIds'] ?? [];
+            
+            // Validation
+            if (!$planningId || empty($professorIds) || !is_array($professorIds)) {
+                echo json_encode(["success" => false, "error" => "Données incomplètes"]);
+                exit;
+            }
+            
+            // Check if planning exists
+            $sqlCheckPlanning = "SELECT COUNT(*) as count FROM planningexamen WHERE idPlanning = ?";
+            $stmtCheckPlanning = $conn->prepare($sqlCheckPlanning);
+            $stmtCheckPlanning->execute([$planningId]);
+            $result = $stmtCheckPlanning->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result['count'] == 0) {
+                echo json_encode(["success" => false, "error" => "Planning non trouvé"]);
+                exit;
+            }
+            
+            // Begin transaction
+            $conn->beginTransaction();
+            
+            // Get planning details (to get examId)
+            $sqlGetExamId = "SELECT idExamen FROM planningexamen WHERE idPlanning = ?";
+            $stmtGetExamId = $conn->prepare($sqlGetExamId);
+            $stmtGetExamId->execute([$planningId]);
+            $examData = $stmtGetExamId->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$examData) {
+                throw new Exception("Détails du planning introuvables");
+            }
+            
+            $examId = $examData['idExamen'];
+            
+            // Successfully assigned professors counter
+            $assignedCount = 0;
+            
+            // Assign the planning to each professor
+            foreach ($professorIds as $professorId) {
+                // First check if this professor-planning-exam combination already exists
+                $sqlCheckExisting = "SELECT COUNT(*) as count FROM planningexamen 
+                                   WHERE idExamen = ? AND idProfesseur = ?";
+                $stmtCheckExisting = $conn->prepare($sqlCheckExisting);
+                $stmtCheckExisting->execute([$examId, $professorId]);
+                $existingResult = $stmtCheckExisting->fetch(PDO::FETCH_ASSOC);
+                
+                if ($existingResult['count'] > 0) {
+                    // Already assigned, count it as successful
+                    $assignedCount++;
+                    continue;
+                }
+                
+                // Get details from the original planning
+                $sqlGetDetails = "SELECT idGroupe, idSalle, dateDebut, dateFin, duree, anneeUniversitaire, idAdministrateur 
+                                 FROM planningexamen WHERE idPlanning = ?";
+                $stmtGetDetails = $conn->prepare($sqlGetDetails);
+                $stmtGetDetails->execute([$planningId]);
+                $planningDetails = $stmtGetDetails->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$planningDetails) {
+                    throw new Exception("Impossible de récupérer les détails du planning");
+                }
+                
+                // Create a new planning entry for this professor
+                $sqlInsert = "INSERT INTO planningexamen 
+                            (idExamen, idGroupe, idSalle, dateDebut, dateFin, duree, anneeUniversitaire, idAdministrateur, idProfesseur) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $stmtInsert = $conn->prepare($sqlInsert);
+                $stmtInsert->execute([
+                    $examId,
+                    $planningDetails['idGroupe'],
+                    $planningDetails['idSalle'],
+                    $planningDetails['dateDebut'],
+                    $planningDetails['dateFin'],
+                    $planningDetails['duree'],
+                    $planningDetails['anneeUniversitaire'],
+                    $planningDetails['idAdministrateur'],
+                    $professorId
+                ]);
+                
+                $newPlanningId = $conn->lastInsertId();
+                
+                // Now also copy any groups associations if they exist
+                $sqlGetGroups = "SELECT idGroupe FROM planningexamen_groupes WHERE idPlanning = ?";
+                $stmtGetGroups = $conn->prepare($sqlGetGroups);
+                $stmtGetGroups->execute([$planningId]);
+                $groups = $stmtGetGroups->fetchAll(PDO::FETCH_ASSOC);
+                
+                foreach ($groups as $group) {
+                    $sqlInsertGroup = "INSERT INTO planningexamen_groupes (idPlanning, idGroupe) VALUES (?, ?)";
+                    $stmtInsertGroup = $conn->prepare($sqlInsertGroup);
+                    $stmtInsertGroup->execute([$newPlanningId, $group['idGroupe']]);
+                }
+                
+                $assignedCount++;
+            }
+            
+            // Commit transaction
+            $conn->commit();
+            
+            echo json_encode([
+                "success" => true,
+                "message" => "Planning envoyé à " . $assignedCount . " professeur(s) avec succès"
+            ]);
+            
+        } catch (PDOException $e) {
+            // Rollback transaction in case of error
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            echo json_encode(["success" => false, "error" => "Erreur de base de données: " . $e->getMessage()]);
+        } catch (Exception $e) {
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            echo json_encode(["success" => false, "error" => "Erreur: " . $e->getMessage()]);
+        }
+        exit;
+    }
     // Répondre par défaut pour les requêtes POST non reconnues
     echo json_encode(["success" => false, "error" => "Action non reconnue ou non autorisée"]);
 }

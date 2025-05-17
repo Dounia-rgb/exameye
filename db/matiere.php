@@ -89,13 +89,16 @@ function supprimerMatiere($conn) {
         $idMatiere = intval($_POST['idMatiere']);
         
         try {
-            // Vérifier si la matière est utilisée dans d'autres tables
-            // Par exemple, vérifier dans la table examen
+            // Début d'une transaction
+            $conn->beginTransaction();
+            
+            // Vérifier si la matière est utilisée dans la table examen
             $checkExamen = $conn->prepare("SELECT COUNT(*) FROM examen WHERE idMatiere = :idMatiere");
             $checkExamen->bindParam(':idMatiere', $idMatiere);
             $checkExamen->execute();
             
             if ($checkExamen->fetchColumn() > 0) {
+                $conn->rollBack();
                 echo json_encode([
                     'success' => false,
                     'message' => 'Cette matière est utilisée dans des examens et ne peut pas être supprimée.'
@@ -103,13 +106,50 @@ function supprimerMatiere($conn) {
                 return;
             }
             
-            // Vérifier dans la table professeur (si la matière est enseignée)
-            $checkProfesseur = $conn->prepare("SELECT COUNT(*) FROM professeur WHERE matiereEnseignee LIKE :matiere");
-            $searchPattern = '%' . $idMatiere . '%'; // Assurez-vous que ce format correspond à la façon dont les matières sont stockées
-            $checkProfesseur->bindParam(':matiere', $searchPattern);
+            // Vérifier si la matière est utilisée dans la table surveillance
+            $checkSurveillance = $conn->prepare("SELECT COUNT(*) FROM surveillance WHERE matiere = :idMatiere");
+            $checkSurveillance->bindParam(':idMatiere', $idMatiere);
+            $checkSurveillance->execute();
+            
+            if ($checkSurveillance->fetchColumn() > 0) {
+                $conn->rollBack();
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Cette matière est utilisée dans des surveillances et ne peut pas être supprimée.'
+                ]);
+                return;
+            }
+            
+            // Vérifier si la matière est utilisée dans la table convocation
+            $checkConvocation = $conn->prepare("SELECT COUNT(*) FROM convocation WHERE matiere = :idMatiere");
+            $checkConvocation->bindParam(':idMatiere', $idMatiere);
+            $checkConvocation->execute();
+            
+            if ($checkConvocation->fetchColumn() > 0) {
+                $conn->rollBack();
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Cette matière est utilisée dans des convocations et ne peut pas être supprimée.'
+                ]);
+                return;
+            }
+            
+            // Vérification dans la table professeur - Adapter selon la structure réelle de votre base de données
+            // Si matiereEnseignee contient des IDs séparés par des virgules, utilisez cette méthode:
+            $checkProfesseur = $conn->prepare("SELECT COUNT(*) FROM professeur WHERE matiereEnseignee LIKE :pattern1 OR matiereEnseignee LIKE :pattern2 OR matiereEnseignee LIKE :pattern3 OR matiereEnseignee = :exact");
+            $pattern1 = $idMatiere . ',%';  // au début
+            $pattern2 = '%,' . $idMatiere . ',%';  // au milieu
+            $pattern3 = '%,' . $idMatiere;  // à la fin
+            $exact = (string)$idMatiere;  // exactement l'ID
+            
+            $checkProfesseur->bindParam(':pattern1', $pattern1);
+            $checkProfesseur->bindParam(':pattern2', $pattern2);
+            $checkProfesseur->bindParam(':pattern3', $pattern3);
+            $checkProfesseur->bindParam(':exact', $exact);
             $checkProfesseur->execute();
             
             if ($checkProfesseur->fetchColumn() > 0) {
+                $conn->rollBack();
                 echo json_encode([
                     'success' => false,
                     'message' => 'Cette matière est enseignée par des professeurs et ne peut pas être supprimée.'
@@ -123,17 +163,22 @@ function supprimerMatiere($conn) {
             $stmt->execute();
             
             if ($stmt->rowCount() > 0) {
+                $conn->commit();
                 echo json_encode([
                     'success' => true,
                     'message' => 'Matière supprimée avec succès.'
                 ]);
             } else {
+                $conn->rollBack();
                 echo json_encode([
                     'success' => false,
                     'message' => 'Aucune matière trouvée avec cet ID.'
                 ]);
             }
         } catch (PDOException $e) {
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
             echo json_encode([
                 'success' => false,
                 'message' => 'Erreur de base de données: ' . $e->getMessage()
