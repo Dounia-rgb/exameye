@@ -17,36 +17,6 @@
     padding: 20px;
 }
 
-.title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.title i {
-    margin-right: 15px;
-    color: var(--secondary-color);
-}
-
-/* Header improvements */
-.header {
-    background-color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header i {
-    color: var(--secondary-color);
-    margin-right: 3px;
-}
 
 /* Search and filter section */
 .search-filter {

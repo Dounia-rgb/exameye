@@ -61,30 +61,24 @@
     </div>
 
     <div class="main-container" role="main">
-        <div class="title">
-            <i class="fas fa-file-contract" aria-hidden="true"></i>
-            Gestion des PV d'examen
-        </div>
+        <div class="title">Système de Surveillance des Examens</div>
         <div class="main-content">
-            <div class="header">
-                <div>
-                    <i class="fas fa-file-alt" aria-hidden="true"></i>
-                    PV d'examen par matière
-                </div>
+            <div class="header"><i class="fas fa-file-alt"></i>
+              Gestion des PV d'examen
                 <div class="account-container" id="accountContainer">
-                  <div class="account-icon" id="accountIcon" tabindex="0" aria-label="Menu du compte" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-user" aria-hidden="true"></i>
-                  </div>
-                  <div class="account-dropdown" id="accountDropdown" role="menu" aria-labelledby="accountIcon">
-                      <ul>
-                          <li role="menuitem"><i class="fas fa-user" aria-hidden="true"></i>
-                              <a href="compte.html" style="text-decoration: none; color: inherit;">MON COMPTE</a>
-                          </li>
-                          <li role="menuitem"><i class="fas fa-cog" aria-hidden="true"></i> Paramètres</li>
-                          <li role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Déconnexion</li>
-                      </ul>
-                  </div>
-              </div>
+                    <div class="account-icon" id="accountIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <ul>
+                            <li><i class="fas fa-user"></i>
+                                <a href="compte.html" style="text-decoration: none; color: inherit;">MY ACCOUNT</a>
+                            </li>
+                            <li><i class="fas fa-cog"></i> Paramètres</li>
+                            <li><i class="fas fa-sign-out-alt"></i> Déconnexion</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             
             <!-- Search and filter section -->
@@ -375,10 +369,7 @@
         </div>
     </div>
 
-    <!-- Fixed Help Button -->
-    <button class="help-btn" id="helpBtn" aria-label="Aide">
-        <i class="fas fa-question-circle" aria-hidden="true"></i>
-    </button>
+    
 
      <!-- Scripts -->
      <script src="../src/js/pvchefdep.js" defer></script>

@@ -3,38 +3,36 @@ body {
   padding: 0;
   font-family: 'Poppins', sans-serif;
   background-color: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
 }
 
 .planning-paper {
   background-color: white;
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  justify-content: center;
-  align-items: flex-start; 
-  min-height: 100vh;
   box-sizing: border-box;
+  margin: 20px 0;
 }
 
 .planning-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .usto-logo {
-  width: 100px;
-  margin-right: 20px;
+  width: 80px;
+  margin-right: 0;
+  margin-bottom: 15px;
 }
 
 .planning-texts {
   text-align: center;
-  flex: 1;
+  width: 100%;
 }
 
 .planning-title,
@@ -42,16 +40,19 @@ body {
 .ref,
 .planning-heading,
 .subtitle {
-  margin: 3px 0;
+  margin: 5px 0;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
 }
 
 .planning-display-container {
   margin: 20px 0;
+  overflow-x: auto;
 }
 
 .planning-display-container h3 {
   font-weight: 600;
   margin-bottom: 15px;
+  font-size: 1.1rem;
 }
 
 .planning-table {
@@ -59,19 +60,28 @@ body {
   border-collapse: collapse;
   background-color: white;
   margin-top: 10px;
+  font-size: 0.9rem;
+  min-width: 600px; /* Ensures table doesn't get too narrow */
 }
 
 .planning-table th,
 .planning-table td {
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 8px 5px;
   text-align: center;
+  word-break: break-word;
 }
 
-.footer {
-  margin-top: 20px;
-  font-weight: bold;
-  text-align: right;
+.empty-message, 
+.error-message {
+  text-align: center;
+  padding: 15px;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.error-message {
+  color: #e74c3c;
 }
 
 .delete-planning-btn {
@@ -82,63 +92,45 @@ body {
   border-radius: 4px;
   font-weight: 500;
   cursor: pointer;
+  font-size: 0.9rem;
   margin-left: 10px;
-  transition: background-color 0.3s ease;
 }
 
-.delete-planning-btn:hover {
-  background-color: #c0392b;
-}
-
-.empty-message, .error-message {
-  text-align: center;
-  padding: 15px;
-  color: #666;
-}
-
-.error-message {
-  color: #e74c3c;
-}
-
-/* Styles for planning sections */
-.planning-section {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.planning-section h3 {
-  margin: 0;
-  padding-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Account dropdown styles (if not already defined in prof.css) */
 .account-container {
   position: relative;
-  display: inline-block;
 }
 
 .account-icon {
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #e0e4ff;
 }
 
 .account-dropdown {
   position: absolute;
   right: 0;
-  top: 100%;
+  top: 50px;
   background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  min-width: 150px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  min-width: 180px;
   display: none;
   z-index: 100;
 }
 
 .account-dropdown.show {
   display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .account-dropdown ul {
@@ -150,8 +142,77 @@ body {
 .account-dropdown li {
   padding: 10px 15px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s;
 }
 
 .account-dropdown li:hover {
   background-color: #f5f5f5;
+}
+
+.account-dropdown li i {
+  margin-right: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Tablet and Desktop Styles */
+@media (min-width: 768px) {
+  .planning-paper {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 20px auto;
+  }
+
+  .planning-header {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .usto-logo {
+    width: 100px;
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+
+  .planning-texts {
+    text-align: left;
+  }
+
+  .planning-table {
+    font-size: 1rem;
+  }
+
+  .planning-table th,
+  .planning-table td {
+    padding: 10px;
+  }
+}
+
+/* Large Desktop Styles */
+@media (min-width: 1200px) {
+  .planning-paper {
+    padding: 2.5rem;
+  }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 480px) {
+  .planning-table {
+    font-size: 0.8rem;
+  }
+
+  .planning-title {
+    font-size: 1.2rem;
+  }
+  
+  .faculty-title, .planning-heading {
+    font-size: 1rem;
+  }
+
+  .delete-planning-btn {
+    padding: 5px 10px;
+    margin-left: 5px;
+  }
 }

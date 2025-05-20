@@ -578,4 +578,94 @@
           width: 100%;
           justify-content: center;
       }
+      .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background-color: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .sidebar-toggle:hover {
+        background-color: #34495e;
+    }
+    
+    /* Make sidebar responsive */
+    @media screen and (max-width: 768px) {
+        .sidebar-toggle {
+            display: block;
+        }
+        
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            z-index: 999;
+            width: 250px;
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .main-container {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Additional responsive adjustments for the planning table */
+        .planning-table {
+            font-size: 14px;
+        }
+        
+        .planning-display-container {
+            overflow-x: auto;
+        }
+        
+        .planning-header {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .planning-texts {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .usto-logo {
+            max-width: 120px;
+        }
+    }
+    
+    /* For extra small screens */
+    @media screen and (max-width: 480px) {
+        .planning-table {
+            font-size: 12px;
+        }
+        
+        .planning-table th, 
+        .planning-table td {
+            padding: 5px;
+        }
+        
+        .title {
+            font-size: 18px;
+        }
+        
+        .header {
+            font-size: 16px;
+            padding: 10px;
+        }
+    }
   }
